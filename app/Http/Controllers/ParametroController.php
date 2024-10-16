@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Parametro; 
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 
 class ParametroController extends Controller
 {
@@ -13,9 +14,8 @@ class ParametroController extends Controller
      */
     public function index()
     {
-
         $parametros = Parametro::all();
-        return view('seguridad.parametros.index',compact('parametros'));
+        return view('seguridad.parametros.index', compact('parametros'));
     }
 
     /**
@@ -33,27 +33,26 @@ class ParametroController extends Controller
     {
         $request->validate([
             'parametro' => 'required|unique:parametros', 
-             'valor' => 'required'
-            ]);
+            'valor' => 'required'
+        ]);
 
-            $data = [
-                'parametro' => $request->parametro,
-                'valor' => $request->valor,
-                'creado_por' => Auth::user()->id,
-    
-            ];
+        // Llamar al procedimiento almacenado para crear un nuevo parámetro
+        DB::select('CALL sp_insert_parametro(?, ?, ?)', [
+            $request->parametro,
+            $request->valor,
+            Auth::user()->id
+        ]);
 
-            $parametro = Parametro::create($data);
-            app(BitacoraController::class)->register('create', 'parametros', 'Se creó un nuevo parámetro: ' . $parametro->parametro);
-            return redirect()->route('parametros.index')->with('info','Parametro creado con éxito.');
-    }
+        // Registrar la acción en la bitácora
+        app(BitacoraController::class)->register(
+            'create', 
+            'parametros', 
+            'Se creó un nuevo parámetro: ' . $request->parametro,
+            null, // No hay valores anteriores al crear
+            json_encode($request->except(['_token', '_method'])) // Valores nuevos
+        );
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(string $id)
-    {
-        //
+        return redirect()->route('parametros.index')->with('info', 'Parámetro creado con éxito.');
     }
 
     /**
@@ -61,8 +60,8 @@ class ParametroController extends Controller
      */
     public function edit(string $id)
     {
-        $parametro = Parametro::find($id);
-        return view('seguridad.parametros.edit')->with('parametro',$parametro);
+        $parametro = Parametro::findOrFail($id);
+        return view('seguridad.parametros.edit')->with('parametro', $parametro);
     }
 
     /**
@@ -72,20 +71,31 @@ class ParametroController extends Controller
     {
         $request->validate([
             'parametro' => "required|unique:parametros,parametro,{$id}", 
-             'valor' => 'required'
-            ]);
+            'valor' => 'required'
+        ]);
 
-            $parametro = parametro::find($id);
+        // Buscar el parámetro por su ID
+        $parametro = Parametro::findOrFail($id);
+        $valoresAnteriores = json_encode($parametro->toArray()); // Obtener valores anteriores
 
-            $data = [
-                'parametro' => $request->parametro,
-                'valor' => $request->valor,
-                'modificado_por' => Auth::user()->id,
-    
-            ];
-            $parametro->update($data);
-            app(BitacoraController::class)->register('update', 'parametros', 'Se actualizo un nuevo parámetro: ' . $parametro->parametro);
-            return redirect()->route('parametros.index')->with('info','Parametro actualizado con éxito.');
+        // Llamar al procedimiento almacenado para actualizar el parámetro
+        DB::select('CALL sp_update_parametro(?, ?, ?, ?)', [
+            $id,
+            $request->parametro,
+            $request->valor,
+            Auth::user()->id
+        ]);
+
+        // Registrar la acción en la bitácora
+        app(BitacoraController::class)->register(
+            'update', 
+            'parametros', 
+            'Se actualizó un parámetro: ' . $request->parametro,
+            $valoresAnteriores, // Valores anteriores
+            json_encode($request->except(['_token', '_method'])) // Valores nuevos
+        );
+
+        return redirect()->route('parametros.index')->with('info', 'Parámetro actualizado con éxito.');
     }
 
     /**
@@ -93,6 +103,7 @@ class ParametroController extends Controller
      */
     public function destroy(string $id)
     {
-        //
+        // Este método está vacío ya que no se utilizará
     }
 }
+

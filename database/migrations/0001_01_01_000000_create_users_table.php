@@ -21,6 +21,10 @@ return new class extends Migration
             $table->rememberToken();
             $table->foreignId('current_team_id')->nullable();
             $table->string('profile_photo_path', 2048)->nullable();
+            // Nuevos campos
+            $table->enum('role', ['user', 'admin'])->default('user'); // Rol del usuario
+            $table->string('security_question')->nullable(); // Pregunta de seguridad
+            $table->string('security_answer')->nullable(); // Respuesta de seguridad
             $table->timestamps();
         });
 

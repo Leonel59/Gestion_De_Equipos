@@ -17,17 +17,98 @@
                     <th>Tabla</th>
                     <th>Acción</th>
                     <th>Descripción</th>
+                    <th>Valores Anteriores</th>
+                    <th>Valores Nuevos</th>
+                    <th>Acciones</th>
                 </tr>
             </thead>
             <tbody>
                 @foreach ($bitacoras as $bitacora)
                     <tr>
                         <td>{{ $bitacora->fecha }}</td>
-                        <td>{{ $bitacora->usuario->name ?? 'Usuario eliminado' }}</td>
+                        <td>{{ $bitacora->usuario ? $bitacora->usuario->name : 'Usuario no disponible' }}</td>
                         <td>{{ $bitacora->tabla }}</td>
                         <td>{{ $bitacora->accion }}</td>
-                        <td>{{ $bitacora->descripcion }}</td>
+                        <td>{{ Str::limit($bitacora->descripcion, 50) }} <a href="#" data-toggle="modal" data-target="#modal{{ $bitacora->id }}">Ver más</a></td>
+                        <td>{{ Str::limit($bitacora->valores_anteriores, 50) }} <a href="#" data-toggle="modal" data-target="#modalAnterior{{ $bitacora->id }}">Ver más</a></td>
+                        <td>{{ Str::limit($bitacora->valores_nuevos, 50) }} <a href="#" data-toggle="modal" data-target="#modalNuevo{{ $bitacora->id }}">Ver más</a></td>
+                        <td>
+                            <a href="{{ route('bitacoras.download', $bitacora->id) }}" class="btn btn-info btn-sm">Descargar</a>
+                        </td>
                     </tr>
+
+                    <!-- Modal para Descripción -->
+                    <div class="modal fade" id="modal{{ $bitacora->id }}" tabindex="-1" role="dialog" aria-labelledby="modalLabel" aria-hidden="true">
+                        <div class="modal-dialog" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="modalLabel">Descripción Completa</h5>
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                                <div class="modal-body">
+                                    {{ $bitacora->descripcion }}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Modal para Valores Anteriores -->
+                    <div class="modal fade" id="modalAnterior{{ $bitacora->id }}" tabindex="-1" role="dialog" aria-labelledby="modalLabel" aria-hidden="true">
+                        <div class="modal-dialog" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="modalLabel">Valores Anteriores</h5>
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                                <div class="modal-body">
+                                    <ul>
+                                        @php
+                                            $valoresAnteriores = json_decode($bitacora->valores_anteriores, true) ?? [];
+                                        @endphp
+                                        @if (count($valoresAnteriores) > 0)
+                                            @foreach ($valoresAnteriores as $key => $valor)
+                                                <li>{{ $key }}: {{ $valor }}</li>
+                                            @endforeach
+                                        @else
+                                            <li>No hay valores anteriores disponibles.</li>
+                                        @endif
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Modal para Valores Nuevos -->
+                    <div class="modal fade" id="modalNuevo{{ $bitacora->id }}" tabindex="-1" role="dialog" aria-labelledby="modalLabel" aria-hidden="true">
+                        <div class="modal-dialog" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="modalLabel">Valores Nuevos</h5>
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                                <div class="modal-body">
+                                    <ul>
+                                        @php
+                                            $valoresNuevos = json_decode($bitacora->valores_nuevos, true) ?? [];
+                                        @endphp
+                                        @if (count($valoresNuevos) > 0)
+                                            @foreach ($valoresNuevos as $key => $valor)
+                                                <li>{{ $key }}: {{ $valor }}</li>
+                                            @endforeach
+                                        @else
+                                            <li>No hay valores nuevos disponibles.</li>
+                                        @endif
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 @endforeach
             </tbody>
         </table>
@@ -98,5 +179,8 @@
     }
 </style>
 @stop
+
+
+
 
 

@@ -7,6 +7,7 @@ use App\Http\Controllers\ObjetosController;
 use App\Http\Controllers\PreguntaController;
 use App\Http\Controllers\BitacoraController;
 use App\Http\Controllers\EmpleadoController;
+use App\Http\Controllers\SecurityAnswerController;
 
 use Illuminate\Support\Facades\Route;
 
@@ -37,6 +38,12 @@ Route::get('/', function () {
     Route::resource('empleados',EmpleadoController::class)->names('empleados');
     
 Route::get('bitacora', [BitacoraController::class, 'index'])->name('bitacora.index');
+Route::get('/bitacoras/download/{id}', [BitacoraController::class, 'download'])->name('bitacoras.download');
 
+ // Rutas para la respuesta a la pregunta de seguridad
+ Route::get('security-answer', [SecurityAnswerController::class, 'showForm'])->name('security.answer.form');
+ Route::post('security-answer', [SecurityAnswerController::class, 'checkAnswer'])->name('security.answer');
 
 });
+
+

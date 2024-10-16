@@ -18,11 +18,14 @@ return new class extends Migration
             $table->string('tabla');
             $table->string('accion');
             $table->string('descripcion');
-
-             // Columnas de marca de tiempo
-             $table->timestamps();
-
-             $table->foreign('id_usuario')->references('id')->on('users')->onDelete('cascade');
+            
+            $table->text('valores_anteriores')->nullable(); // Campo para valores anteriores
+            $table->text('valores_nuevos')->nullable();     // Campo para valores nuevos
+        
+            // Columnas de marca de tiempo
+            $table->timestamps();
+        
+            $table->foreign('id_usuario')->references('id')->on('users')->onDelete('cascade');
         });
 
     }

@@ -14,6 +14,8 @@ class Bitacora extends Model
         'tabla',
         'accion',
         'descripcion',
+        'valores_anteriores',
+        'valores_nuevos',
     ];
 
     public function usuario()

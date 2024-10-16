@@ -293,7 +293,7 @@ return [
     |
     */
 
-    'menu' => [
+'menu' => [
         // Navbar items:
         [
             'type' => 'navbar-search',
@@ -350,7 +350,8 @@ return [
                 [
                     'text' => 'Usuarios',
                     'url' => '/usuarios',
-                    'icon' => 'fas fa-users fa-fw'
+                    'icon' => 'fas fa-users fa-fw',
+                    'can' => 'VER_BITACORA3'
                 ],
             ],
         ],
@@ -381,6 +382,10 @@ return [
             'url' => '#',
         ],
     ],
+
+
+
+
 
     /*
     |--------------------------------------------------------------------------

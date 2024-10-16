@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Objeto;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 
 class ObjetosController extends Controller
 {
@@ -13,8 +14,8 @@ class ObjetosController extends Controller
      */
     public function index()
     {
-        $objetos= Objeto::all();
-        return view('seguridad.objetos.index',compact('objetos'));
+        $objetos = Objeto::all();
+        return view('seguridad.objetos.index', compact('objetos'));
     }
 
     /**
@@ -30,30 +31,28 @@ class ObjetosController extends Controller
      */
     public function store(Request $request)
     {
-        $request ->validate([
-            'objeto' => "required|unique:objetos|min:5|max:255", 
+        $request->validate([
+            'objeto' => "required|unique:objetos,objeto|min:5|max:255", 
             'descripcion' => "required|min:5|max:255"
-
         ]);
 
-        $data=[
-            'objeto' => $request->objeto,
-            'descripcion' => $request->descripcion,
-            'creado_por' => Auth::user()->id,
+        // Llamar al procedimiento almacenado para crear un nuevo objeto
+        DB::select('CALL sp_insert_objeto(?, ?, ?)', [
+            $request->objeto,
+            $request->descripcion,
+            Auth::user()->id
+        ]);
 
-        ];
+        // Registrar la acción en la bitácora
+        app(BitacoraController::class)->register(
+            'create', 
+            'objetos', 
+            'Se creó un nuevo objeto: ' . $request->objeto,
+            null, // No hay valores anteriores al crear
+            json_encode($request->except(['_token', '_method'])) // Excluir el token y método
+        );
 
-        $objeto= Objeto::create($data);
-        app(BitacoraController::class)->register('create', 'objeto', 'Se creó un nuevo objeto: ' . $objeto->objeto);
-        return redirect()->route('objetos.index')->with('info','objeto creado con exito');
-    }
-
-    /**
-     * Display the specified resource.
-     */
-    public function show(string $id)
-    {
-        //
+        return redirect()->route('objetos.index')->with('info', 'Objeto creado con éxito.');
     }
 
     /**
@@ -61,9 +60,8 @@ class ObjetosController extends Controller
      */
     public function edit(string $id)
     {
-        $objeto= Objeto::find($id);
-        return view('seguridad.objetos.edit',compact('objeto'));
-
+        $objeto = Objeto::findOrFail($id);
+        return view('seguridad.objetos.edit', compact('objeto'));
     }
 
     /**
@@ -72,21 +70,32 @@ class ObjetosController extends Controller
     public function update(Request $request, string $id)
     {
         $request->validate([
-            'objeto' => "required|unique:parametros,parametro,{$id}||min:5|max:255", 
-             'descripcion' => 'required|min:5|max:255'
-            ]);
+            'objeto' => "required|unique:objetos,objeto,{$id}|min:5|max:255", 
+            'descripcion' => 'required|min:5|max:255'
+        ]);
 
-            $objeto = Objeto::find($id);
+        // Buscar el objeto por su ID
+        $objeto = Objeto::findOrFail($id);
+        $valoresAnteriores = json_encode($objeto->toArray()); // Obtener valores anteriores
 
-            $data = [
-                'objeto' => $request->objeto,
-                'descripcion' => $request->descripcion,
-                'modificado_por' => Auth::user()->id,
-    
-            ];
-            $objeto->update($data);
-            app(BitacoraController::class)->register('update', 'objetos', 'Se actualizo un nuevo objeto: ' . $objeto->objeto);
-            return redirect()->route('objetos.index')->with('info','Objeto actualizado con éxito.');
+        // Llamar al procedimiento almacenado para actualizar el objeto
+        DB::select('CALL sp_update_objeto(?, ?, ?, ?)', [
+            $id,
+            $request->objeto,
+            $request->descripcion,
+            Auth::user()->id
+        ]);
+
+        // Registrar la acción en la bitácora
+        app(BitacoraController::class)->register(
+            'update', 
+            'objetos', 
+            'Se actualizó un objeto: ' . $request->objeto,
+            $valoresAnteriores, // Valores anteriores
+            json_encode($request->except(['_token', '_method'])) // Excluir token y método
+        );
+
+        return redirect()->route('objetos.index')->with('info', 'Objeto actualizado con éxito.');
     }
 
     /**
@@ -94,11 +103,21 @@ class ObjetosController extends Controller
      */
     public function destroy(string $id)
     {
-        $objeto =Objeto::find($id);
-        $objeto->delete();
+        $objeto = Objeto::findOrFail($id);
+        $valoresAnteriores = json_encode($objeto->toArray()); // Obtener valores anteriores
 
-        app(BitacoraController::class)->register('delete', 'objetos', 'Se elimino un objeto: ' . $objeto->objeto);
-        return redirect()->route('objetos.index')->with('info','Objeto eliminado con éxito.');
+        // Llamar al procedimiento almacenado para eliminar el objeto
+        DB::select('CALL sp_delete_objeto(?)', [$id]);
 
+        // Registrar la acción en la bitácora
+        app(BitacoraController::class)->register(
+            'delete', 
+            'objetos', 
+            'Se eliminó un objeto: ' . $objeto->objeto,
+            $valoresAnteriores, // Valores anteriores
+            null // No hay valores nuevos al eliminar
+        );
+
+        return redirect()->route('objetos.index')->with('info', 'Objeto eliminado con éxito.');
     }
 }

@@ -1,8 +1,10 @@
-<?php
+<?php 
 
 namespace App\Http\Controllers;
+
 use App\Models\Empleado;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class EmpleadoController extends Controller
 {
@@ -12,9 +14,9 @@ class EmpleadoController extends Controller
         return view('empleados.index', compact('empleados'));
     }
 
-     // Método para almacenar un nuevo empleado
-     public function store(Request $request)
-     {
+    // Método para almacenar un nuevo empleado
+    public function store(Request $request)
+    {
         // Validar los datos
         $request->validate([
             'cod_empleado' => 'required|string|unique:empleados,cod_empleado',
@@ -31,19 +33,39 @@ class EmpleadoController extends Controller
             'sexo_empleado' => 'required|in:masculino,femenino,otro',
         ]);
 
-         // Crear nuevo empleado
-         $empleado= Empleado::create($request->all());
-         app(BitacoraController::class)->register('create', 'empleado', 'Se creó un nuevo empleado: ' . $empleado->empleado);
-         // Redirigir de vuelta con un mensaje
-         return redirect()->route('empleados.index')->with('success', 'Empleado agregado exitosamente.');
-     }
+        // Llamar al procedimiento almacenado para crear un nuevo empleado
+        DB::select('CALL sp_insert_empleado(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)', [
+            $request->cod_empleado,
+            $request->correo,
+            $request->telefono,
+            $request->direccion,
+            $request->sucursal,
+            $request->area,
+            $request->dni_empleado,
+            $request->nombre_empleado,
+            $request->apellido_empleado,
+            $request->cargo_empleado,
+            $request->fecha_contratacion,
+            $request->sexo_empleado
+        ]);
 
-     public function edit(string $id)
+        // Registrar la acción en la bitácora
+        app(BitacoraController::class)->register(
+            'create', 
+            'empleados', 
+            'Se creó un nuevo empleado: ' . $request->nombre_empleado,
+            null, // No hay valores anteriores al crear
+            json_encode($request->except(['_token', '_method'])) // Valores nuevos
+        );
+
+        // Redirigir de vuelta con un mensaje
+        return redirect()->route('empleados.index')->with('success', 'Empleado agregado exitosamente.');
+    }
+
+    public function edit(string $id)
     {
-    
-    $empleado = Empleado::findOrFail($id);
-
-    return view('empleados.edit', compact('empleado'));
+        $empleado = Empleado::findOrFail($id);
+        return view('empleados.edit', compact('empleado'));
     }
 
     public function update(Request $request, string $id)
@@ -63,26 +85,62 @@ class EmpleadoController extends Controller
             'fecha_contratacion' => 'required|date',
             'sexo_empleado' => 'required|in:masculino,femenino,otro',
         ]);
-    
+
         // Buscar el empleado por su ID
         $empleado = Empleado::findOrFail($id);
-    
-        // Actualizar empleado con los datos validados
-        $empleado->update($request->all());
-        app(BitacoraController::class)->register('update', 'empleados', 'Se actualizo un nuevo empleado: ' . $empleado->empleado);
+        $valoresAnteriores = json_encode($empleado->toArray()); // Obtener valores anteriores
+
+        // Llamar al procedimiento almacenado para actualizar el empleado
+        DB::select('CALL sp_update_empleado(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)', [
+            $id,
+            $request->cod_empleado,
+            $request->correo,
+            $request->telefono,
+            $request->direccion,
+            $request->sucursal,
+            $request->area,
+            $request->dni_empleado,
+            $request->nombre_empleado,
+            $request->apellido_empleado,
+            $request->cargo_empleado,
+            $request->fecha_contratacion,
+            $request->sexo_empleado
+        ]);
+
+        // Registrar la acción en la bitácora
+        app(BitacoraController::class)->register(
+            'update', 
+            'empleados', 
+            'Se actualizó un empleado: ' . $request->nombre_empleado,
+            $valoresAnteriores, // Valores anteriores
+            json_encode($request->except(['_token', '_method'])) // Excluir token y método
+        );
+
         // Redirigir de vuelta con un mensaje
         return redirect()->route('empleados.index')->with('success', 'Empleado actualizado exitosamente.');
     }
 
     public function destroy(string $id)
-{
-    // Buscar el empleado por su ID
-    $empleado = Empleado::findOrFail($id);
-    
-    // Eliminar el empleado
-    $empleado->delete();
-    app(BitacoraController::class)->register('delete', 'empleados', 'Se elimino un empleado: ' . $empleado->empleado);
-    // Redirigir de vuelta con un mensaje
-    return redirect()->route('empleados.index')->with('success', 'Empleado eliminado exitosamente.');
+    {
+        // Buscar el empleado por su ID
+        $empleado = Empleado::findOrFail($id);
+        $valoresAnteriores = json_encode($empleado->toArray()); // Obtener valores anteriores
+
+        // Llamar al procedimiento almacenado para eliminar el empleado
+        DB::select('CALL sp_delete_empleado(?)', [$id]);
+
+        // Registrar la acción en la bitácora
+        app(BitacoraController::class)->register(
+            'delete', 
+            'empleados', 
+            'Se eliminó un empleado: ' . $empleado->nombre_empleado,
+            $valoresAnteriores, // Valores anteriores
+            null // No hay valores nuevos al eliminar
+        );
+
+        // Redirigir de vuelta con un mensaje
+        return redirect()->route('empleados.index')->with('success', 'Empleado eliminado exitosamente.');
+    }
 }
-}
+
+
