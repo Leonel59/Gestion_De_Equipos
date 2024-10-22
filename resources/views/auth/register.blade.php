@@ -1,4 +1,3 @@
-
 <x-guest-layout>
     <x-authentication-card>
         <x-slot name="logo">
@@ -51,7 +50,14 @@
 
             <div class="mt-4">
                 <x-label for="security_question" value="{{ __('Pregunta de Seguridad') }}" />
-                <x-input id="security_question" class="block mt-1 w-full input-style" type="text" name="security_question" :value="old('security_question')" required />
+                <select id="security_question" name="security_question" class="block mt-1 w-full input-style" required>
+                    <option value="">{{ __('Seleccione una pregunta de seguridad') }}</option>
+                    <option value="¿Cuál es el nombre de tu primera mascota?">{{ __('¿Cuál es el nombre de tu primera mascota?') }}</option>
+                    <option value="¿Cuál es el nombre de tu mejor amigo de la infancia?">{{ __('¿Cuál es el nombre de tu mejor amigo de la infancia?') }}</option>
+                    <option value="¿Cuál es el nombre de la ciudad donde naciste?">{{ __('¿Cuál es el nombre de la ciudad donde naciste?') }}</option>
+                    <option value="¿Cuál es tu comida favorita?">{{ __('¿Cuál es tu comida favorita?') }}</option>
+                    <option value="¿Cuál fue la marca de tu primer auto?">{{ __('¿Cuál fue la marca de tu primer auto?') }}</option>
+                </select>
             </div>
 
             <div class="mt-4">
@@ -113,17 +119,17 @@
     <style>
         /* Estilo para los campos de entrada */
         .input-style {
-            border: 1px solid #cbd5e0; /* Color del borde */
-            border-radius: 0.375rem; /* Bordes redondeados */
-            padding: 0.5rem; /* Espaciado interno */
-            transition: border-color 0.3s; /* Transición suave para el color del borde */
+            border: 1px solid #cbd5e0;
+            border-radius: 0.375rem;
+            padding: 0.5rem;
+            transition: border-color 0.3s;
         }
 
-        /* Efecto al enfocarse en el campo de entrada */
         .input-style:focus {
-            border-color: #4f46e5; /* Color del borde al enfocarse */
-            outline: none; /* Quitar el borde de enfoque predeterminado */
-            box-shadow: 0 0 0 1px rgba(79, 70, 229, 0.5); /* Sombra de enfoque */
+            border-color: #4f46e5;
+            outline: none;
+            box-shadow: 0 0 0 1px rgba(79, 70, 229, 0.5);
         }
     </style>
 </x-guest-layout>
+

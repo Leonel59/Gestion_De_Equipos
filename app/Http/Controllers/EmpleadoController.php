@@ -21,7 +21,7 @@ class EmpleadoController extends Controller
         $request->validate([
             'cod_empleado' => 'required|string|unique:empleados,cod_empleado',
             'correo' => 'required|email|unique:empleados,correo',
-            'telefono' => 'nullable|string',
+            'telefono' => 'nullable|numeric',
             'direccion' => 'nullable|string',
             'sucursal' => 'nullable|string',
             'area' => 'nullable|string',
@@ -74,7 +74,7 @@ class EmpleadoController extends Controller
         $request->validate([
             'cod_empleado' => 'required|string|unique:empleados,cod_empleado,' . $id,
             'correo' => 'required|email|unique:empleados,correo,' . $id,
-            'telefono' => 'nullable|string',
+            'telefono' => 'nullable|numeric',
             'direccion' => 'nullable|string',
             'sucursal' => 'nullable|string',
             'area' => 'nullable|string',
@@ -142,5 +142,6 @@ class EmpleadoController extends Controller
         return redirect()->route('empleados.index')->with('success', 'Empleado eliminado exitosamente.');
     }
 }
+
 
 

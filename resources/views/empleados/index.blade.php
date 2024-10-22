@@ -77,7 +77,7 @@
                     </div>
                     <div class="form-group">
                         <label for="telefono">Teléfono</label>
-                        <input type="text" class="form-control" id="telefono" name="telefono">
+                        <input type="text" class="form-control" id="telefono" name="telefono" pattern="\d*" title="Solo se permiten números">
                     </div>
                     <div class="form-group">
                         <label for="direccion">Dirección</label>
@@ -177,6 +177,7 @@
     });
 </script>
 @endsection
+
 
 
 

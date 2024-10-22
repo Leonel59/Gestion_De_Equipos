@@ -13,6 +13,7 @@ return new class extends Migration
         DB::unprepared('
             DROP PROCEDURE IF EXISTS sp_insert_parametro;
             DROP PROCEDURE IF EXISTS sp_update_parametro;
+            DROP PROCEDURE IF EXISTS sp_delete_parametro;
 
             CREATE PROCEDURE sp_insert_parametro (
                 IN p_parametro VARCHAR(255),
@@ -45,6 +46,13 @@ return new class extends Migration
                     updated_at = NOW()
                 WHERE id = p_id;
             END;
+
+            CREATE PROCEDURE sp_delete_parametro (
+                IN p_id BIGINT
+            )
+            BEGIN
+                DELETE FROM parametros WHERE id = p_id;
+            END;
         ');
     }
 
@@ -56,7 +64,9 @@ return new class extends Migration
         DB::unprepared('
             DROP PROCEDURE IF EXISTS sp_insert_parametro;
             DROP PROCEDURE IF EXISTS sp_update_parametro;
+            DROP PROCEDURE IF EXISTS sp_delete_parametro;
         ');
     }
 };
+
 

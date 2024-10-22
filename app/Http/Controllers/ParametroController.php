@@ -1,4 +1,4 @@
-<?php
+<?php 
 
 namespace App\Http\Controllers;
 
@@ -32,17 +32,24 @@ class ParametroController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'parametro' => 'required|unique:parametros', 
-            'valor' => 'required'
+            'parametro' => 'required|unique:parametros,parametro|min:3|max:100',
+            'valor' => 'required|numeric|min:1', // Sin límite máximo
+        ], [
+            'parametro.required' => 'El nombre del parámetro es obligatorio.',
+            'parametro.unique' => 'Este parámetro ya está registrado.',
+            'parametro.min' => 'El nombre del parámetro debe tener al menos 3 caracteres.',
+            'parametro.max' => 'El nombre del parámetro no puede superar los 100 caracteres.',
+            'valor.required' => 'El valor es obligatorio.',
+            'valor.numeric' => 'El valor debe ser un número.',
+            'valor.min' => 'El valor debe ser al menos 1.',
         ]);
 
-        // Llamar al procedimiento almacenado para crear un nuevo parámetro
+        // Llamar al procedimiento almacenado para insertar el nuevo parámetro
         DB::select('CALL sp_insert_parametro(?, ?, ?)', [
             $request->parametro,
             $request->valor,
             Auth::user()->id
         ]);
-
         // Registrar la acción en la bitácora
         app(BitacoraController::class)->register(
             'create', 
@@ -69,15 +76,32 @@ class ParametroController extends Controller
      */
     public function update(Request $request, string $id)
     {
+        // Validar los datos de entrada
         $request->validate([
-            'parametro' => "required|unique:parametros,parametro,{$id}", 
-            'valor' => 'required'
+            'parametro' => "required|unique:parametros,parametro,{$id}|min:3|max:100",
+            'valor' => 'required|numeric|min:1', // Sin límite máximo
+        ], [
+            'parametro.required' => 'El nombre del parámetro es obligatorio.',
+            'parametro.unique' => 'Este parámetro ya está registrado.',
+            'parametro.min' => 'El nombre del parámetro debe tener al menos 3 caracteres.',
+            'parametro.max' => 'El nombre del parámetro no puede superar los 100 caracteres.',
+            'valor.required' => 'El valor es obligatorio.',
+            'valor.numeric' => 'El valor debe ser un número.',
+            'valor.min' => 'El valor debe ser al menos 1.',
         ]);
-
+    
         // Buscar el parámetro por su ID
         $parametro = Parametro::findOrFail($id);
+    
+        // Verificar si los valores han cambiado
+        if ($request->parametro == $parametro->parametro && $request->valor == $parametro->valor) {
+            return redirect()->route('parametros.edit', $id)
+                ->withErrors(['no_changes' => 'No se han realizado cambios en los campos.'])
+                ->withInput();
+        }
+    
         $valoresAnteriores = json_encode($parametro->toArray()); // Obtener valores anteriores
-
+    
         // Llamar al procedimiento almacenado para actualizar el parámetro
         DB::select('CALL sp_update_parametro(?, ?, ?, ?)', [
             $id,
@@ -85,7 +109,7 @@ class ParametroController extends Controller
             $request->valor,
             Auth::user()->id
         ]);
-
+    
         // Registrar la acción en la bitácora
         app(BitacoraController::class)->register(
             'update', 
@@ -94,16 +118,39 @@ class ParametroController extends Controller
             $valoresAnteriores, // Valores anteriores
             json_encode($request->except(['_token', '_method'])) // Valores nuevos
         );
-
+    
         return redirect()->route('parametros.index')->with('info', 'Parámetro actualizado con éxito.');
     }
+    
 
     /**
      * Remove the specified resource from storage.
      */
     public function destroy(string $id)
     {
-        // Este método está vacío ya que no se utilizará
+        /// Obtener el parámetro antes de eliminarlo
+    $parametro = DB::table('parametros')->find($id);
+
+    // Verificar si el parámetro existe
+    if (!$parametro) {
+        return redirect()->route('parametros.index')->with('error', 'Parámetro no encontrado.');
+    }
+
+    // Llamar al procedimiento almacenado para eliminar el parámetro
+    DB::select('CALL sp_delete_parametro(?)', [$id]);
+
+    // Registrar la acción en la bitácora
+    app(BitacoraController::class)->register(
+        'delete', 
+        'parametros', 
+        'Se eliminó un parámetro con ID: ' . $id,
+        json_encode($parametro), // Valores anteriores al eliminar
+        json_encode(['id' => $id]) // Valores eliminados
+    );
+
+        return redirect()->route('parametros.index')->with('info', 'Parámetro eliminado con éxito.');
     }
 }
+
+
 
