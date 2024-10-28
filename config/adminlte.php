@@ -294,94 +294,116 @@ return [
     */
 
 'menu' => [
-        // Navbar items:
-        [
-            'type' => 'navbar-search',
-            'text' => 'search',
-            'topnav_right' => false,
-        ],
-        [
-            'type' => 'fullscreen-widget',
-            'topnav_right' => true,
-        ],
+    // Navbar items:
+    [
+        'type' => 'navbar-search',
+        'text' => 'search',
+        'topnav_right' => false,
+    ],
+    [
+        'type' => 'fullscreen-widget',
+        'topnav_right' => true,
+    ],
 
-        // Sidebar items:
-        [
-            'type' => 'sidebar-menu-search',
-            'text' => 'search',
-        ],
-        [
-            'text' => 'blog',
-            'url' => 'admin/blog',
-            'can' => 'manage-blog',
-        ],
-      
-        ['header' => 'account_settings'],
-        
-        [
-            'text' => 'Seguridad',
-            'icon' => 'fas fa-fw fa-lock',
-            'submenu' => [
-                [
-                    'text' => 'Bitacora',
-                    'url' => '/bitacora',
-                    'icon' => 'fas fa-solid fa-clipboard-list'
-                ],
-                [
-                    'text' => 'Objetos',
-                    'url' => '/objetos',
-                    'icon' => 'fas fa-desktop'
-                ],
-                [
-                    'text' => 'parametros',
-                    'url' => '/parametros',
-                    'icon' => 'fas fa-key fa-fw'
-                ],
-                [
-                    'text' => 'Preguntas de Seguridad',
-                    'url' => '/preguntas',
-                    'icon' => 'fas fa-question fa-fw'
-                ],
-                [
-                    'text' => 'Roles',
-                    'url' => '/roles',
-                    'icon' => 'fas fa-users-cog fa-fw'
-                ],
-                [
-                    'text' => 'Usuarios',
-                    'url' => '/usuarios',
-                    'icon' => 'fas fa-users fa-fw',
-                    'can' => 'VER_BITACORA3'
-                ],
+    // Sidebar items:
+    [
+        'type' => 'sidebar-menu-search',
+        'text' => 'search',
+    ],
+    [
+        'text' => 'blog',
+        'url' => 'admin/blog',
+        'can' => 'manage-blog',
+    ],
+  
+    ['header' => 'account_settings'],
+    
+    [
+        'text' => 'Seguridad',
+        'icon' => 'fas fa-fw fa-lock',
+        'submenu' => [
+            [
+                'text' => 'Bitacora',
+                'url' => '/bitacora',
+                'icon' => 'fas fa-solid fa-clipboard-list'
+            ],
+            [
+                'text' => 'Objetos',
+                'url' => '/objetos',
+                'icon' => 'fas fa-desktop'
+            ],
+            [
+                'text' => 'Parametros',
+                'url' => '/parametros',
+                'icon' => 'fas fa-key fa-fw'
+            ],
+            [
+                'text' => 'Preguntas de Seguridad',
+                'url' => '/preguntas',
+                'icon' => 'fas fa-question fa-fw'
+            ],
+            [
+                'text' => 'Roles',
+                'url' => '/roles',
+                'icon' => 'fas fa-users-cog fa-fw'
+            ],
+            [
+                'text' => 'Usuarios',
+                'url' => '/usuarios',
+                'icon' => 'fas fa-users fa-fw',
+                'can' => 'VER_BITACORA3'
             ],
         ],
-        ['header' => 'Secciones'],
-        [
-            'text' => 'Empleados',
-            'icon_color' => 'green',
-            'url' => '/empleados',
-        ],
-        [
-            'text' => 'Inventario',
-            'icon_color' => 'yellow',
-            'url' => '#',
-        ],
-        [
-            'text' => 'Mantenimientos',
-            'icon_color' => 'orange',
-            'url' => '#',
-        ],
-        [
-            'text' => 'Asignaciones',
-            'icon_color' => 'purple',
-            'url' => '#',
-        ],
-        [
-            'text' => 'Reportes',
-            'icon_color' => 'cyan',
-            'url' => '#',
+    ],
+    ['header' => 'Secciones'],
+    [
+        'text' => 'Personas',
+        'icon_color' => 'red',
+        'url' => '#',
+    ],
+    [
+        'text' => 'Empleados',
+        'icon_color' => 'green',
+        'url' => '/empleados',
+    ],
+    [
+        'text' => 'Equipos',
+        'icon_color' => 'yellow',
+        'url' => '/equipos',
+    ],
+    [
+        'text' => 'Mantenimientos',
+        'icon_color' => 'orange',
+        'submenu' => [
+            [
+                'text' => 'Servicios Mantenimiento',
+                'url' => '/servicios', // Cambia esto a la URL correcta
+                'icon' => 'fas fa-tools'
+            ],
+            [
+                'text' => 'Proveedores',
+                'url' => '/proveedores', // Cambia esto a la URL correcta
+                'icon' => 'fas fa-truck'
+            ],
+            [
+                'text' => 'Facturas',
+                'url' => '/facturas', // Cambia esto a la URL correcta
+                'icon' => 'fas fa-file-invoice'
+            ],
         ],
     ],
+    [
+        'text' => 'Asignaciones',
+        'icon_color' => 'purple',
+        'url' => '/asignaciones',
+    ],
+    [
+        'text' => 'Reportes',
+        'icon_color' => 'cyan',
+        'url' => '#',
+    ],
+],
+
 
 
 
