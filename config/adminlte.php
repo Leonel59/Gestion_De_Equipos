@@ -337,11 +337,7 @@ return [
                 'url' => '/parametros',
                 'icon' => 'fas fa-key fa-fw'
             ],
-            [
-                'text' => 'Preguntas de Seguridad',
-                'url' => '/preguntas',
-                'icon' => 'fas fa-question fa-fw'
-            ],
+            
             [
                 'text' => 'Roles',
                 'url' => '/roles',
@@ -351,28 +347,32 @@ return [
                 'text' => 'Usuarios',
                 'url' => '/usuarios',
                 'icon' => 'fas fa-users fa-fw',
-                'can' => 'VER_BITACORA3'
+                
             ],
         ],
     ],
     ['header' => 'Secciones'],
     [
         'text' => 'Personas',
+        'icon' => 'fas fa-user',
         'icon_color' => 'red',
         'url' => '#',
     ],
     [
         'text' => 'Empleados',
+        'icon' => 'fas fa-user-tie',
         'icon_color' => 'green',
         'url' => '/empleados',
     ],
     [
         'text' => 'Equipos',
+        'icon' => 'fas fa-desktop',
         'icon_color' => 'yellow',
         'url' => '/equipos',
     ],
     [
         'text' => 'Mantenimientos',
+        'icon' => 'fas fa-wrench',
         'icon_color' => 'orange',
         'submenu' => [
             [
@@ -394,11 +394,13 @@ return [
     ],
     [
         'text' => 'Asignaciones',
+        'icon' => 'fas fa-tasks',
         'icon_color' => 'purple',
         'url' => '/asignaciones',
     ],
     [
         'text' => 'Reportes',
+        'icon' => 'fas fa-chart-bar', 
         'icon_color' => 'cyan',
         'url' => '#',
     ],

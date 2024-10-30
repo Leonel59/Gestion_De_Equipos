@@ -1,7 +1,7 @@
 <?php
 
 namespace App\Http\Controllers;
-
+use App\Models\User;
 
 
 use Illuminate\Http\Request;
@@ -13,8 +13,13 @@ class UsuarioController extends Controller
      */
     public function index()
     {
-        return view('seguridad.usuarios.index');
+        // Obtiene todos los usuarios
+        $usuarios = User::all(); 
+
+        // Devuelve la vista y pasa los usuarios
+        return view('seguridad.usuarios.index', compact('usuarios'));
     }
+
 
     /**
      * Show the form for creating a new resource.

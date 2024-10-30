@@ -4,7 +4,7 @@
             <x-authentication-card-logo />
         </x-slot>
 
-        <x-validation-errors class="mb-4" />
+        <x-validation-errors class="mb-4" id="errorContainer" />
 
         @if (session('status'))
             <div class="mb-4 font-medium text-sm text-green-600">
@@ -12,7 +12,7 @@
             </div>
         @endif
 
-        <form method="POST" action="{{ route('login') }}">
+        <form method="POST" action="{{ route('login') }}" id="loginForm">
             @csrf
 
             <div>
@@ -52,11 +52,44 @@
         const togglePassword = document.getElementById('togglePassword');
         const passwordInput = document.getElementById('password');
         const toggleText = document.getElementById('toggleText');
+        const loginForm = document.getElementById('loginForm');
+        const errorContainer = document.getElementById('errorContainer');
 
         togglePassword.addEventListener('click', () => {
             const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
             passwordInput.setAttribute('type', type);
             toggleText.textContent = type === 'password' ? 'Ver Contraseña' : 'Ocultar Contraseña';
+        });
+
+        loginForm.addEventListener('submit', function(event) {
+            // Limpiar mensajes de error anteriores
+            errorContainer.innerHTML = '';
+
+            // Usar las validaciones de Laravel
+            const formData = new FormData(loginForm);
+            const password = formData.get('password');
+            const passwordErrors = [];
+
+            // Validaciones de contraseña
+            if (password.length < 8) {
+                passwordErrors.push("La contraseña debe tener al menos 8 caracteres.");
+            }
+            if (!/[A-Z]/.test(password)) {
+                passwordErrors.push("La contraseña debe contener al menos una letra mayúscula.");
+            }
+            if (!/[0-9]/.test(password)) {
+                passwordErrors.push("La contraseña debe contener al menos un número.");
+            }
+            if (!/[!@#$%^&*(),.?":{}|<>]/.test(password)) {
+                passwordErrors.push("La contraseña debe contener al menos un carácter especial.");
+            }
+
+            if (passwordErrors.length > 0) {
+                event.preventDefault(); // Evita el envío del formulario
+                // Mostrar errores en el contenedor
+                errorContainer.classList.add('text-red-600', 'mt-2');
+                errorContainer.innerHTML = passwordErrors.join('<br>');
+            }
         });
     </script>
 
@@ -98,6 +131,7 @@
         }
     </style>
 </x-guest-layout>
+
 
 
 
