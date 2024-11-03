@@ -101,20 +101,28 @@ return new class extends Migration
         Schema::create($tableNames['role_has_permissions'], function (Blueprint $table) use ($tableNames, $pivotRole, $pivotPermission) {
             $table->unsignedBigInteger($pivotPermission);
             $table->unsignedBigInteger($pivotRole);
-
+        
+            // Agregar columnas para los permisos
+            $table->boolean('ver')->default(false);     // Para ver
+            $table->boolean('editar')->default(false);  // Para editar
+            $table->boolean('crear')->default(false);   // Para crear
+            $table->boolean('eliminar')->default(false); // Para eliminar
+        
+            // Definir las claves foráneas
             $table->foreign($pivotPermission)
-                ->references('id') // permission id
+                ->references('id') // referencia a la columna 'id' en 'permissions'
                 ->on($tableNames['permissions'])
                 ->onDelete('cascade');
-
+        
             $table->foreign($pivotRole)
-                ->references('id') // role id
+                ->references('id') // referencia a la columna 'id' en 'roles'
                 ->on($tableNames['roles'])
                 ->onDelete('cascade');
-
+        
+            // Clave primaria combinada
             $table->primary([$pivotPermission, $pivotRole], 'role_has_permissions_permission_id_role_id_primary');
         });
-
+        
         app('cache')
             ->store(config('permission.cache.store') != 'default' ? config('permission.cache.store') : null)
             ->forget(config('permission.cache.key'));

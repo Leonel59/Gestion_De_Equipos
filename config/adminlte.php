@@ -317,15 +317,17 @@ return [
     ],
   
     ['header' => 'account_settings'],
-    
+     
     [
         'text' => 'Seguridad',
         'icon' => 'fas fa-fw fa-lock',
         'submenu' => [
+            
             [
                 'text' => 'Bitacora',
                 'url' => '/bitacora',
                 'icon' => 'fas fa-solid fa-clipboard-list'
+                
             ],
             [
                 'text' => 'Objetos',
@@ -349,15 +351,12 @@ return [
                 'icon' => 'fas fa-users fa-fw',
                 
             ],
+           
         ],
     ],
+    
     ['header' => 'Secciones'],
-    [
-        'text' => 'Personas',
-        'icon' => 'fas fa-user',
-        'icon_color' => 'red',
-        'url' => '#',
-    ],
+
     [
         'text' => 'Empleados',
         'icon' => 'fas fa-user-tie',

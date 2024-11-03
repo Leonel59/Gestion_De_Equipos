@@ -12,12 +12,7 @@ use Spatie\Permission\Traits\HasRoles;
 
 class User extends Authenticatable
 {
-    use HasApiTokens;
-    use HasFactory;
-    use HasProfilePhoto;
-    use Notifiable;
-    use TwoFactorAuthenticatable;
-    use HasRoles;
+    use HasApiTokens, HasFactory, HasProfilePhoto, Notifiable, TwoFactorAuthenticatable, HasRoles;
 
     /**
      * The attributes that are mass assignable.
@@ -29,10 +24,8 @@ class User extends Authenticatable
         'email',
         'password',
         'username',
-        'role',                // Campo para el rol del usuario
         'security_question',   // Campo para la pregunta de seguridad
         'security_answer',     // Campo para la respuesta de seguridad
-        
     ];
 
     /**
@@ -45,7 +38,7 @@ class User extends Authenticatable
         'remember_token',
         'two_factor_recovery_codes',
         'two_factor_secret',
-        
+        'security_answer', // Asegúrate de ocultar la respuesta de seguridad si es necesario
     ];
 
     /**
@@ -62,12 +55,14 @@ class User extends Authenticatable
      *
      * @return array<string, string>
      */
-    protected function casts(): array
+    protected $casts = [
+        'email_verified_at' => 'datetime',
+        'password' => 'hashed',
+        'security_answer' => 'string', // Asegúrate de que la respuesta de seguridad sea del tipo correcto
+    ];
+
+    public function roles()
     {
-        return [
-            'email_verified_at' => 'datetime',
-            'password' => 'hashed',
-        ];
+        return $this->belongsToMany(Role::class);
     }
 }
-

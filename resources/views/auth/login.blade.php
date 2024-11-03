@@ -54,6 +54,9 @@
         const toggleText = document.getElementById('toggleText');
         const loginForm = document.getElementById('loginForm');
         const errorContainer = document.getElementById('errorContainer');
+        let attemptCount = 0; // Contador de intentos
+        let isLocked = false; // Estado de bloqueo
+        const lockDuration = 6000; // Duración del bloqueo en milisegundos
 
         togglePassword.addEventListener('click', () => {
             const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
@@ -62,13 +65,27 @@
         });
 
         loginForm.addEventListener('submit', function(event) {
+            if (isLocked) {
+                event.preventDefault(); // Evita el envío si está bloqueado
+                errorContainer.classList.add('text-red-600', 'mt-2');
+                errorContainer.innerHTML = 'Demasiados intentos fallidos. Intenta de nuevo en 6 segundos.';
+                return;
+            }
+
             // Limpiar mensajes de error anteriores
             errorContainer.innerHTML = '';
 
             // Usar las validaciones de Laravel
             const formData = new FormData(loginForm);
+            const username = formData.get('username');
             const password = formData.get('password');
             const passwordErrors = [];
+            const usernameErrors = [];
+
+            // Validaciones de usuario
+            if (/[^a-zA-Z0-9]/.test(username)) {
+                usernameErrors.push("El usuario no puede contener caracteres especiales.");
+            }
 
             // Validaciones de contraseña
             if (password.length < 8) {
@@ -84,11 +101,29 @@
                 passwordErrors.push("La contraseña debe contener al menos un carácter especial.");
             }
 
+            // Mostrar errores de usuario si hay
+            if (usernameErrors.length > 0) {
+                event.preventDefault(); // Evita el envío del formulario
+                errorContainer.classList.add('text-red-600', 'mt-2');
+                errorContainer.innerHTML = usernameErrors.join('<br>');
+                return;
+            }
+
+            // Incrementar el contador de intentos
+            attemptCount++;
+            if (attemptCount >= 3) {
+                isLocked = true;
+                setTimeout(() => {
+                    isLocked = false;
+                    attemptCount = 0; // Reiniciar el contador
+                }, lockDuration);
+            }
+
             if (passwordErrors.length > 0) {
                 event.preventDefault(); // Evita el envío del formulario
                 // Mostrar errores en el contenedor
                 errorContainer.classList.add('text-red-600', 'mt-2');
-                errorContainer.innerHTML = passwordErrors.join('<br>');
+                errorContainer.innerHTML += passwordErrors.join('<br>');
             }
         });
     </script>
@@ -131,8 +166,5 @@
         }
     </style>
 </x-guest-layout>
-
-
-
 
 

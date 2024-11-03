@@ -1,68 +1,82 @@
-@extends('adminlte::page') 
+@extends('adminlte::page')
 
 @section('title', 'Editar Rol')
 
 @section('content_header')
-<h1 class="text-center">Editar Rol</h1>
-<hr class="bg-dark border-1 border-top border-dark">
+<h1 class="text-center text-primary font-weight-bold">Editar Rol</h1>
+<hr class="bg-dark border-2 border-top border-dark">
 @stop
 
 @section('content')
-<form id="editRoleForm" action="{{ route('roles.update', $role->id) }}" method="POST">
+<form id="editRoleForm" action="{{ route('roles.update', $rol->id) }}" method="POST">
     @csrf
-    @method('PUT') <!-- Método para actualizar el rol -->
+    @method('PUT')
 
-    <div class="row">
-        <div class="col-sm-12 col-xs-12">
-            <div class="form-group has-primary">
-                <label for="rol">Nombre del Rol:</label>
-                <input
-                    type="text"
-                    id="rol"
-                    class="form-control border-secondary"
-                    placeholder="Ingrese el rol..."
-                    name="rol"
-                    value="{{ old('rol', $role->name) }}"
-                    autofocus
-                >
+    <!-- Selección del Rol -->
+    <div class="row mb-4">
+        <div class="col-sm-12">
+            <div class="form-group">
+                <label for="rol" class="font-weight-bold">Seleccionar Rol:</label>
+                <select id="rol" name="rol" class="form-control border-primary shadow-sm">
+                    <option value="" disabled>Seleccione un rol</option>
+                    <option value="admin" {{ $rol->name == 'admin' ? 'selected' : '' }}>Admin</option>
+                    <option value="supervisor" {{ $rol->name == 'supervisor' ? 'selected' : '' }}>Supervisor</option>
+                    <option value="usuario" {{ $rol->name == 'usuario' ? 'selected' : '' }}>Usuario</option>
+                </select>
                 @if ($errors->has('rol'))
-                    <div id="rol-error" class="error text-danger pl-3" style="display: block;">
+                    <div class="error text-danger pl-3" style="display: block;">
                         <strong>{{ $errors->first('rol') }}</strong>
                     </div>
-                @else
-                    <div id="rol-error" class="error text-danger pl-3" style="display: none;"></div>
                 @endif
             </div>
         </div>
     </div>
 
+    <!-- Selección de Usuario -->
+    <div class="row mb-4">
+        <div class="col-sm-12">
+            <div class="form-group">
+                <label for="usuario" class="font-weight-bold">Seleccionar Usuario:</label>
+                <select id="usuario" name="usuario" class="form-control border-primary shadow-sm">
+                    <option value="" disabled>Seleccione un usuario</option>
+                    @foreach($usuarios as $usuario)
+                        <option value="{{ $usuario->id }}" {{ $usuario->hasRole($rol->name) ? 'selected' : '' }}>
+                            {{ $usuario->name }}
+                        </option>
+                    @endforeach
+                </select>
+                @if ($errors->has('usuario'))
+                    <div class="error text-danger pl-3" style="display: block;">
+                        <strong>{{ $errors->first('usuario') }}</strong>
+                    </div>
+                @endif
+            </div>
+        </div>
+    </div>
+
+    <!-- Listado de Permisos -->
     <div class="row">
-        <div class="col-sm-12 col-xs-12">
+        <div class="col-sm-12">
             <div class="table-responsive-sm mt-5">
-                <table id="tablaRoles" class="table table-striped table-bordered table-condensed table-hover">
-                    <thead class="text-center">
-                        <tr>
-                            <th colspan="6">Listado de Permisos</th>
-                        </tr>
+                <table id="tablaRoles" class="table table-striped table-bordered table-hover">
+                    <thead class="text-center bg-light">
                         <tr>
                             <th>#</th>
-                            <th>Pantalla</th>
-                            <th>Ver</th>
-                            <th>Insertar</th>
-                            <th>Editar</th>
-                            <th>Eliminar</th>
+                            <th>Permiso</th>
+                            <th>Seleccionar</th>
                         </tr>
                     </thead>
                     <tbody class="text-center">
                         @php $i = 0; @endphp
-                        @foreach($objetos as $objeto)
+                        @foreach(['ver', 'insertar', 'editar', 'eliminar'] as $permiso)
                             <tr>
                                 <td>{{ ++$i }}</td>
-                                <td>{{ $objeto->objeto }}</td>
-                                <td><input type="checkbox" name="permisos[]" value="VER_{{ $objeto->objeto }}" {{ in_array("VER_{$objeto->objeto}", $role->permissions->pluck('name')->toArray()) ? 'checked' : '' }}></td>
-                                <td><input type="checkbox" name="permisos[]" value="INSERTAR_{{ $objeto->objeto }}" {{ in_array("INSERTAR_{$objeto->objeto}", $role->permissions->pluck('name')->toArray()) ? 'checked' : '' }}></td>
-                                <td><input type="checkbox" name="permisos[]" value="EDITAR_{{ $objeto->objeto }}" {{ in_array("EDITAR_{$objeto->objeto}", $role->permissions->pluck('name')->toArray()) ? 'checked' : '' }}></td>
-                                <td><input type="checkbox" name="permisos[]" value="ELIMINAR_{{ $objeto->objeto }}" {{ in_array("ELIMINAR_{$objeto->objeto}", $role->permissions->pluck('name')->toArray()) ? 'checked' : '' }}></td>
+                                <td>{{ ucfirst($permiso) }}</td>
+                                <td>
+                                    <input type="checkbox" id="permiso-{{ $permiso }}" name="permisos[]"
+                                           value="{{ $permiso }}"
+                                           {{ $rol->hasPermissionTo($permiso) ? 'checked' : '' }}>
+                                </td>
                             </tr>
                         @endforeach
                     </tbody>
@@ -71,79 +85,48 @@
         </div>
     </div>
 
-    <div class="row">
-        <div class="col-sm-6 col-xs-12 mb-2">
-            <a href="{{ route('roles.index') }}" class="btn btn-danger w-100">
+    <!-- Botones de Guardar y Cancelar -->
+    <div class="row mt-4">
+        <div class="col-sm-6 mb-2">
+            <a href="{{ route('roles.index') }}" class="btn btn-danger w-100 transition-btn">
                 Cancelar <i class="fa fa-times-circle ml-2"></i>
             </a>
         </div>
-        <div class="col-sm-6 col-xs-12 mb-2">
-            <button type="submit" class="btn btn-success w-100">
-                Actualizar <i class="fa fa-check-circle ml-2"></i>
+        <div class="col-sm-6 mb-2">
+            <button type="submit" class="btn btn-success w-100 transition-btn">
+                Guardar <i class="fa fa-check-circle ml-2"></i>
             </button>
         </div>
     </div>
 </form>
 
-@stop
-
-@section('css')
-@stop
-
-@section('js')
 <script>
-    let canInput = true;
+    document.getElementById('rol').addEventListener('change', function() {
+        var selectedRole = this.value;
 
-    document.getElementById('rol').addEventListener('input', function() {
-        const rol = this.value.trim();
-        const rolError = document.getElementById('rol-error');
+        // Obtener los checkboxes de permisos
+        var permisoVer = document.getElementById('permiso-ver');
+        var permisoInsertar = document.getElementById('permiso-insertar');
+        var permisoEditar = document.getElementById('permiso-editar');
+        var permisoEliminar = document.getElementById('permiso-eliminar');
 
-        // Limpiar mensaje de error previo
-        rolError.style.display = 'none';
+        // Resetear permisos y desbloquear todos
+        permisoVer.checked = permisoInsertar.checked = permisoEditar.checked = permisoEliminar.checked = false;
+        permisoVer.disabled = permisoInsertar.disabled = permisoEditar.disabled = permisoEliminar.disabled = false;
 
-        // Validación en tiempo real
-        if (!canInput) {
-            rolError.innerText = 'No puede ingresar caracteres especiales por 5 segundos.';
-            rolError.style.display = 'block';
-            this.value = rol.replace(/[^A-Za-z0-9_\- ]/g, ''); // Elimina caracteres especiales
-            return;
-        }
-
-        if (rol.length < 4 || rol.length > 255 || /[^A-Za-z0-9_\- ]/.test(rol)) {
-            rolError.innerText = 'El nombre del rol debe tener entre 4 y 255 caracteres y no debe contener caracteres especiales.';
-            rolError.style.display = 'block';
-
-            if (/[^A-Za-z0-9_\- ]/.test(rol)) {
-                canInput = false;
-                setTimeout(() => {
-                    canInput = true;
-                }, 5000); // Resetea la variable después de 5 segundos
-            }
-        }
-    });
-
-    document.getElementById('editRoleForm').addEventListener('submit', function(event) {
-        const rol = document.getElementById('rol').value.trim();
-        const rolError = document.getElementById('rol-error');
-
-        // Limpiar errores previos
-        rolError.style.display = 'none';
-
-        // Validación
-        let valid = true;
-
-        // Validación de nombre del rol
-        if (rol.length < 4 || rol.length > 255 || /[^A-Za-z0-9_\- ]/.test(rol)) {
-            rolError.innerText = 'El nombre del rol debe tener entre 4 y 255 caracteres y no debe contener caracteres especiales.';
-            rolError.style.display = 'block';
-            valid = false;
-        }
-
-        // Evitar el envío del formulario si no es válido
-        if (!valid) {
-            event.preventDefault(); // Evitar el envío del formulario
+        // Aplicar permisos según el rol seleccionado
+        if (selectedRole === 'admin') {
+            // Admin tiene todos los permisos
+            permisoVer.checked = permisoInsertar.checked = permisoEditar.checked = permisoEliminar.checked = true;
+        } else if (selectedRole === 'supervisor') {
+            // Supervisor solo tiene permiso de ver
+            permisoVer.checked = true;
+            permisoInsertar.disabled = permisoEditar.disabled = permisoEliminar.disabled = true;
+        } else if (selectedRole === 'usuario') {
+            // Usuario tiene permisos de ver e insertar
+            permisoVer.checked = permisoInsertar.checked = true;
+            permisoEditar.disabled = permisoEliminar.disabled = true;
         }
     });
 </script>
 @stop
-

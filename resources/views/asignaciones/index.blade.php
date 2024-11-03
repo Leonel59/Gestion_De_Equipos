@@ -13,9 +13,11 @@
         </div>
     @endif
 
-    <div class="mb-3">
-        <a href="{{ route('asignaciones.create') }}" class="btn btn-success">Agregar Asignación</a>
-    </div>
+    @can('insertar') <!-- Verifica si el usuario puede agregar asignaciones -->
+        <div class="mb-3">
+            <a href="{{ route('asignaciones.create') }}" class="btn btn-success">Agregar Asignación</a>
+        </div>
+    @endcan
 
     <div class="card">
         <div class="card-body">
@@ -28,7 +30,9 @@
                         <th>Detalle de Asignación</th>
                         <th>Fecha de Asignación</th>
                         <th>Fecha de Devolución</th>
-                        <th>Acciones</th>
+                        @canany(['editar', 'eliminar']) <!-- Verifica si el usuario puede editar o eliminar -->
+                            <th>Acciones</th>
+                        @endcanany
                     </tr>
                 </thead>
                 <tbody>
@@ -41,14 +45,20 @@
                             <td>{{ $asignacion->fecha_asignacion ? \Carbon\Carbon::parse($asignacion->fecha_asignacion)->format('d-m-Y') : 'N/A' }}</td>
                             <td>{{ $asignacion->fecha_devolucion ? \Carbon\Carbon::parse($asignacion->fecha_devolucion)->format('d-m-Y') : 'N/A' }}</td>
 
-                            <td>
-                                <a href="{{ route('asignaciones.edit', $asignacion->id_asignacion) }}" class="btn btn-warning">Editar</a>
-                                <form action="{{ route('asignaciones.destroy', $asignacion->id_asignacion) }}" method="POST" style="display:inline;">
-                                    @csrf
-                                    @method('DELETE')
-                                    <button type="submit" class="btn btn-danger" onclick="return confirm('¿Estás seguro de eliminar esta asignación?')">Eliminar</button>
-                                </form>
-                            </td>
+                            @canany(['editar', 'eliminar']) <!-- Verifica si el usuario puede editar o eliminar -->
+                                <td>
+                                    @can('editar') <!-- Verifica si el usuario puede editar -->
+                                        <a href="{{ route('asignaciones.edit', $asignacion->id_asignacion) }}" class="btn btn-warning">Editar</a>
+                                    @endcan
+                                    @can('eliminar') <!-- Verifica si el usuario puede eliminar -->
+                                        <form action="{{ route('asignaciones.destroy', $asignacion->id_asignacion) }}" method="POST" style="display:inline;">
+                                            @csrf
+                                            @method('DELETE')
+                                            <button type="submit" class="btn btn-danger" onclick="return confirm('¿Estás seguro de eliminar esta asignación?')">Eliminar</button>
+                                        </form>
+                                    @endcan
+                                </td>
+                            @endcanany
                         </tr>
                     @endforeach
                 </tbody>

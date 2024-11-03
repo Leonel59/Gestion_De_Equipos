@@ -13,11 +13,13 @@
             <div class="card-header">
                 <div class="d-flex justify-content-between">
                     <h3 class="card-title">Empleados Registrados</h3>
-                    <button class="btn btn-success" id="btnAgregarEmpleado">Agregar Empleado</button>
+                    @can('insertar') <!-- Verifica si el usuario puede insertar -->
+                        <button class="btn btn-success" id="btnAgregarEmpleado">Agregar Empleado</button>
+                    @endcan
                 </div>
             </div>
             <div class="card-body">
-                <table id="tablaObjetos" class="table table-bordered">
+                <table id="tablaEmpleados" class="table table-bordered">
                     <thead>
                         <tr>
                             <th>Código</th>
@@ -25,7 +27,9 @@
                             <th>Apellido</th>
                             <th>Correo</th>
                             <th>Cargo</th>
-                            <th>Acciones</th>
+                            @canany(['editar', 'eliminar']) <!-- Verifica si el usuario puede editar o eliminar -->
+                                <th>Acciones</th>
+                            @endcanany
                         </tr>
                     </thead>
                     <tbody>
@@ -36,15 +40,20 @@
                             <td>{{ $empleado->apellido_empleado }}</td>
                             <td>{{ $empleado->correo }}</td>
                             <td>{{ $empleado->cargo_empleado }}</td>
-                            <td>
-                                <a href="{{ route('empleados.edit', $empleado->id) }}" class="btn btn-warning btn-sm">Editar</a>
-                                
-                                <form action="{{ route('empleados.destroy', $empleado->id) }}" method="POST" style="display:inline;" onsubmit="return confirm('¿Estás seguro de que deseas eliminar este empleado?');">
-                                    @csrf
-                                    @method('DELETE')
-                                    <button type="submit" class="btn btn-danger btn-sm">Eliminar</button>
-                                </form>
-                            </td>
+                            @canany(['editar', 'eliminar']) <!-- Verifica si el usuario puede editar o eliminar -->
+                                <td>
+                                    @can('editar') <!-- Verifica si el usuario puede editar -->
+                                        <a href="{{ route('empleados.edit', $empleado->id) }}" class="btn btn-warning btn-sm">Editar</a>
+                                    @endcan
+                                    @can('eliminar') <!-- Verifica si el usuario puede eliminar -->
+                                        <form action="{{ route('empleados.destroy', $empleado->id) }}" method="POST" style="display:inline;" onsubmit="return confirm('¿Estás seguro de que deseas eliminar este empleado?');">
+                                            @csrf
+                                            @method('DELETE')
+                                            <button type="submit" class="btn btn-danger btn-sm">Eliminar</button>
+                                        </form>
+                                    @endcan
+                                </td>
+                            @endcanany
                         </tr>
                         @endforeach
                     </tbody>
@@ -140,7 +149,7 @@
 <script src="https://cdn.datatables.net/buttons/1.7.0/js/buttons.print.min.js"></script>
 <script>
     $(document).ready(function() {
-        $('#tablaObjetos').DataTable({
+        $('#tablaEmpleados').DataTable({
             "language": {
                 "url": "//cdn.datatables.net/plug-ins/1.10.15/i18n/Spanish.json"
             },
@@ -148,7 +157,7 @@
             buttons: [
                 {
                     extend: 'pdf',
-                    className: 'btn btn-danger glyphicon glyphicon-duplicate',
+                    className: 'btn btn-danger',
                     exportOptions: {
                         columns: ':not(:last-child)' // No incluir la columna de acciones
                     }
@@ -156,14 +165,14 @@
                 {
                     extend: 'print',
                     text: 'Imprimir',
-                    className: 'btn btn-secondary glyphicon glyphicon-duplicate',
+                    className: 'btn btn-secondary',
                     exportOptions: {
                         columns: ':not(:last-child)' // No incluir la columna de acciones
                     }
                 },
                 {
                     extend: 'excel',
-                    className: 'btn btn-success glyphicon glyphicon-duplicate',
+                    className: 'btn btn-success',
                     exportOptions: {
                         columns: ':not(:last-child)' // No incluir la columna de acciones
                     }
@@ -177,8 +186,3 @@
     });
 </script>
 @endsection
-
-
-
-
-

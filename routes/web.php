@@ -29,13 +29,19 @@ Route::get('/', function () {
    //     return view('dashboard');
   //  })->name('dashboard');
 
-    Route::middleware(['auth:sanctum','verified'])->group(function(){
+  Route::middleware(['auth', 'verified'])->group(function(){
 
     Route::get('/dashboard', function () {
         return view('dashboard');
     })->name('dashboard');
 
     Route::resource('usuarios',UsuarioController::class)->names('usuarios');
+    Route::get('/usuarios/create', [UsuarioController::class, 'create'])->name('usuarios.create');
+Route::post('/usuarios/store', [UsuarioController::class, 'store'])->name('usuarios.store');
+
+Route::get('roles/{id}/delete', [RoleController::class, 'delete'])->name('roles.delete');
+
+
     Route::resource('roles',RoleController::class)->names('roles');
     Route::resource('parametros',ParametroController::class)->names('parametros');
     Route::resource('objetos',ObjetosController::class)->names('objetos');

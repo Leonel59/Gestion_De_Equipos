@@ -13,9 +13,11 @@
         </div>
     @endif
 
-    <div class="mb-3">
-        <a href="{{ route('facturas.create') }}" class="btn btn-success">Agregar Factura</a>
-    </div>
+    @can('insertar') <!-- Verifica si el usuario puede insertar -->
+        <div class="mb-3">
+            <a href="{{ route('facturas.create') }}" class="btn btn-success">Agregar Factura</a>
+        </div>
+    @endcan
 
     <div class="card">
         <div class="card-body">
@@ -30,7 +32,9 @@
                         <th>Fecha de Facturación</th>
                         <th>Cantidad</th>
                         <th>Total</th>
-                        <th>Acciones</th>
+                        @canany(['editar', 'eliminar']) <!-- Verifica si el usuario puede editar o eliminar -->
+                            <th>Acciones</th>
+                        @endcanany
                     </tr>
                 </thead>
                 <tbody>
@@ -44,13 +48,24 @@
                             <td>{{ $factura->fecha_facturacion }}</td>
                             <td>{{ $factura->cantidad }}</td>
                             <td>{{ $factura->total }}</td>
-                            <td>
-                                <form action="{{ route('facturas.destroy', $factura->cod_factura) }}" method="POST" style="display:inline;">
-                                    @csrf
-                                    @method('DELETE')
-                                    <button type="submit" class="btn btn-danger" onclick="return confirm('¿Estás seguro de eliminar esta factura?')">Eliminar</button>
-                                </form>
-                            </td>
+                            @canany(['editar', 'eliminar']) <!-- Verifica si el usuario puede editar o eliminar -->
+                                <td>
+                                    @can('editar') <!-- Verifica si el usuario puede editar -->
+                                        <a href="{{ route('facturas.edit', $factura->cod_factura) }}" class="btn btn-warning btn-sm">
+                                            <i class="fa fa-edit"></i>
+                                        </a>
+                                    @endcan
+                                    @can('eliminar') <!-- Verifica si el usuario puede eliminar -->
+                                        <form action="{{ route('facturas.destroy', $factura->cod_factura) }}" method="POST" style="display:inline;">
+                                            @csrf
+                                            @method('DELETE')
+                                            <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('¿Estás seguro de eliminar esta factura?')">
+                                                <i class="fa fa-trash"></i>
+                                            </button>
+                                        </form>
+                                    @endcan
+                                </td>
+                            @endcanany
                         </tr>
                     @endforeach
                 </tbody>

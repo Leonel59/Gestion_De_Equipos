@@ -13,7 +13,9 @@
             <div class="card-header">
                 <div class="d-flex justify-content-between">
                     <h3 class="card-title">Equipos Registrados</h3>
-                    <a href="{{ route('equipos.create') }}" class="btn btn-success">Agregar Equipo</a>
+                    @can('insertar') <!-- Verifica si el usuario puede insertar -->
+                        <a href="{{ route('equipos.create') }}" class="btn btn-success">Agregar Equipo</a>
+                    @endcan
                 </div>
             </div>
             <div class="card-body">
@@ -44,7 +46,9 @@
                             <th>Fecha de Adquisición</th>
                             <th>Creado Por</th>
                             <th>Ver Propiedades</th>
-                            <th>Acciones</th>
+                            @canany(['editar', 'eliminar']) <!-- Verifica si el usuario puede editar o eliminar -->
+                                <th>Acciones</th>
+                            @endcanany
                         </tr>
                     </thead>
                     <tbody>
@@ -68,21 +72,27 @@
                             <td>
                                 <a href="{{ route('equipos.show', $equipo->cod_equipo) }}" class="btn btn-info btn-sm">Ver Propiedades</a>
                             </td>
-                            <td>
-                                <div class="d-flex">
-                                    <a href="{{ route('equipos.edit', $equipo->cod_equipo) }}" class="btn btn-warning btn-sm mr-1">
-                                        <i class="fas fa-edit"></i>
-                                    </a>
-                                    
-                                    <form action="{{ route('equipos.destroy', $equipo->cod_equipo) }}" method="POST" style="display:inline;" onsubmit="return confirm('¿Estás seguro de que deseas eliminar este equipo?');">
-                                        @csrf
-                                        @method('DELETE')
-                                        <button type="submit" class="btn btn-danger btn-sm">
-                                            <i class="fas fa-trash-alt"></i>
-                                        </button>
-                                    </form>
-                                </div>
-                            </td>
+                            @canany(['editar', 'eliminar']) <!-- Verifica si el usuario puede editar o eliminar -->
+                                <td>
+                                    <div class="d-flex">
+                                        @can('editar') <!-- Verifica si el usuario puede editar -->
+                                            <a href="{{ route('equipos.edit', $equipo->cod_equipo) }}" class="btn btn-warning btn-sm mr-1">
+                                                <i class="fas fa-edit"></i>
+                                            </a>
+                                        @endcan
+                                        
+                                        @can('eliminar') <!-- Verifica si el usuario puede eliminar -->
+                                            <form action="{{ route('equipos.destroy', $equipo->cod_equipo) }}" method="POST" style="display:inline;" onsubmit="return confirm('¿Estás seguro de que deseas eliminar este equipo?');">
+                                                @csrf
+                                                @method('DELETE')
+                                                <button type="submit" class="btn btn-danger btn-sm">
+                                                    <i class="fas fa-trash-alt"></i>
+                                                </button>
+                                            </form>
+                                        @endcan
+                                    </div>
+                                </td>
+                            @endcanany
                         </tr>
                         @endforeach
                     </tbody>
