@@ -3,186 +3,202 @@
 @section('title', 'Empleados')
 
 @section('content_header')
-    <h1>Lista de Empleados</h1>
+<h1 class="text-center text-primary font-weight-bold">Lista de Empleados</h1>
 @endsection
 
 @section('content')
-<div class="row">
-    <div class="col-md-12">
-        <div class="card">
-            <div class="card-header">
-                <div class="d-flex justify-content-between">
-                    <h3 class="card-title">Empleados Registrados</h3>
-                    @can('insertar') <!-- Verifica si el usuario puede insertar -->
-                        <button class="btn btn-success" id="btnAgregarEmpleado">Agregar Empleado</button>
-                    @endcan
-                </div>
-            </div>
-            <div class="card-body">
-                <table id="tablaEmpleados" class="table table-bordered">
-                    <thead>
-                        <tr>
-                            <th>Código</th>
-                            <th>Nombre</th>
-                            <th>Apellido</th>
-                            <th>Correo</th>
-                            <th>Cargo</th>
-                            @canany(['editar', 'eliminar']) <!-- Verifica si el usuario puede editar o eliminar -->
-                                <th>Acciones</th>
-                            @endcanany
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @foreach($empleados as $empleado)
-                        <tr>
-                            <td>{{ $empleado->cod_empleado }}</td>
-                            <td>{{ $empleado->nombre_empleado }}</td>
-                            <td>{{ $empleado->apellido_empleado }}</td>
-                            <td>{{ $empleado->correo }}</td>
-                            <td>{{ $empleado->cargo_empleado }}</td>
-                            @canany(['editar', 'eliminar']) <!-- Verifica si el usuario puede editar o eliminar -->
-                                <td>
-                                    @can('editar') <!-- Verifica si el usuario puede editar -->
-                                        <a href="{{ route('empleados.edit', $empleado->id) }}" class="btn btn-warning btn-sm">Editar</a>
-                                    @endcan
-                                    @can('eliminar') <!-- Verifica si el usuario puede eliminar -->
-                                        <form action="{{ route('empleados.destroy', $empleado->id) }}" method="POST" style="display:inline;" onsubmit="return confirm('¿Estás seguro de que deseas eliminar este empleado?');">
-                                            @csrf
-                                            @method('DELETE')
-                                            <button type="submit" class="btn btn-danger btn-sm">Eliminar</button>
-                                        </form>
-                                    @endcan
-                                </td>
-                            @endcanany
-                        </tr>
-                        @endforeach
-                    </tbody>
-                </table>
-            </div>
-        </div>
-    </div>
-</div>
-
-<!-- Modal para agregar empleado -->
-<div class="modal fade" id="modalAgregarEmpleado" tabindex="-1" role="dialog" aria-labelledby="modalLabel" aria-hidden="true">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header bg-dark text-white">
-                <h5 class="modal-title" id="modalLabel">Agregar Empleado</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div class="modal-body">
-                <form action="{{ route('empleados.store') }}" method="POST">
-                    @csrf
-                    <div class="form-group">
-                        <label for="cod_empleado">Código Empleado</label>
-                        <input type="text" class="form-control" id="cod_empleado" name="cod_empleado" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="correo">Correo Electrónico</label>
-                        <input type="email" class="form-control" id="correo" name="correo" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="telefono">Teléfono</label>
-                        <input type="text" class="form-control" id="telefono" name="telefono" pattern="\d*" title="Solo se permiten números">
-                    </div>
-                    <div class="form-group">
-                        <label for="direccion">Dirección</label>
-                        <input type="text" class="form-control" id="direccion" name="direccion">
-                    </div>
-                    <div class="form-group">
-                        <label for="sucursal">Sucursal</label>
-                        <input type="text" class="form-control" id="sucursal" name="sucursal">
-                    </div>
-                    <div class="form-group">
-                        <label for="area">Área</label>
-                        <input type="text" class="form-control" id="area" name="area">
-                    </div>
-                    <div class="form-group">
-                        <label for="dni_empleado">DNI Empleado</label>
-                        <input type="text" class="form-control" id="dni_empleado" name="dni_empleado" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="nombre_empleado">Nombre</label>
-                        <input type="text" class="form-control" id="nombre_empleado" name="nombre_empleado" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="apellido_empleado">Apellido</label>
-                        <input type="text" class="form-control" id="apellido_empleado" name="apellido_empleado" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="cargo_empleado">Cargo</label>
-                        <input type="text" class="form-control" id="cargo_empleado" name="cargo_empleado" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="fecha_contratacion">Fecha de Contratación</label>
-                        <input type="date" class="form-control" id="fecha_contratacion" name="fecha_contratacion" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="sexo_empleado">Sexo</label>
-                        <select class="form-control" id="sexo_empleado" name="sexo_empleado" required>
-                            <option value="">Seleccione</option>
-                            <option value="masculino">Masculino</option>
-                            <option value="femenino">Femenino</option>
-                            <option value="otro">Otro</option>
-                        </select>
-                    </div>
-                    <button type="submit" class="btn btn-primary">Agregar Empleado</button>
-                </form>
-            </div>
-        </div>
-    </div>
-</div>
-@endsection
-
-@section('js')
-<script src="https://cdn.datatables.net/1.10.23/js/jquery.dataTables.min.js"></script>
-<script src="https://cdn.datatables.net/1.10.23/js/dataTables.bootstrap5.min.js"></script>
-<script src="https://cdn.datatables.net/responsive/2.2.3/js/dataTables.responsive.min.js"></script>
-<script src="https://cdn.datatables.net/buttons/1.7.0/js/dataTables.buttons.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.3/jszip.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/pdfmake.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/vfs_fonts.js"></script>
-<script src="https://cdn.datatables.net/buttons/1.7.0/js/buttons.html5.min.js"></script>
-<script src="https://cdn.datatables.net/buttons/1.7.0/js/buttons.print.min.js"></script>
+@if($message = Session::get('mensaje'))
 <script>
-    $(document).ready(function() {
-        $('#tablaEmpleados').DataTable({
-            "language": {
-                "url": "//cdn.datatables.net/plug-ins/1.10.15/i18n/Spanish.json"
-            },
-            dom: 'Blfrtip',
-            buttons: [
-                {
-                    extend: 'pdf',
-                    className: 'btn btn-danger',
-                    exportOptions: {
-                        columns: ':not(:last-child)' // No incluir la columna de acciones
-                    }
-                }, 
-                {
-                    extend: 'print',
-                    text: 'Imprimir',
-                    className: 'btn btn-secondary',
-                    exportOptions: {
-                        columns: ':not(:last-child)' // No incluir la columna de acciones
-                    }
-                },
-                {
-                    extend: 'excel',
-                    className: 'btn btn-success',
-                    exportOptions: {
-                        columns: ':not(:last-child)' // No incluir la columna de acciones
-                    }
-                }
-            ]
-        });
-
-        $('#btnAgregarEmpleado').click(function(){
-            $('#modalAgregarEmpleado').modal('show');
+    document.addEventListener('DOMContentLoaded', function() {
+        Swal.fire({
+            title: "Éxito!",
+            text: "{{$message}}",
+            icon: "success",
+            confirmButtonText: 'Aceptar',
+            width: '300px', // Ajusta el tamaño de la ventana
+            customClass: {
+                popup: 'my-popup' // Clase personalizada para estilos
+            }
         });
     });
 </script>
+@endif
+
+<div class="card shadow-lg rounded-3">
+    <div class="card-header d-flex justify-content-start align-items-center bg-gradient-primary text-white rounded-top">
+        <h3 class="card-title mr-auto">Empleados Registrados</h3>
+        @can('insertar')
+            <a href="{{ route('empleados.create') }}" class="btn btn-light btn-lg">
+                <i class="fas fa-plus"></i> Agregar Empleado
+            </a>
+        @endcan
+    </div>
+    <div class="card-body">
+        <table id="tablaObjetos" class="table table-bordered text-center">
+            <thead class="thead-dark">
+                <tr>
+                    <th>Código</th>
+                    <th>Nombre</th>
+                    <th>Apellido</th>
+                    <th>Sucursal</th>
+                    <th>Área</th>
+                    <th>Correo Electrónico</th>
+                    <th>Teléfono</th>
+                    <th>Cargo</th>
+                    <th>Fecha de Contratación</th>
+                    <th>Estado</th>
+                    @canany(['editar', 'eliminar'])
+                        <th>Acciones</th>
+                    @endcanany
+                </tr>
+            </thead>
+            <tbody>
+                @foreach($empleados as $empleado)
+                <tr>
+                    <td>{{ $empleado->cod_empleados }}</td>
+                    <td>{{ $empleado->nombre_empleado }}</td>
+                    <td>{{ $empleado->apellido_empleado }}</td>
+
+                    <td>
+                        @if ($empleado->sucursales)
+                            {{ $empleado->sucursales->nombre_sucursal }}
+                        @else
+                            No tiene sucursal asignada
+                        @endif
+                    </td>
+
+                    <td>
+                        @if ($empleado->areas)
+                            {{ $empleado->areas->nombre_area }}
+                        @else
+                            No tiene área asignada
+                        @endif
+                    </td>
+
+                    <td>
+                        @forelse ($empleado->correos as $correo)
+                        <div>
+                            <strong>Personal:</strong> <br> {{ $correo->correo_personal }} <br>
+                        </div>
+
+                        @if($correo->correo_profesional)
+                        <div>
+                            <strong>Laboral:</strong> <br> {{ $correo->correo_profesional }} <br>
+                        </div>
+                        @endif
+                        @empty
+                        No tiene correos registrados
+                        @endforelse
+                    </td>
+
+                    <td>
+                        @forelse ($empleado->telefonos as $telefono)
+                        <div>
+                            <strong>Personal:</strong> <br> {{ $telefono->telefono_personal }}
+                        </div>
+                        @if($telefono->telefono_trabajo)
+                        <div>
+                            <strong>Laboral:</strong> <br> {{ $telefono->telefono_trabajo }}
+                        </div>
+                        @endif
+                        @empty
+                        No tiene teléfonos registrados
+                        @endforelse
+                    </td>
+
+                    <td>{{ $empleado->cargo_empleado }}</td>
+                    <td>{{ \Carbon\Carbon::parse($empleado->fecha_contratacion)->format('d/m/Y') }}</td>
+                    <td>{{ $empleado->estado_empleado }}</td>
+
+                    @canany(['editar', 'eliminar'])
+                    <td>
+                        @can('editar')
+                        <a href="{{ route('empleados.edit', $empleado->cod_empleados) }}" class="btn btn-warning btn-sm rounded-pill">
+                            <i class="fas fa-edit"></i> Editar
+                        </a>
+                        @endcan
+                        @can('eliminar')
+                        <form action="{{ route('empleados.destroy', $empleado->cod_empleados) }}" method="POST" style="display:inline;">
+                            @csrf
+                            @method('DELETE')
+                            <button type="submit" class="btn btn-danger btn-sm rounded-pill" onclick="return confirm('¿Estás seguro de eliminar este empleado?')">
+                                <i class="fas fa-trash"></i> Eliminar
+                            </button>
+                        </form>
+                        @endcan
+                    </td>
+                    @endcanany
+                </tr>
+                @endforeach
+            </tbody>
+        </table>
+    </div>
+</div>
+
+@stop
+
+@section('js')
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.all.min.js"></script>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
+<link rel="stylesheet" href="https://cdn.datatables.net/1.11.5/css/jquery.dataTables.min.css">
+
+<script>
+    $(document).ready(function() {
+        $('#tablaObjetos').DataTable({
+            searching: true,
+            ordering: false,
+            paging: true,
+            info: true,
+            language: {
+                paginate: {
+                    previous: "Anterior",
+                    next: "Siguiente"
+                },
+                info: "Mostrando _START_ a _END_ de _TOTAL_ registros",
+                infoEmpty: "Mostrando 0 a 0 de 0 registros",
+                infoFiltered: "(filtrado de _MAX_ registros totales)"
+            }
+        });
+
+        $(document).on('click', '.delete-empleado', function() {
+            var empleadoId = $(this).data('id');
+            var url = '{{ route("empleados.destroy", ":id") }}';
+            url = url.replace(':id', empleadoId);
+
+            Swal.fire({
+                title: '¿Estás seguro?',
+                text: "¡No podrás recuperar este empleado!",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#d33',
+                cancelButtonColor: '#3085d6',
+                confirmButtonText: 'Sí, eliminarlo!',
+                cancelButtonText: 'Cancelar'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    $.ajax({
+                        url: url,
+                        type: 'POST',
+                        data: {
+                            _method: 'DELETE',
+                            _token: '{{ csrf_token() }}'
+                        },
+                        success: function(response) {
+                            Swal.fire('Eliminado!', 'El empleado ha sido eliminado.', 'success');
+                            location.reload();
+                        },
+                        error: function(xhr) {
+                            Swal.fire('Error!', 'No se pudo eliminar el empleado.', 'error');
+                        }
+                    });
+                }
+            });
+        });
+    });
+</script>
+@endsection
+
+@section('css')
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
 @endsection

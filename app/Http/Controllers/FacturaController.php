@@ -32,41 +32,37 @@ class FacturaController extends Controller
      * Store a newly created resource in storage.
      */
     public function store(Request $request)
-    {
-        // Validación de los datos
-        $request->validate([
-            'id_proveedor' => 'required|exists:proveedor,id_proveedor',
-            'tipo_factura' => 'required|string|max:100',
-            'nombre_cliente' => 'required|string|max:100',
-            'rtn_cliente' => 'required|string|unique:factura,rtn_cliente|max:20',
-            'fecha_facturacion' => 'required|date',
-            'direccion_empresa' => 'nullable|string|max:100',
-            'cantidad' => 'required|integer|min:1',
-            'descripcion' => 'required|string|max:200',
-            'garantia' => 'nullable|string|max:15',
-            'precio_unitario' => 'required|numeric|min:0',
-            'impuesto' => 'required|numeric|min:0',
-            'total' => 'required|numeric|min:0',
-        ]);
+{
+    // Validación de los datos
+    $request->validate([
+        'id_proveedor' => 'required|exists:proveedor,id_proveedor',
+        'tipo_factura' => 'required|string|max:100',
+        'nombre_cliente' => 'required|string|max:100',
+        'rtn_cliente' => 'required|string|unique:factura,rtn_cliente|max:20',
+        'fecha_facturacion' => 'required|date',
+        'imagen' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048'  // Validación de imagen
+    ]);
 
-        // Llamada al procedimiento almacenado para insertar una factura
-        DB::statement('CALL sp_insert_factura(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)', [
-            $request->id_proveedor,
-            $request->tipo_factura,
-            $request->nombre_cliente,
-            $request->rtn_cliente,
-            $request->fecha_facturacion,
-            $request->direccion_empresa,
-            $request->cantidad,
-            $request->descripcion,
-            $request->garantia,
-            $request->precio_unitario,
-            $request->impuesto,
-            $request->total,
-        ]);
-
-        return redirect()->route('facturas.index')->with('success', 'Factura creada exitosamente.');
+    // Manejo de la carga de la imagen
+    $imagenPath = null;
+    if ($request->hasFile('imagen')) {
+        $imagenPath = $request->file('imagen')->store('imagenes_facturas', 'public');
     }
+
+    // Llamada al procedimiento almacenado con el nuevo parámetro de imagen
+    DB::statement('CALL sp_insert_factura(?, ?, ?, ?, ?, ?)', [
+        $request->id_proveedor,
+        $request->tipo_factura,
+        $request->nombre_cliente,
+        $request->rtn_cliente,
+        $request->fecha_facturacion,
+        $imagenPath, // Ruta de la imagen almacenada
+    ]);
+
+    return redirect()->route('facturas.index')->with('success', 'Factura creada exitosamente.');
+}
+
+
 
     /**
      * Remove the specified resource from storage.

@@ -1,7 +1,6 @@
 <?php
 
 namespace App\Models;
-
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -10,27 +9,46 @@ class Equipos extends Model
     use HasFactory;
 
     protected $fillable = [
-        'cod_equipo',
+        'estado_equipo',
         'tipo_equipo',
-        'numero_serie',
+        'cod_equipo',
         'marca_equipo',
         'modelo_equipo',
+        'numero_serie',
         'precio_equipo',
         'fecha_adquisicion',
-        'depreciacion_equipo',
-        'estado_equipo', // Agregar el campo estado_equipo aquí
-        'id_usuario',
+        'serie_cargador_comp',
+        'procesador_comp',
+        'memoria_comp',
+        'tarjeta_grafica_comp',
+        'tipodisco_comp',
+        'sistema_operativo_comp',
+        'tipo_impresora',
+        'resolucion_impresora',
+        'conectividad_impresora',
+        'capacidad',
+        'tamano',
+        'color'
     ];
 
-    // Especifica la clave primaria
-    protected $primaryKey = 'cod_equipo'; // Cambia 'cod_equipo' si tu clave primaria tiene otro nombre
-    public $incrementing = false; // Cambia a true si 'cod_equipo' es autoincrementable, false si no lo es
-    protected $keyType = 'string'; // Cambia a 'int' si tu clave primaria es un número
+    protected $table = 'equipos'; // Nombre de la tabla
+    protected $primaryKey = 'id_equipo'; // Clave primaria
+    public $timestamps = true; // Esto es opcional, según tu configuración
 
-    // Relación con el modelo User
-    public function usuario()
+    public function propiedades_computadoras()
     {
-        return $this->belongsTo(User::class, 'id_usuario'); // Asegúrate de que 'id_usuario' sea el campo correcto en tu base de datos
+        return $this->hasMany(PropiedadesComputadoras::class, 'id_equipo', 'id_equipo');
     }
 
+    public function propiedades_impresoras()
+    {
+        return $this->hasMany(PropiedadesImpresoras::class, 'id_equipo', 'id_equipo');
+    }
+
+    public function propiedades_otroequipo()
+    {
+        return $this->hasMany(PropiedadesOtroEquipo::class, 'id_equipo', 'id_equipo');
+    }
+
+   
 }

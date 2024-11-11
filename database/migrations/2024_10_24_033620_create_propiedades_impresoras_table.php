@@ -12,19 +12,15 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('propiedades_impresoras', function (Blueprint $table) {
-            $table->id('id_propiedad_impr'); // Clave primaria autoincremental
-            $table->unsignedBigInteger('id_equipo'); // Relación con la tabla equipos
-            $table->string('tipo_impresora', 50); // Tipo de impresora
-            $table->string('resolucion_impresora', 30)->nullable(); // Resolución de la impresora, opcional
-            $table->string('conectividad_impresora', 50)->nullable(); // Conectividad de la impresora, opcional
+            $table->id('id_propiedad_impr'); // Clave primaria ID_PROPIEDAD_IMPR
+            $table->unsignedBigInteger('id_equipo'); // Clave foránea ID_EQUIPO
+            $table->string('tipo_impresora', 50)->notNullable(); // TIPO_IMPRESORA como VARCHAR(50)
+            $table->string('resolucion_impresora', 30)->notNullable(); // RESOLUCION_IMPRESORA como VARCHAR(30)
+            $table->string('conectividad_impresora', 50)->notNullable(); // CONECTIVIDAD_IMPRESORA como VARCHAR(50)
+            $table->timestamps();
 
-            $table->timestamps(); // created_at y updated_at
-
-            // Definición de la clave foránea
-            $table->foreign('id_equipo')
-                ->references('id_equipo')
-                ->on('equipos')
-                ->onDelete('cascade'); // Eliminar en cascada si se elimina el equipo
+            // Definir la clave foránea hacia la tabla equipos
+            $table->foreign('id_equipo')->references('id_equipo')->on('equipos')->onDelete('cascade');
         });
     }
 

@@ -9,10 +9,17 @@ class PropiedadesOtroEquipo extends Model
 {
     use HasFactory;
 
+    protected $table = 'propiedades_otroequipo'; // Nombre de la tabla en la base de datos
     protected $fillable = [
         'id_equipo',
         'capacidad',
-        'tamaño',
+        'tamano',
         'color',
     ];
+ 
+    // Relación inversa con el modelo Equipos
+    public function equipo()
+    {
+        return $this->belongsTo(Equipos::class, 'id_equipo');
+    }
 }

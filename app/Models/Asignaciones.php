@@ -31,7 +31,7 @@ class Asignaciones extends Model
      */
     public function empleado()
     {
-        return $this->belongsTo(Empleado::class, 'cod_empleados', 'cod_empleado');
+        return $this->belongsTo(Empleado::class, 'cod_empleados', 'cod_empleados');
     }
 
 }

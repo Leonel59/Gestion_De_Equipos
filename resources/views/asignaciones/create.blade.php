@@ -23,7 +23,7 @@
                         <option value="">Seleccione un código de empleado</option>
                         @foreach($empleados as $empleado)
                             <option value="{{ $empleado->cod_empleado }}" {{ old('cod_empleados') == $empleado->cod_empleado ? 'selected' : '' }}>
-                                {{ $empleado->cod_empleado }} 
+                                {{ $empleado->cod_empleados }} 
                             </option>
                         @endforeach
                     </select>

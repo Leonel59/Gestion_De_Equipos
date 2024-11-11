@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('asignaciones', function (Blueprint $table) {
             $table->id('id_asignacion'); // Clave primaria con auto_increment
-            $table->string('cod_empleados'); // Relación con la tabla empleados
+            $table->unsignedBigInteger('cod_empleados'); // Relación con la tabla empleados
             $table->string('sucursal'); // Campo para la sucursal
             $table->string('detalle_asignacion', 100); // Campo con detalles de la asignación
             $table->dateTime('fecha_asignacion')->nullable(); // Fecha de asignación
@@ -21,16 +21,10 @@ return new class extends Migration
             $table->timestamps(); // created_at y updated_at
 
             // Definición de claves foráneas
-            $table->foreign('cod_empleados')
-                ->references('cod_empleado')
+            $table->foreign('cod_empleados') // No es necesario definir de nuevo la columna
+                ->references('cod_empleados')
                 ->on('empleados')
                 ->onDelete('cascade');
-
-            // Si sucursal es una clave foránea, descomentar y modificar la siguiente línea
-            // $table->foreign('sucursal')
-            //     ->references('id_sucursal') // Cambia esto según la clave primaria de la tabla de sucursales
-            //     ->on('sucursales') // Cambia esto según el nombre de tu tabla de sucursales
-            //     ->onDelete('cascade');
         });
     }
 

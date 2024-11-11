@@ -12,18 +12,19 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('equipos', function (Blueprint $table) {
-            $table->id('id_equipo');
-            $table->enum('estado_equipo', ['Activo', 'Inactivo', 'En Mantenimiento'])->default('Activo');
-            $table->string('cod_equipo', 10)->unique();
-            $table->enum('tipo_equipo', ['Computadora', 'Impresora', 'Otro'])->default('Otro');
-            $table->string('numero_serie', 30)->nullable();
-            $table->string('marca_equipo', 100)->nullable();
-            $table->string('modelo_equipo', 100)->nullable();
-            $table->decimal('precio_equipo', 10, 2)->nullable();
-            $table->dateTime('fecha_adquisicion')->nullable();
-            $table->decimal('depreciacion_equipo', 10, 2)->nullable();
-            $table->foreignId('id_usuario')->constrained('users'); // Agregado aquí
+            $table->id('id_equipo'); // Clave primaria ID_EQUIPO
+            $table->enum('estado_equipo',['Disponible', 'En Mantenimiento', 'No Disponible'] ); 
+            $table->enum('tipo_equipo', ['Computadora', 'Impresora', 'Otro'])->notNullable(); // TIPO_EQUIPO como ENUM
+            $table->string('cod_equipo', 10)->unique(); // COD_EQUIPO con UNIQUE
+            $table->string('marca_equipo', 100)->notNullable(); // MARCA_EQUIPO como VARCHAR(100), obligatorio
+            $table->string('modelo_equipo', 100)->notNullable(); // MODELO_EQUIPO como VARCHAR(100), obligatorio
+            $table->string('numero_serie', 30)->notNullable(); // NUMERO_SERIE como VARCHAR(30), obligatorio
+            $table->decimal('precio_equipo', 10, 2)->notNullable(); // PRECIO_EQUIPO como DECIMAL(10,2), obligatorio
+            $table->date('fecha_adquisicion')->notNullable(); // FECHA_ADQUISICION como DATE, obligatorio
+            $table->decimal('depreciacion_equipo', 10, 2)->notNullable(); // DEPRECIACION_EQUIPO como DECIMAL(10,2), obligatorio
             $table->timestamps();
+
+
         });
     }
 

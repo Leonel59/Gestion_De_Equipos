@@ -86,7 +86,7 @@
                     @auth
                         <a href="{{ url('/dashboard') }}">Dashboard</a>
                     @else
-                        <a href="{{ route('login') }}">Log in</a>
+                        <a href="{{ route('login') }}">Iniciar Sesión</a>
                         
                     @endauth
                 </div>
@@ -101,8 +101,5 @@
             <p>Administra y gestiona tus servicios de manera rápida y sencilla.</p>
         </main>
 
-        <footer>
-            Laravel v{{ Illuminate\Foundation\Application::VERSION }} (PHP v{{ PHP_VERSION }})
-        </footer>
     </body>
 </html>

@@ -7,6 +7,7 @@
 @section('title', 'Parametros')
 
 @section('content_header')
+@canany(['insertar','editar'])
     <h1 class="text-center">Parametros</h1>
     <hr class="bg-dark border-1 border-top border-dark">
 @stop
@@ -69,6 +70,15 @@
         </tbody>
     </table>
 </div>
+
+@else
+    <div class="card border-light shadow-sm mt-3 text-center">
+        <div class="card-body">
+            <i class="fas fa-lock text-danger mb-2" style="font-size: 2rem;"></i>
+            <p class="mb-0" style="font-size: 1.1rem; color: #9e9e9e;">No tienes permiso para ver esta información.</p>
+        </div>
+    </div>
+@endcanany
 
 @stop
 

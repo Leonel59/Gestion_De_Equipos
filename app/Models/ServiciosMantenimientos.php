@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
+
 class ServiciosMantenimientos extends Model
 {
     use HasFactory;
@@ -30,4 +31,11 @@ class ServiciosMantenimientos extends Model
         'modificado_por',
         'fecha_modificacion',
     ];
+
+    
+    public function equipo()
+    {
+        return $this->belongsTo(Equipos::class, 'id_equipo_mant', 'cod_equipo');
+    }
+    
 }

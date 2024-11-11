@@ -53,7 +53,7 @@ class AsignacionesController extends Controller
     public function update(Request $request, $id_asignacion)
     {
         $request->validate([
-            'cod_empleados' => 'required|exists:empleados,cod_empleado',
+            'cod_empleados' => 'required|exists:empleados,cod_empleados',
             'sucursal' => 'required|string|max:100',
             'detalle_asignacion' => 'required|string|max:100',
             'fecha_asignacion' => 'nullable|date',

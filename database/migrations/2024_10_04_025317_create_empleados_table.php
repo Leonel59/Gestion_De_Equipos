@@ -12,21 +12,15 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('empleados', function (Blueprint $table) {
-            $table->id();
-            $table->string('cod_empleado')->unique();
-            $table->string('correo')->unique();
-            $table->string('telefono')->nullable();
-            $table->string('direccion')->nullable();
-            $table->string('sucursal')->nullable();
-            $table->string('area')->nullable();
-            $table->string('dni_empleado')->unique();
-            $table->string('nombre_empleado');
-            $table->string('apellido_empleado');
-            $table->string('cargo_empleado');
+            $table->id('cod_empleados')->primary();
+            $table->unsignedInteger('id_sucursal')->nullable()->index('fk_empleados_sucursal_id_sucursal');
+            $table->unsignedInteger('id_area')->nullable()->index('fk_empleados_area_id_area');
+            $table->string('nombre_empleado', 100);
+            $table->string('apellido_empleado', 100);
+            $table->string('cargo_empleado', 30);
+            $table->enum('estado_empleado', ['Activo', 'Inactivo']);
             $table->date('fecha_contratacion');
-            $table->enum('sexo_empleado', ['masculino', 'femenino', 'otro']);
-            $table->timestamps();
-
+            $table->dateTime('fecha_modificacion')->nullable();
         });
     }
 

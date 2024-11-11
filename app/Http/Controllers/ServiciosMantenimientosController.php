@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Equipos;
+use App\Models\ServiciosMantenimientos;
 
 class ServiciosMantenimientosController extends Controller
 {
@@ -71,7 +72,7 @@ class ServiciosMantenimientosController extends Controller
      */
     public function edit(int $id_mant)
     {
-        $servicio = DB::table('servicios_mantenimientos')->where('id_mant', $id_mant)->first();
+        $servicio = ServiciosMantenimientos::with('equipo')->find($id_mant);
         $equipos = Equipos::all();
         return view('mantenimiento.edit', compact('servicio', 'equipos'));
     }

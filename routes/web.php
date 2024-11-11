@@ -7,11 +7,15 @@ use App\Http\Controllers\ObjetosController;
 use App\Http\Controllers\PreguntaController;
 use App\Http\Controllers\BitacoraController;
 use App\Http\Controllers\EmpleadoController;
+use App\Http\Controllers\SucursalController;
+use App\Http\Controllers\AreasController;
 use App\Http\Controllers\EquiposController;
 use App\Http\Controllers\ProveedorController;
 use App\Http\Controllers\FacturaController;
 use App\Http\Controllers\AsignacionesController;
+use App\Http\Controllers\ProductoMantenimientoController;
 use App\Http\Controllers\ServiciosMantenimientosController;
+use App\Http\Controllers\ReportController;
 use App\Http\Controllers\SecurityAnswerController;
 
 use Illuminate\Support\Facades\Route;
@@ -47,13 +51,18 @@ Route::get('roles/{id}/delete', [RoleController::class, 'delete'])->name('roles.
     Route::resource('objetos',ObjetosController::class)->names('objetos');
     Route::resource('preguntas',PreguntaController::class)->names('preguntas');
     Route::resource('empleados',EmpleadoController::class)->names('empleados');
-    Route::resource('equipos', EquiposController::class);
+    Route::resource('equipos',EquiposController::class)->names('equipos');
     Route::resource('servicios', ServiciosMantenimientosController::class);
     Route::resource('proveedores', ProveedorController::class);
     Route::resource('facturas', FacturaController::class);
     Route::resource('asignaciones', AsignacionesController::class);
+    Route::resource('productos', ProductoMantenimientoController::class);
 
+//Equipos rutas// 
 
+Route::get('/equipos/{id_equipo}/propiedades', [EquiposController::class, 'mostrarPropiedades'])->name('equipos.propiedades');
+Route::get('/verificar-codigo-equipo', [EquiposController::class, 'verificarCodigoEquipo']);
+Route::put('/equipos/{id}', [EquiposController::class, 'update'])->name('equipos.update');
 
 Route::get('bitacora', [BitacoraController::class, 'index'])->name('bitacora.index');
 Route::get('/bitacoras/download/{id}', [BitacoraController::class, 'download'])->name('bitacoras.download');
@@ -62,6 +71,16 @@ Route::get('/bitacoras/download/{id}', [BitacoraController::class, 'download'])-
 Route::get('security-answer', [SecurityAnswerController::class, 'showForm'])->name('security.answer.form');
 Route::post('security-answer', [SecurityAnswerController::class, 'checkAnswer'])->name('security.answer');
 
+//RUTAS DE REPORTES// 
+Route::get('/reportes', [ReportController::class, 'index'])->name('reportes.index');
+Route::get('/reportes/equipos', [ReportController::class, 'equiposReport'])->name('reportes.equipos');
+
+//Rutas Empleados//
+Route::put('/empleados/{id}', [EmpleadoController::class, 'update'])->name('empleados.update');
+
+Route::get('/formulario-sucursal', [SucursalController::class, 'mostrarFormulario']);
+Route::get('/formulario-area', [AreasController::class, 'mostrarFormulario']);
+Route::get('/get-areas/{id_sucursal}', [EmpleadoController::class, 'getAreasBySucursal'])->name('get.areas');
 });
 
 

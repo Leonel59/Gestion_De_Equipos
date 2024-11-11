@@ -7,6 +7,8 @@
     "require": {
         "php": "^8.2",
         "jeroennoten/laravel-adminlte": "^3.13",
+        "koolreport/core": "^6.6",
+        "koolreport/laravel": "^2.1",
         "laravel/framework": "^11.9",
         "laravel/jetstream": "^5.2",
         "laravel/sanctum": "^4.0",

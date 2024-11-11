@@ -62,13 +62,12 @@ return [
     | https://github.com/jeroennoten/Laravel-AdminLTE/wiki/Basic-Configuration
     |
     */
+'logo' => '<b style="background: linear-gradient(to right, green, yellow); -webkit-background-clip: text; color: transparent;">Recarga</b><span style="background: linear-gradient(to right, blue, lightblue); -webkit-background-clip: text; color: transparent;">Veloz</span>',
 
-    'logo' => '<b>Admin</b>LTE',
-    'logo_img' => 'vendor/adminlte/dist/img/AdminLTELogo.png',
-    'logo_img_class' => 'brand-image img-circle elevation-3',
-    'logo_img_xl' => null,
-    'logo_img_xl_class' => 'brand-image-xs',
-    'logo_img_alt' => 'Admin Logo',
+'logo_img' => 'logo/empresafondo.png',  // Ruta relativa desde 'public'
+'logo_img_class' => 'brand-image img-circle elevation-1 custom-logo',  // Clase personalizada adicional
+'logo_img_alt' => 'Logo de Recarga Veloz',
+
 
     /*
     |--------------------------------------------------------------------------
@@ -109,17 +108,18 @@ return [
     |
     */
 
-    'preloader' => [
-        'enabled' => true,
-        'mode' => 'fullscreen',
-        'img' => [
-            'path' => 'vendor/adminlte/dist/img/AdminLTELogo.png',
-            'alt' => 'AdminLTE Preloader Image',
-            'effect' => 'animation__shake',
-            'width' => 60,
-            'height' => 60,
-        ],
+   'preloader' => [
+    'enabled' => false,
+    'mode' => 'fullscreen',  // o 'cwrapper' si prefieres que no cubra toda la pantalla
+    'img' => [
+        'path' => 'logo/empresa.png',  // Ruta a la imagen de tu logo en la carpeta 'public'
+        'alt' => 'Logo de Recarga Veloz',
+        'effect' => 'animation__shake',  // Puedes experimentar con otros efectos si prefieres
+        'width' => 50,
+        'height' => 50,
     ],
+],
+
 
     /*
     |--------------------------------------------------------------------------
@@ -189,8 +189,7 @@ return [
     | https://github.com/jeroennoten/Laravel-AdminLTE/wiki/Layout-and-Styling-Configuration
     |
     */
-
-    'classes_body' => '',
+'classes_body' => '',
     'classes_brand' => '',
     'classes_brand_text' => '',
     'classes_content_wrapper' => '',
@@ -201,6 +200,8 @@ return [
     'classes_topnav' => 'navbar-white navbar-light',
     'classes_topnav_nav' => 'navbar-expand',
     'classes_topnav_container' => 'container',
+
+
 
     /*
     |--------------------------------------------------------------------------
@@ -380,6 +381,11 @@ return [
                 'icon' => 'fas fa-tools'
             ],
             [
+                'text' => 'Producto Mantenimiento',
+                'url' => '/productos', // Cambia esto a la URL correcta
+                'icon' => 'fas fa-cogs'
+            ],
+            [
                 'text' => 'Proveedores',
                 'url' => '/proveedores', // Cambia esto a la URL correcta
                 'icon' => 'fas fa-truck'
@@ -401,7 +407,7 @@ return [
         'text' => 'Reportes',
         'icon' => 'fas fa-chart-bar', 
         'icon_color' => 'cyan',
-        'url' => '#',
+        'url' => '/reportes',
     ],
 ],
 

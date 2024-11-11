@@ -11,20 +11,16 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('propiedades_otro_equipo', function (Blueprint $table) {
-            $table->id('id_propiedad_otro'); // Clave primaria autoincremental
-            $table->unsignedBigInteger('id_equipo'); // Relación con la tabla equipos
-            $table->decimal('capacidad', 10, 2); // Capacidad con dos decimales
-            $table->decimal('tamaño', 10, 2)->nullable(); // Tamaño con dos decimales, opcional
-            $table->string('color', 30)->nullable(); // Color del equipo, opcional
+        Schema::create('propiedades_otroequipo', function (Blueprint $table) {
+            $table->id('id_propiedad_otro'); // Clave primaria ID_PROPIEDAD_OTRO
+            $table->unsignedBigInteger('id_equipo'); // Clave foránea ID_EQUIPO
+            $table->string('capacidad', 50)->notNullable(); // CAPACIDAD como VARCHAR(50) 
+            $table->string('tamano', 50)->notNullable(); // TAMAÑO como VARCHAR(50)
+            $table->string('color', 30)->notNullable(); // COLOR como VARCHAR(30)
+            $table->timestamps();
 
-            $table->timestamps(); // created_at y updated_at
-
-            // Definición de la clave foránea
-            $table->foreign('id_equipo')
-                ->references('id_equipo')
-                ->on('equipos')
-                ->onDelete('cascade'); // Eliminar en cascada si se elimina el equipo
+            // Definir la clave foránea hacia la tabla equipos
+            $table->foreign('id_equipo')->references('id_equipo')->on('equipos')->onDelete('cascade');
         });
     }
 
@@ -33,6 +29,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('propiedades_otro_equipo');
+        Schema::dropIfExists('propiedades_otroequipo');
     }
 };
