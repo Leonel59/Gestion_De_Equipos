@@ -46,6 +46,8 @@ class ServiciosMantenimientosController extends Controller
             'fecha_creacion' => 'required|date',
             'modificado_por' => 'nullable|max:100',
             'fecha_modificacion' => 'nullable|date',
+
+        
         ]);
 
         $modificado_por = Auth::user()->name;
@@ -63,7 +65,7 @@ class ServiciosMantenimientosController extends Controller
             $modificado_por,
             $request->fecha_modificacion,
         ]);
-
+  
         return redirect()->route('servicios.index')->with('info', 'Servicio de mantenimiento creado con éxito.');
     }
 

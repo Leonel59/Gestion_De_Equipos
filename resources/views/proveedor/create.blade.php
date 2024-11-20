@@ -119,13 +119,23 @@
             restrictedFields.forEach(field => {
                 const inputField = document.getElementById(field);
 
-                inputField.addEventListener('input', function (event) {
+                inputField.addEventListener('input', function () {
                     // Permitir solo letras, números y espacios
                     this.value = this.value.replace(/[^a-zA-Z0-9\s]/g, '');
                 });
             });
+
+            // Validación para el campo de correo
+            const emailField = document.getElementById('email_proveedor');
+            if (emailField) {
+                emailField.addEventListener('input', function () {
+                    // Permitir solo caracteres válidos para correos (letras, números, @, y punto)
+                    this.value = this.value.replace(/[^a-zA-Z0-9@.]/g, '');
+                });
+            }
         });
     </script>
 @stop
+
 
     

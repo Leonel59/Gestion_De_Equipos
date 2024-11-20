@@ -37,7 +37,7 @@
         <table id="tablaObjetos" class="table table-bordered text-center">
             <thead class="thead-dark">
                 <tr>
-                    <th>Código</th>
+                    
                     <th>Nombre</th>
                     <th>Apellido</th>
                     <th>Sucursal</th>
@@ -55,7 +55,7 @@
             <tbody>
                 @foreach($empleados as $empleado)
                 <tr>
-                    <td>{{ $empleado->cod_empleados }}</td>
+                    
                     <td>{{ $empleado->nombre_empleado }}</td>
                     <td>{{ $empleado->apellido_empleado }}</td>
 

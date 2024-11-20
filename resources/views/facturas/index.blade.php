@@ -3,7 +3,7 @@
 @section('title', 'Facturas')
 
 @section('content_header')
-    <h1 class="text-center text-primary font-weight-bold">Lista de Facturas</h1>
+    <h1 class="text-center text-primary font-weight-bold">Lista de Facturas de Proveedores</h1>
     <hr class="bg-dark border-1 border-top border-dark">
 @stop
 

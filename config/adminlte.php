@@ -390,25 +390,32 @@ return [
                 'url' => '/proveedores', // Cambia esto a la URL correcta
                 'icon' => 'fas fa-truck'
             ],
-            [
-                'text' => 'Facturas',
-                'url' => '/facturas', // Cambia esto a la URL correcta
-                'icon' => 'fas fa-file-invoice'
-            ],
+            
         ],
+        
     ],
+
+    [
+        'text' => 'Facturas',
+        'url' => '/facturas', // Cambia esto a la URL correcta
+        'icon' => 'fas fa-file-invoice',
+        'icon_color' => 'blue'
+    ],
+
     [
         'text' => 'Asignaciones',
         'icon' => 'fas fa-tasks',
         'icon_color' => 'purple',
         'url' => '/asignaciones',
     ],
+
     [
         'text' => 'Reportes',
         'icon' => 'fas fa-chart-bar', 
         'icon_color' => 'cyan',
         'url' => '/reportes',
     ],
+
 ],
 
 

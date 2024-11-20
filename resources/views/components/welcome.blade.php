@@ -22,9 +22,8 @@
                 <i class="fas fa-users fa-2x text-indigo-600"></i>
                 <div class="ml-4">
                     <h2 class="text-lg font-semibold text-indigo-800">Empleados</h2>
-                    <p class="text-gray-600">100</p> <!-- Número de empleados -->
                     <div class="flex items-center">
-                        <a href="{{ url('/empleados') }}" class="text-indigo-600 hover:underline">More info</a>
+                        <a href="{{ url('/empleados') }}" class="text-indigo-600 hover:underline">IR A EMPLEADOS</a>
                         <i class="fas fa-info-circle ml-2 text-indigo-600"></i> <!-- Ícono de More Info -->
                     </div>
                 </div>
@@ -37,9 +36,9 @@
                 <i class="fas fa-file-alt fa-2x text-green-600"></i>
                 <div class="ml-4">
                     <h2 class="text-lg font-semibold text-green-800">Reportes</h2>
-                    <p class="text-gray-600">10</p> <!-- Número de reportes -->
+                    
                     <div class="flex items-center">
-                        <a href="#" class="text-green-600 hover:underline">More info</a>
+                        <a href="{{ url('/reportes') }}" class="text-green-600 hover:underline">IR A REPORTES</a>
                         <i class="fas fa-info-circle ml-2 text-green-600"></i> <!-- Ícono de More Info -->
                     </div>
                 </div>
@@ -52,9 +51,8 @@
                 <i class="fas fa-box-open fa-2x text-yellow-600"></i>
                 <div class="ml-4">
                     <h2 class="text-lg font-semibold text-yellow-800">Inventario</h2>
-                    <p class="text-gray-600">50</p> <!-- Número de artículos en inventario -->
                     <div class="flex items-center">
-                        <a href="#" class="text-yellow-600 hover:underline">More info</a>
+                        <a href="{{ url('/equipos') }}" class="text-yellow-600 hover:underline">IR A EQUIPOS</a>
                         <i class="fas fa-info-circle ml-2 text-yellow-600"></i> <!-- Ícono de More Info -->
                     </div>
                 </div>

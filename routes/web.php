@@ -17,12 +17,12 @@ use App\Http\Controllers\ProductoMantenimientoController;
 use App\Http\Controllers\ServiciosMantenimientosController;
 use App\Http\Controllers\ReportController;
 use App\Http\Controllers\SecurityAnswerController;
-
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
     return view('welcome');
 });
+
 
     //Route::middleware([
    //'auth:sanctum',
@@ -81,6 +81,8 @@ Route::put('/empleados/{id}', [EmpleadoController::class, 'update'])->name('empl
 Route::get('/formulario-sucursal', [SucursalController::class, 'mostrarFormulario']);
 Route::get('/formulario-area', [AreasController::class, 'mostrarFormulario']);
 Route::get('/get-areas/{id_sucursal}', [EmpleadoController::class, 'getAreasBySucursal'])->name('get.areas');
+
+
 });
 
 

@@ -160,19 +160,25 @@
         }
     });
 
-    // Validacion para ingresar telefonos
+    // Validación para ingresar teléfonos
     document.querySelectorAll('#telefono_personal, #telefono_trabajo').forEach(function(input) {
         input.addEventListener('input', function(event) {
             // Expresión regular: solo permite números, guiones y el signo +
             const regex = /^[0-9+\-\s]*$/;
 
-            // Si el valor del input no cumple con la expresión regular, lo corregimos
             if (!regex.test(event.target.value)) {
-                // Eliminamos el último carácter que no cumple con la validación
                 event.target.value = event.target.value.replace(/[^0-9+\-\s]/g, '');
             }
         });
     });
 
+    // Validaciones para correos electrónicos
+    document.querySelectorAll('#correo_personal, #correo_profesional').forEach(function(input) {
+        input.addEventListener('input', function(event) {
+            // Permitir solo letras, números, @ y el punto
+            const regex = /[^a-zA-Z0-9@.]/g;
+            this.value = this.value.replace(regex, '');
+        });
+    });
 </script>
 @endsection

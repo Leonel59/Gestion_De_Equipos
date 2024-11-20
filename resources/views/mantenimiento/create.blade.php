@@ -13,29 +13,38 @@
                 @csrf
 
                 <!-- Información del equipo -->
-                <h5>Información del Equipo</h5>
-                <div class="form-group">
-                    <label for="id_equipo_mant">Equipo de Mantenimiento</label>
-                    <select class="form-control rounded" id="id_equipo_mant" name="id_equipo_mant" required>
-                        <option value="">Seleccione un equipo</option>
-                        @foreach($equipos as $equipo)
-                            <option value="{{ $equipo->cod_equipo }}" 
-                                    data-estado="{{ $equipo->estado_equipo }}" 
-                                    {{ old('id_equipo_mant') == $equipo->cod_equipo ? 'selected' : '' }}>
-                                {{ $equipo->cod_equipo }} - {{ $equipo->tipo_equipo }}
-                            </option>
-                        @endforeach
-                    </select>
-                    @error('id_equipo_mant')
-                        <small class="text-danger">{{ $message }}</small>
-                    @enderror
-                </div>
+<h5>Información del Equipo</h5>
+<div class="form-group">
+    <label for="id_equipo_mant">Equipo de Mantenimiento</label>
+    <select class="form-control rounded" id="id_equipo_mant" name="id_equipo_mant" required>
+        <option value="">Seleccione un equipo</option>
+        @foreach($equipos as $equipo)
+            @if($equipo->estado_equipo == 'No Disponible')
+                <option value="{{ $equipo->cod_equipo }}" 
+                        data-estado="{{ $equipo->estado_equipo }}" 
+                        disabled>
+                    {{ $equipo->cod_equipo }} - {{ $equipo->tipo_equipo }} (No Disponible)
+                </option>
+            @else
+                <option value="{{ $equipo->cod_equipo }}" 
+                        data-estado="{{ $equipo->estado_equipo }}" 
+                        {{ old('id_equipo_mant') == $equipo->cod_equipo ? 'selected' : '' }}>
+                    {{ $equipo->cod_equipo }} - {{ $equipo->tipo_equipo }} ({{ $equipo->estado_equipo }})
+                </option>
+            @endif
+        @endforeach
+    </select>
+    @error('id_equipo_mant')
+        <small class="text-danger">{{ $message }}</small>
+    @enderror
+</div>
 
-                <!-- Estado del equipo -->
-                <div class="form-group" id="estado_equipo_container" style="display: none;">
-                    <label for="estado_equipo">Estado del Equipo</label>
-                    <input type="text" class="form-control rounded" id="estado_equipo" name="estado_equipo" readonly>
-                </div>
+<!-- Estado del equipo -->
+<div class="form-group" id="estado_equipo_container" style="display: none;">
+    <label for="estado_equipo">Estado del Equipo</label>
+    <input type="text" class="form-control rounded" id="estado_equipo" name="estado_equipo" readonly>
+</div>
+
 
                 <!-- Tipo de Mantenimiento -->
                 <h5>Tipo de Mantenimiento</h5>
@@ -175,6 +184,5 @@
     });
 </script>
 @endsection
-
 
 

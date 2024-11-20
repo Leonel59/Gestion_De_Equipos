@@ -90,11 +90,13 @@
 
 @section('js')
 <script>
+    // Función para alternar la visibilidad de la contraseña
     function togglePasswordVisibility(fieldId) {
         const field = document.querySelector(`input[name="${fieldId}"]`);
         field.type = field.type === 'password' ? 'text' : 'password';
     }
 
+    // Validación de coincidencia de contraseñas
     document.getElementById('userForm').addEventListener('submit', function(event) {
         const password = document.querySelector('input[name="password"]').value;
         const passwordConfirmation = document.querySelector('input[name="password_confirmation"]').value;
@@ -104,6 +106,12 @@
             alert('La contraseña y la confirmación de contraseña no coinciden.');
         }
     });
+
+    // Validación en tiempo real del campo de correo electrónico
+    document.querySelector('input[name="email"]').addEventListener('input', function(event) {
+        // Solo permite letras, números, @ y .
+        const regex = /[^a-zA-Z0-9@.]/g;
+        this.value = this.value.replace(regex, '');
+    });
 </script>
 @stop
-

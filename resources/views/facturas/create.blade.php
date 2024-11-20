@@ -3,7 +3,7 @@
 @section('title', 'Crear Factura')
 
 @section('content_header')
-    <h1 class="text-center text-primary font-weight-bold">Crear Nueva Factura</h1>
+    <h1 class="text-center text-primary font-weight-bold">Crear Nueva Factura de Proveedor</h1>
     <hr class="bg-dark border-1 border-top border-dark">
 @stop
 
