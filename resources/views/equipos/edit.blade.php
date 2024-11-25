@@ -31,7 +31,8 @@
                                 <select class="form-control" id="estado_equipo" name="estado_equipo" required>
                                     <option value="Disponible" {{ $equipo->estado_equipo == 'Disponible' ? 'selected' : '' }}>Disponible</option>
                                     <option value="En Mantenimiento" {{ $equipo->estado_equipo == 'En Mantenimiento' ? 'selected' : '' }}>En Mantenimiento</option>
-                                    <option value="No Disponible" {{ $equipo->estado_equipo == 'No Disponible' ? 'selected' : '' }}>No Disponible</option>
+                                    <option value="Comodin" {{ $equipo->estado_equipo == 'Comodin' ? 'selected' : '' }}>Comodin</option>
+                                    <option value="Asignado" {{ $equipo->estado_equipo == 'Asignado' ? 'selected' : '' }}>Asignado</option>
                                 </select>
                             </div>
                             <div class="form-group">

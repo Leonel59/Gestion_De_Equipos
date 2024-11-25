@@ -62,11 +62,44 @@ return [
     | https://github.com/jeroennoten/Laravel-AdminLTE/wiki/Basic-Configuration
     |
     */
-'logo' => '<b style="background: linear-gradient(to right, green, yellow); -webkit-background-clip: text; color: transparent;">Recarga</b><span style="background: linear-gradient(to right, blue, lightblue); -webkit-background-clip: text; color: transparent;">Veloz</span>',
+'logo' => '
+    <div style="
+        display: inline-block; /* Asegura que el bloque sea adecuado */
+        animation: fade-in-out 3s infinite; /* Animación de desvanecimiento */
+    ">
+        <b style="
+            background: linear-gradient(to right, green, yellow);
+            -webkit-background-clip: text;
+            color: transparent;
+            font-size: 1.2rem; /* Tamaño más pequeño del texto */
+        ">Recarga</b>
+        <span style="
+            background: linear-gradient(to right, blue, lightblue);
+            -webkit-background-clip: text;
+            color: transparent;
+            font-size: 1.2rem; /* Tamaño más pequeño del texto */
+        ">Veloz</span>
+    </div>
+    <style>
+        @keyframes fade-in-out {
+            0% {
+                opacity: 0; /* Completamente invisible */
+            }
+            50% {
+                opacity: 1; /* Completamente visible */
+            }
+            100% {
+                opacity: 0; /* Vuelve a desaparecer */
+            }
+        }
+    </style>
+',
 
 'logo_img' => 'logo/empresafondo.png',  // Ruta relativa desde 'public'
-'logo_img_class' => 'brand-image img-circle elevation-1 custom-logo',  // Clase personalizada adicional
+'logo_img_class' => 'brand-image img-circle elevation-1',
+'logo_img_style' => 'object-fit: cover; width: 50px; height: 50px;', // Asegúrate de que sea cuadrado
 'logo_img_alt' => 'Logo de Recarga Veloz',
+
 
 
     /*
@@ -309,7 +342,7 @@ return [
     // Sidebar items:
     [
         'type' => 'sidebar-menu-search',
-        'text' => 'search',
+        'text' => 'Buscar',
     ],
     [
         'text' => 'blog',
@@ -320,34 +353,24 @@ return [
     ['header' => 'account_settings'],
      
     [
-        'text' => 'Seguridad',
+        'text' => 'SEGURIDAD',
         'icon' => 'fas fa-fw fa-lock',
         'submenu' => [
             
             [
-                'text' => 'Bitacora',
+                'text' => 'BITACORA',
                 'url' => '/bitacora',
                 'icon' => 'fas fa-solid fa-clipboard-list'
                 
             ],
+ 
             [
-                'text' => 'Objetos',
-                'url' => '/objetos',
-                'icon' => 'fas fa-desktop'
-            ],
-            [
-                'text' => 'Parametros',
-                'url' => '/parametros',
-                'icon' => 'fas fa-key fa-fw'
-            ],
-            
-            [
-                'text' => 'Roles',
+                'text' => 'ROLES',
                 'url' => '/roles',
                 'icon' => 'fas fa-users-cog fa-fw'
             ],
             [
-                'text' => 'Usuarios',
+                'text' => 'USUARIOS',
                 'url' => '/usuarios',
                 'icon' => 'fas fa-users fa-fw',
                 
@@ -356,37 +379,59 @@ return [
         ],
     ],
     
-    ['header' => 'Secciones'],
+    ['header' => 'SECCIONES'],
 
     [
-        'text' => 'Empleados',
+        'text' => 'EMPLEADOS',
         'icon' => 'fas fa-user-tie',
         'icon_color' => 'green',
         'url' => '/empleados',
     ],
     [
-        'text' => 'Equipos',
+        'text' => 'EQUIPOS',
         'icon' => 'fas fa-desktop',
         'icon_color' => 'yellow',
         'url' => '/equipos',
     ],
+
     [
-        'text' => 'Mantenimientos',
+        'text' => 'ASIGNACION',
+        'icon' => 'fas fa-tasks',
+        'icon_color' => 'purple',
+        'submenu' => [
+
+            [
+                'text' => 'SUMINISTROS',
+                'url' => '/suministros', // Cambia esto a la URL correcta
+                'icon' => 'fas fa-cogs'
+            ],
+
+            [
+                'text' => 'ASIGNACIONES',
+                'url' => '/asignaciones', // Cambia esto a la URL correcta
+                'icon' => 'fas fa-clipboard-list'
+            ],
+
+    ],
+],
+
+    [
+        'text' => 'MANTENIMIENTOS',
         'icon' => 'fas fa-wrench',
         'icon_color' => 'orange',
         'submenu' => [
             [
-                'text' => 'Servicios Mantenimiento',
+                'text' => 'SERVICIOS MANTENIMIENTO',
                 'url' => '/servicios', // Cambia esto a la URL correcta
                 'icon' => 'fas fa-tools'
             ],
             [
-                'text' => 'Producto Mantenimiento',
+                'text' => 'PRODUCTO MANTENIMIENTO',
                 'url' => '/productos', // Cambia esto a la URL correcta
                 'icon' => 'fas fa-cogs'
             ],
             [
-                'text' => 'Proveedores',
+                'text' => 'PROVEEDORES',
                 'url' => '/proveedores', // Cambia esto a la URL correcta
                 'icon' => 'fas fa-truck'
             ],
@@ -396,21 +441,14 @@ return [
     ],
 
     [
-        'text' => 'Facturas',
+        'text' => 'FACTURAS',
         'url' => '/facturas', // Cambia esto a la URL correcta
         'icon' => 'fas fa-file-invoice',
         'icon_color' => 'blue'
     ],
 
     [
-        'text' => 'Asignaciones',
-        'icon' => 'fas fa-tasks',
-        'icon_color' => 'purple',
-        'url' => '/asignaciones',
-    ],
-
-    [
-        'text' => 'Reportes',
+        'text' => 'REPORTES',
         'icon' => 'fas fa-chart-bar', 
         'icon_color' => 'cyan',
         'url' => '/reportes',

@@ -113,7 +113,7 @@
                     <div class="input-group">
                         <select class="form-control" id="moneda" name="moneda" required>
                             <option value="HNL" {{ old('moneda') == 'HNL' ? 'selected' : '' }}>Lempiras (HNL)</option>
-                            <option value="USD" {{ old('moneda') == 'USD' ? 'selected' : '' }}>Dólares (USD)</option>
+                
                         </select>
                         <input type="number" class="form-control rounded" id="costo_mantenimiento" name="costo_mantenimiento" step="0.01" value="{{ old('costo_mantenimiento') }}" placeholder="Ejemplo: 100.00" required>
                     </div>

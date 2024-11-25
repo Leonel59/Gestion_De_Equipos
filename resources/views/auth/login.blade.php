@@ -49,6 +49,18 @@
     </x-authentication-card>
 
     <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            // Restricción de caracteres especiales en el campo 'Usuario'
+            const usernameField = document.getElementById('username');
+            
+            usernameField.addEventListener('input', function (event) {
+                // Permitir solo letras, números y espacios
+                this.value = this.value.replace(/[^a-zA-Z0-9\s]/g, '');
+            });
+        });
+    </script>
+
+    <script>
         const togglePassword = document.getElementById('togglePassword');
         const passwordInput = document.getElementById('password');
         const toggleText = document.getElementById('toggleText');
@@ -166,5 +178,6 @@
         }
     </style>
 </x-guest-layout>
+
 
 

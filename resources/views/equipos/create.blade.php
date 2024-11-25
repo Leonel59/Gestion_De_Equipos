@@ -30,7 +30,8 @@
                             <option value="">Seleccione</option>
                             <option value="Disponible">Disponible</option>
                             <option value="En Mantenimiento">En Mantenimiento</option>
-                            <option value="No Disponible">No Disponible</option>
+                            <option value="Comodin">Comodin</option>
+                            <option value="NAsignado">Asignado</option>
                         </select>
                     </div>
 

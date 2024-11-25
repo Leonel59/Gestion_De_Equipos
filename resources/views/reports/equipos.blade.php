@@ -76,7 +76,8 @@
                                             <span class="badge 
                                                 @if($equipo['estado_equipo'] == 'Disponible') badge-success 
                                                 @elseif($equipo['estado_equipo'] == 'En Mantenimiento') badge-warning 
-                                                @elseif($equipo['estado_equipo'] == 'No Disponible') badge-danger 
+                                                @elseif($equipo['estado_equipo'] == 'Comodin') badge-primary
+                                                @elseif($equipo['estado_equipo'] == 'Asignado') badge-info
                                                 @endif">
                                                 {{ $equipo['estado_equipo'] }}
                                             </span>
@@ -171,14 +172,14 @@
             document.getElementById('download-pdf').style.display = 'none';
 
             const options = {
-                margin:       0,
+                margin:       0,  // Ajuste de márgenes
                 filename:     'reporte_equipos.pdf',
-                image:        { type: 'jpeg', quality: 0.98 },
-                html2canvas:  { dpi: 192, letterRendering: true },
-                jsPDF:        { unit: 'in', format: 'letter', orientation: 'portrait' }
+                image:        { type: 'jpeg', quality: 1.0 },  // Mejor calidad de imagen
+                html2canvas:  { dpi: 300, letterRendering: true, scale: 2 },  // Mayor escala
+                jsPDF:        { unit: 'in', format: 'letter', orientation: 'portrait', autoFirstPage: true }
             };
 
-            const element = document.querySelector('.content');  // Para seleccionar solo el header
+            const element = document.querySelector('.content');  // Selecciona la sección que se quiere exportar a PDF
 
             html2pdf().from(element).set(options).save().then(function() {
                 document.getElementById('download-pdf').style.display = 'block';
@@ -186,3 +187,4 @@
         });
     </script>
 @stop
+

@@ -9,9 +9,9 @@
 @section('content')
 <div class="card">
     <div class="card-body">
-         <!-- Permiso general para acceder a la bitácora -->
-         @canany(['insertar','editar'])
-        <table class="table table-bordered table-striped">
+        <!-- Permiso general para acceder a la bitácora -->
+        @canany(['insertar','editar'])
+        <table class="table table-bordered table-striped table-sm">
             <thead>
                 <tr>
                     <th>Fecha</th>
@@ -114,7 +114,14 @@
                 @endforeach
             </tbody>
         </table>
-    
+        @else
+        <div class="card border-light shadow-sm mt-3 text-center">
+            <div class="card-body">
+                <i class="fas fa-lock text-danger mb-2" style="font-size: 2rem;"></i>
+                <p class="mb-0" style="font-size: 1.1rem; color: #9e9e9e;">No tienes permiso para ver esta información.</p>
+            </div>
+        </div>
+        @endcanany
     </div>
 </div>
 
@@ -145,50 +152,46 @@
     </nav>
 </div>
 
-@else
-    <div class="card border-light shadow-sm mt-3 text-center">
-        <div class="card-body">
-            <i class="fas fa-lock text-danger mb-2" style="font-size: 2rem;"></i>
-            <p class="mb-0" style="font-size: 1.1rem; color: #9e9e9e;">No tienes permiso para ver esta información.</p>
-        </div>
-    </div>
-@endcanany
-
-
 @stop
 
 @section('css')
 <style>
+    /* Aseguramos que la tabla sea más compacta */
+    .table-sm th, .table-sm td {
+        padding: 6px; /* Espaciado más pequeño */
+        font-size: 0.9rem; /* Tamaño de fuente más pequeño */
+    }
+
     .minimal-pagination {
         list-style: none;
         padding: 0;
         margin: 0;
+        font-size: 0.9rem; /* Tamaño de fuente reducido para paginación */
     }
-    
+
     .minimal-pagination li {
-        margin: 0 5px; /* Espaciado entre los elementos */
+        margin: 0 5px;
     }
-    
+
     .minimal-pagination a, .minimal-pagination span {
-        display: inline-block;
-        padding: 8px 12px; /* Espaciado interno */
-        color: #007bff; /* Color de texto */
-        text-decoration: none; /* Sin subrayado */
-        border-radius: 4px; /* Bordes redondeados */
-        transition: background-color 0.3s; /* Efecto de transición */
+        padding: 6px 10px; /* Reducir el tamaño de los botones de paginación */
+        color: #007bff;
+        text-decoration: none;
+        border-radius: 4px;
+        transition: background-color 0.3s;
     }
 
     .minimal-pagination li.active span {
-        background-color: #007bff; /* Fondo de la página activa */
-        color: white; /* Color del texto en la página activa */
+        background-color: #007bff;
+        color: white;
     }
 
     .minimal-pagination a:hover {
-        background-color: rgba(0, 123, 255, 0.1); /* Fondo en hover */
+        background-color: rgba(0, 123, 255, 0.1);
     }
 
     .minimal-pagination li.disabled span {
-        color: #ccc; /* Color de texto deshabilitado */
+        color: #ccc;
     }
 </style>
 @stop

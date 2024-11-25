@@ -16,7 +16,7 @@ return new class extends Migration
             DROP PROCEDURE IF EXISTS sp_delete_equipos;
 
 CREATE PROCEDURE sp_insert_equipos(
-    IN p_estado_equipo ENUM("Disponible", "En Mantenimiento", "No Disponible"),
+    IN p_estado_equipo ENUM("Disponible", "En Mantenimiento", "Comodin", "Asignado"),
     IN p_tipo_equipo ENUM("Computadora", "Impresora", "Otro"),
     IN p_cod_equipo VARCHAR(10),
     IN p_marca_equipo VARCHAR(100),
@@ -45,9 +45,9 @@ BEGIN
     DECLARE v_vida_util INT DEFAULT 5;
 
     -- Validaciones del estado
-    IF p_estado_equipo NOT IN ("Disponible", "En Mantenimiento", "No Disponible") THEN
+    IF p_estado_equipo NOT IN ("Disponible", "En Mantenimiento", "Comodin", "Asignado") THEN
         SIGNAL SQLSTATE "45000" 
-        SET MESSAGE_TEXT = "Error: El estado de equipo debe ser Disponible, En Mantenimiento y No Disponible.";
+        SET MESSAGE_TEXT = "Error: El estado de equipo debe ser Disponible, En Mantenimiento, Comodin y Asignado.";
     END IF;
 
     -- Validaciones
@@ -118,7 +118,7 @@ END;
 
             CREATE PROCEDURE sp_update_equipos(
                 IN p_id_equipo INT,
-                IN p_estado_equipo ENUM("Disponible", "En Mantenimiento", "No Disponible"),
+                IN p_estado_equipo ENUM("Disponible", "En Mantenimiento", "Comodin", "Asignado" ),
                 IN p_tipo_equipo ENUM("Computadora", "Impresora", "Otro"),
                 IN p_cod_equipo VARCHAR(10),
                 IN p_marca_equipo VARCHAR(100),

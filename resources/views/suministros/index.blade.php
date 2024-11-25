@@ -1,18 +1,18 @@
 @extends('adminlte::page')
 
-@section('title', 'Asignaciones')
+@section('title', 'Suministros')
 
 @section('content_header')
-    <h1 class="text-center text-primary font-weight-bold">Lista de Asignaciones</h1>
+    <h1 class="text-center text-primary font-weight-bold">Lista de Suministros</h1>
 @stop
 
 @section('content')
     <div class="card shadow-lg rounded-3">
         <div class="card-header d-flex justify-content-start align-items-center bg-gradient-primary text-white rounded-top">
-            <h3 class="card-title mr-auto">Asignaciones Registradas</h3>
+            <h3 class="card-title mr-auto">Suministros Registrados</h3>
             @can('insertar')
-                <a href="{{ route('asignaciones.create') }}" class="btn btn-light btn-lg">
-                    <i class="fas fa-plus"></i> Agregar Asignación
+                <a href="{{ route('suministros.create') }}" class="btn btn-light btn-lg">
+                    <i class="fas fa-plus"></i> Agregar Suministro
                 </a>
             @endcan
         </div>
@@ -26,58 +26,40 @@
                 </div>
             @endif
 
-            <table id="asignacionesTable" class="table table-striped table-hover rounded shadow-sm">
+            <table id="suministrosTable" class="table table-striped table-hover rounded shadow-sm">
                 <thead class="thead-dark">
                     <tr class="text-center">
-                        <th>Equipo</th>
-                        <th>Suministros</th>
-                        <th>Empleado</th>
-                        <th>Sucursal</th>
-                        <th>Área</th>
-                        <th>Detalle de Asignación</th>
-                        <th>Fecha de Asignación</th>
-                        <th>Fecha de Devolución</th>
+                        <th>Proveedor</th>
+                        <th>Nombre del Suministro</th>
+                        <th>Descripción</th>
+                        <th>Fecha de Adquisición</th>
+                        <th>Cantidad</th>
+                        <th>Costo Unitario</th>
+                        <th>Costo Total</th>
                         @canany(['editar', 'eliminar'])
                             <th>Acciones</th>
                         @endcanany
                     </tr>
                 </thead>
                 <tbody>
-                    @foreach ($asignaciones as $asignacion)
+                    @foreach ($suministros as $suministro)
                         <tr class="text-center">
-                            <td>{{ $asignacion->equipos->cod_equipo }} - {{ $asignacion->equipos->tipo_equipo }}</td>
-                            <td>
-                                @if ($asignacion->suministros->isNotEmpty())
-                                    <ul>
-                                        @foreach ($asignacion->suministros as $suministro)
-                                            <li>{{ $suministro->nombre_suministro }}</li>
-                                        @endforeach
-                                    </ul>
-                                @else
-                                    No se asignaron suministros
-                                @endif
-                            </td>
-                            <td>
-                                @if ($asignacion->equipos->tipo_equipo === 'Impresora')
-                                    N/A
-                                @else
-                                    {{ $asignacion->empleado ? $asignacion->empleado->nombre_empleado . ' ' . $asignacion->empleado->apellido_empleado : 'Empleado no asignado' }}
-                                @endif
-                            </td>
-                            <td>{{ $asignacion->sucursales ? $asignacion->sucursales->nombre_sucursal : 'Sucursal no asignada' }}</td>
-                            <td>{{ $asignacion->areas ? $asignacion->areas->nombre_area : 'Área no asignada' }}</td>
-                            <td>{{ $asignacion->detalle_asignacion }}</td>
-                            <td>{{ $asignacion->fecha_asignacion ? \Carbon\Carbon::parse($asignacion->fecha_asignacion)->format('d-m-Y') : 'N/A' }}</td>
-                            <td>{{ $asignacion->fecha_devolucion ? \Carbon\Carbon::parse($asignacion->fecha_devolucion)->format('d-m-Y') : 'N/A' }}</td>
+                            <td>{{ $suministro->proveedor->nombre_proveedor ?? 'Sin Proveedor' }}</td>
+                            <td>{{ $suministro->nombre_suministro }}</td>
+                            <td>{{ $suministro->descripcion_suministro }}</td>
+                            <td>{{ $suministro->fecha_adquisicion ? \Carbon\Carbon::parse($suministro->fecha_adquisicion)->format('d-m-Y') : 'N/A' }}</td>
+                            <td>{{ $suministro->cantidad_suministro }}</td>
+                            <td>L.{{ number_format($suministro->costo_unitario, 2) }}</td>
+                            <td>L.{{ number_format($suministro->costo_total, 2) }}</td>
                             @canany(['editar', 'eliminar'])
                                 <td>
                                     @can('editar')
-                                        <a href="{{ route('asignaciones.edit', $asignacion->id_asignacion) }}" class="btn btn-warning btn-sm rounded-pill">
+                                        <a href="{{ route('suministros.edit', $suministro->id_suministro) }}" class="btn btn-warning btn-sm rounded-pill">
                                             <i class="fas fa-edit"></i> Editar
                                         </a>
                                     @endcan
                                     @can('eliminar')
-                                        <button type="button" class="btn btn-danger btn-sm rounded-pill delete-asignacion" data-id="{{ $asignacion->id_asignacion }}">
+                                        <button type="button" class="btn btn-danger btn-sm rounded-pill delete-suministro" data-id="{{ $suministro->id_suministro }}">
                                             <i class="fas fa-trash"></i> Eliminar
                                         </button>
                                     @endcan
@@ -111,7 +93,7 @@
             border-radius: 10px;
         }
         .dataTables_paginate {
-            float: none;
+            float: none; /* Centra los botones de paginación */
             text-align: center;
         }
     </style>
@@ -122,7 +104,7 @@
     <script src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
     <script>
         $(document).ready(function() {
-            $('#asignacionesTable').DataTable({
+            $('#suministrosTable').DataTable({
                 searching: true,
                 ordering: false,
                 paging: true,
@@ -138,13 +120,13 @@
                 }
             });
 
-            $(document).on('click', '.delete-asignacion', function() {
-                var asignacionId = $(this).data('id');
-                var url = '{{ route("asignaciones.destroy", ":id") }}'.replace(':id', asignacionId);
+            $(document).on('click', '.delete-suministro', function() {
+                var suministroId = $(this).data('id');
+                var url = '{{ route("suministros.destroy", ":id") }}'.replace(':id', suministroId);
 
                 Swal.fire({
                     title: '¿Estás seguro?',
-                    text: "¡No podrás recuperar esta asignación!",
+                    text: "¡No podrás recuperar este suministro!",
                     icon: 'warning',
                     showCancelButton: true,
                     confirmButtonColor: '#d33',
@@ -161,11 +143,19 @@
                                 _token: '{{ csrf_token() }}'
                             },
                             success: function(response) {
-                                Swal.fire('Eliminado!', 'La asignación ha sido eliminada.', 'success');
+                                Swal.fire(
+                                    'Eliminado!',
+                                    'El suministro ha sido eliminado.',
+                                    'success'
+                                );
                                 location.reload();
                             },
                             error: function(xhr) {
-                                Swal.fire('Error!', 'No se pudo eliminar la asignación.', 'error');
+                                Swal.fire(
+                                    'Error!',
+                                    'No se pudo eliminar el suministro.',
+                                    'error'
+                                );
                             }
                         });
                     }

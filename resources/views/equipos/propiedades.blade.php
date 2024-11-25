@@ -3,8 +3,8 @@
 @section('title', 'Propiedades del Equipo')
 
 @section('content')
-    <div class="container mt-4"> <!-- Agrega un contenedor con margen superior -->
-        <div class="card mx-auto" style="max-width: 800px;"> <!-- Limita el ancho de la tarjeta y la centra -->
+    <div class="container-fluid mt-4"> <!-- Usa container-fluid para ocupar todo el ancho -->
+        <div class="card"> <!-- Tarjeta sin límite fijo de ancho -->
             <div class="card-body">
                 @if($equipo->tipo_equipo === 'Computadora')
                     <h5>Propiedades de Computadora:</h5>
@@ -26,7 +26,7 @@
                                         <td>{{ $propiedad->serie_cargador_comp }}</td>
                                         <td>{{ $propiedad->procesador_comp }}</td>
                                         <td>{{ $propiedad->memoria_comp }}</td>
-                                        <td>{{ $propiedad->tarjeta_grafica_comp }}</td>
+                                        <td>{{ $propiedad->tarjeta_grafica_comp ?? 'N/A' }}</td> <!-- Ajuste aquí -->
                                         <td>{{ $propiedad->tipodisco_comp }}</td>
                                         <td>{{ $propiedad->sistema_operativo_comp }}</td>
                                     </tr>
@@ -95,4 +95,29 @@
             </div>
         </div>
     </div>
+@stop
+
+@section('css')
+<style>
+    /* Asegura que el fondo cubra toda la página */
+    body {
+        background-color: #f8f9fa; /* Fondo claro */
+        min-height: 100vh; /* Ocupa toda la altura de la ventana */
+    }
+
+    .card {
+        margin: auto;
+        border-radius: 10px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Sombra sutil */
+    }
+
+    .table {
+        margin-top: 20px;
+    }
+
+    .btn-primary {
+        background-color: #007bff;
+        border-color: #007bff;
+    }
+</style>
 @stop

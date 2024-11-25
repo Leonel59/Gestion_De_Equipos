@@ -107,7 +107,7 @@ class EquiposController extends Controller
     {
         // Validar los datos del equipo
         $request->validate([
-            'estado_equipo' => 'required|in:Disponible,En Mantenimiento,No Disponible',
+            'estado_equipo' => 'required|in:Disponible,En Mantenimiento,Comodin,Asignado',
             'tipo_equipo' => 'required|in:Computadora,Impresora,Otro',
             'cod_equipo' => 'required|string|unique:equipos,cod_equipo,' . $id . ',id_equipo',
             'marca_equipo' => 'required|string',

@@ -13,6 +13,7 @@ use App\Http\Controllers\EquiposController;
 use App\Http\Controllers\ProveedorController;
 use App\Http\Controllers\FacturaController;
 use App\Http\Controllers\AsignacionesController;
+use App\Http\Controllers\SuministrosController;
 use App\Http\Controllers\ProductoMantenimientoController;
 use App\Http\Controllers\ServiciosMantenimientosController;
 use App\Http\Controllers\ReportController;
@@ -55,7 +56,8 @@ Route::get('roles/{id}/delete', [RoleController::class, 'delete'])->name('roles.
     Route::resource('servicios', ServiciosMantenimientosController::class);
     Route::resource('proveedores', ProveedorController::class);
     Route::resource('facturas', FacturaController::class);
-    Route::resource('asignaciones', AsignacionesController::class);
+    Route::resource('asignaciones', AsignacionesController::class)->names('asignaciones');
+    Route::resource('suministros', SuministrosController::class)->names('suministros');
     Route::resource('productos', ProductoMantenimientoController::class);
 
 //Equipos rutas// 
@@ -74,7 +76,10 @@ Route::post('security-answer', [SecurityAnswerController::class, 'checkAnswer'])
 //RUTAS DE REPORTES// 
 Route::get('/reportes', [ReportController::class, 'index'])->name('reportes.index');
 Route::get('/reportes/equipos', [ReportController::class, 'equiposReport'])->name('reportes.equipos');
-
+Route::get('/reportes/empleados', [ReportController::class, 'empleadosReport'])->name('reportes.empleados'); 
+Route::get('/reportes/servicios', [ReportController::class, 'servicioMantenimientoReport'])->name('reportes.servicios');
+Route::get('/reportes/proveedores', [ReportController::class, 'proveedorFacturaReport'])->name('reportes.proveedores');
+Route::get('/reportes/asignaciones', [ReportController::class, 'asignacionesReport'])->name('reportes.asignaciones'); 
 //Rutas Empleados//
 Route::put('/empleados/{id}', [EmpleadoController::class, 'update'])->name('empleados.update');
 
@@ -82,7 +87,13 @@ Route::get('/formulario-sucursal', [SucursalController::class, 'mostrarFormulari
 Route::get('/formulario-area', [AreasController::class, 'mostrarFormulario']);
 Route::get('/get-areas/{id_sucursal}', [EmpleadoController::class, 'getAreasBySucursal'])->name('get.areas');
 
-
+//RUTAS DE ASIGNACIONES//
+Route::post('/asignaciones/actualizar-cantidad', [AsignacionesController::class, 'actualizarCantidad']);
+Route::get('/asignaciones/empleados/{id_sucursal}', [AsignacionesController::class, 'getEmpleadosBySucursal']);
+Route::get('/get-area-by-empleado/{empleadoId}/{sucursalId}', [AsignacionesController::class, 'getAreaByEmpleado']);
+Route::get('/asignaciones/empleados/{id}/areas', [AsignacionesController::class, 'getEmpleadoArea'])->name('asignaciones.empleado.area');
+Route::get('/asignaciones/areas/{id_sucursal}', [AsignacionesController::class, 'getAreasBySucursal']);
+Route::get('/asignaciones/empleados/{id}/areas', [AsignacionesController::class, 'getEmpleadoArea']);
 });
 
 
