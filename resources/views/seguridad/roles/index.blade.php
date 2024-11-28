@@ -1,11 +1,12 @@
-@extends('adminlte::page') 
+@extends('adminlte::page')
+
+@section('title', 'Roles')
 
 @section('css')
 <link href="https://cdn.datatables.net/1.11.3/css/dataTables.bootstrap5.min.css" rel="stylesheet">
 <style>
-    /* Estilos para mejorar la apariencia de los permisos */
     .badge-permission {
-        font-size: 0.9em;
+        font-size: 0.85em;
         margin: 2px;
         padding: 5px 10px;
         color: #fff;
@@ -13,7 +14,6 @@
     .badge-primary { background-color: #007bff; }
     .badge-secondary { background-color: #6c757d; }
 
-    /* Estilo del botón Crear Nuevo Rol */
     .btn-create-role {
         border-radius: 50px;
         padding: 10px 30px;
@@ -26,7 +26,6 @@
         color: #fff;
     }
 
-    /* Estilo del título */
     .header-title {
         font-family: 'Roboto', sans-serif;
         font-size: 2em;
@@ -37,62 +36,70 @@
 </style>
 @stop
 
-@section('title', 'Roles')
-
 @section('content_header')
-@canany(['insertar','editar'])
-    <h1 class="text-center header-title">Roles</h1>
-    <hr class="bg-dark border-1 border-top border-dark">
+<h1 class="text-center header-title">Gestión de Roles</h1>
+<hr class="bg-dark border-1 border-top border-dark">
 @stop
 
 @section('content')
 
-@can('insertar')
-    <a href="{{ route('roles.create') }}" class="btn btn-outline-info btn-block text-center btn-create-role">
-        <span>Crear Nuevo Rol</span> <i class="fas fa-plus-circle"></i>
-    </a>
-@endcan
+@can('seguridad.ver')
+   
+        <!-- Botón para crear nuevo rol -->
+        @can('seguridad.insertar')
+            <a href="{{ route('roles.create') }}" class="btn btn-outline-info btn-block text-center btn-create-role mb-4">
+                <span>Crear Nuevo Rol</span> <i class="fas fa-plus-circle"></i>
+            </a>
+        @endcan
 
-<div class="table-responsive-sm mt-5">
-    <table id="tablaRoles" class="table table-striped table-bordered table-condensed table-hover">
-        <thead class="thead-dark">
-            <tr>
-                <th>#</th>
-                <th>Nombre del Rol</th>
-                <th>Permisos</th>
-                @canany(['editar', 'eliminar'])
-                    <th>Opciones</th>
-                @endcanany
-            </tr>
-        </thead>
-        <tbody>
-            @php $i = 0; @endphp
-            @foreach($roles as $rol)
-                <tr>
-                    <td>{{ ++$i }}</td>
-                    <td>{{ $rol->name }}</td>
-                    <td>
-                        @if($rol->permissions->isNotEmpty())
-                            @foreach($rol->permissions as $permiso)
-                                <span class="badge badge-permission badge-primary">{{ $permiso->name }}</span>
-                            @endforeach
-                        @else
-                            <span class="badge badge-secondary">Sin permisos asignados</span>
-                        @endif
-                    </td>
-                    @canany(['editar', 'eliminar'])
-                        <td class="text-center">
-                            @can('editar')
+        <!-- Tabla de roles -->
+        <div class="table-responsive-sm mt-5">
+            <table id="tablaRoles" class="table table-striped table-bordered table-condensed table-hover">
+                <thead class="thead-dark">
+                    <tr>
+                        <th>#</th>
+                        <th>Nombre del Rol</th>
+                        <th>Permisos Globales</th>
+                        @canany(['seguridad.editar', 'seguridad.eliminar'])
+                            <th>Opciones</th>
+                        @endcanany
+                    </tr>
+                </thead>
+                <tbody>
+                    @php $i = 0; @endphp
+                    @foreach($roles as $rol)
+                        <tr>
+                            <td>{{ ++$i }}</td>
+                            <td>{{ $rol->name }}</td>
+                            <td>
+                                @if($rol->permissions->isNotEmpty())
+                                    @php
+                                        $groupedPermissions = $rol->permissions->groupBy(function($permission) {
+                                            return explode('.', $permission->name)[0]; // Agrupa por módulo
+                                        });
+                                    @endphp
+                                    @foreach($groupedPermissions as $module => $permissions)
+                                        <span class="badge badge-permission badge-primary">
+                                            {{ $module }}: {{ $permissions->pluck('name')->map(fn($p) => explode('.', $p)[1] ?? $p)->join(', ') }}
+                                        </span>
+                                    @endforeach
+                                @else
+                                    <span class="badge badge-secondary">Sin permisos globales asignados</span>
+                                @endif
+                            </td>
+                            @canany(['seguridad.editar', 'seguridad.eliminar'])
+                            <td class="text-center">
+                                @can('seguridad.editar')
                                 <a href="{{ route('roles.edit', $rol->id) }}" class="btn btn-warning btn-sm">
                                     <i class="fa fa-edit"></i> Editar
                                 </a>
-                            @endcan
-                            @can('ver')
+                                @endcan
+                                @can('seguridad.ver')
                                 <a href="{{ route('roles.show', $rol->id) }}" class="btn btn-info btn-sm">
                                     <i class="fa fa-eye"></i> Ver
                                 </a>
-                            @endcan
-                            @can('eliminar')
+                                @endcan
+                                @can('seguridad.eliminar')
                                 <form action="{{ route('roles.destroy', $rol->id) }}" method="POST" style="display:inline;">
                                     @csrf
                                     @method('DELETE')
@@ -100,23 +107,25 @@
                                         <i class="fa fa-trash"></i>
                                     </button>
                                 </form>
-                            @endcan
-                        </td>
-                    @endcanany
-                </tr>
-            @endforeach
-        </tbody>
-    </table>
-</div>
+                                @endcan
+                            </td>
+                            @endcanany
+                        </tr>
+                    @endforeach
+                </tbody>
+            </table>
+        </div>
 
-@else
-    <div class="card border-light shadow-sm mt-3 text-center">
+        @else
+   <!-- Mensaje de permiso denegado -->
+   <div class="card border-light shadow-sm mt-3 text-center">
         <div class="card-body">
             <i class="fas fa-lock text-danger mb-2" style="font-size: 2rem;"></i>
             <p class="mb-0" style="font-size: 1.1rem; color: #9e9e9e;">No tienes permiso para ver esta información.</p>
         </div>
     </div>
-@endcanany
+@endcan
+
 
 @stop
 
@@ -128,25 +137,13 @@
         $('#tablaRoles').DataTable({
             "language": {
                 "url": "//cdn.datatables.net/plug-ins/1.10.15/i18n/Spanish.json"
-            },
-            dom: 'Blfrtip',
-            buttons: [
-                {
-                    extend: 'pdf',
-                    className: 'btn btn-danger',
-                },
-                {
-                    extend: 'print',
-                    text: 'Imprimir',
-                    className: 'btn btn-secondary'
-                },
-                {
-                    extend: 'excel',
-                    className: 'btn btn-success'
-                }
-            ]
+            }
         });
     });
 </script>
 @stop
+
+
+
+
 

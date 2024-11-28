@@ -7,10 +7,11 @@
 @stop
 
 @section('content')
+@can('mantenimiento.ver')
     <div class="card shadow-lg rounded-3">
         <div class="card-header d-flex justify-content-start align-items-center bg-gradient-primary text-white rounded-top">
             <h3 class="card-title mr-auto">Lista de Productos</h3>
-            @can('insertar')
+            @can('mantenimiento.insertar')
                 <a href="{{ route('productos.create') }}" class="btn btn-light btn-lg">
                     <i class="fas fa-plus"></i> Agregar Producto
                 </a>
@@ -37,7 +38,7 @@
                         <th>Costo</th>
                         <th>Fecha de Adquisición</th>
 
-                        @canany(['editar', 'eliminar'])
+                        @canany(['mantenimiento.editar', 'mantenimiento.eliminar'])
                             <th>Acciones</th>
                         @endcanany
                     </tr>
@@ -65,14 +66,14 @@
                             <td>${{ number_format($producto->costo_producto, 2) }}</td>
                             <td>{{ \Carbon\Carbon::parse($producto->fecha_adquisicion_producto)->format('d/m/Y') }}</td>
 
-                            @canany(['editar', 'eliminar'])
+                            @canany(['mantenimiento.editar', 'mantenimiento.eliminar'])
                                 <td>
-                                    @can('editar')
+                                    @can('mantenimiento.editar')
                                         <a href="{{ route('productos.edit', $producto->id_producto) }}" class="btn btn-warning btn-sm rounded-pill">
                                             <i class="fas fa-edit"></i> Editar
                                         </a>
                                     @endcan
-                                    @can('eliminar')
+                                    @can('mantenimiento.eliminar')
                                         <form action="{{ route('productos.destroy', $producto->id_producto) }}" method="POST" style="display:inline;">
                                             @csrf
                                             @method('DELETE')
@@ -89,6 +90,17 @@
             </table>
         </div>
     </div>
+
+    @else
+   <!-- Mensaje de permiso denegado -->
+   <div class="card border-light shadow-sm mt-3 text-center">
+        <div class="card-body">
+            <i class="fas fa-lock text-danger mb-2" style="font-size: 2rem;"></i>
+            <p class="mb-0" style="font-size: 1.1rem; color: #9e9e9e;">No tienes permiso para ver esta información.</p>
+        </div>
+    </div>
+@endcan
+
 @stop
 
 @push('css')

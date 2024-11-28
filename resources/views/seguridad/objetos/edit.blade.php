@@ -3,130 +3,150 @@
 @section('title', 'Editar Objeto')
 
 @section('content_header')
-<h1 class="text-center">Editar Objeto</h1>
-<hr class="bg-dark border-1 border-top border-dark">
+    <h1>Editar Objeto</h1>
 @stop
 
 @section('content')
-    <form action="{{ route('objetos.update', $objeto->id) }}" method="POST">
-        @csrf
-        @method('PUT')
-
-        <div class="row">
-            <div class="col-sm-6 col-xs-12">
-                <div class="form-group has-primary">
-                    <label for="objeto">Nombre del Objeto:</label>
-                    <input
-                        type="text"
-                        id="objeto"
-                        class="form-control border-secondary"
-                        placeholder="Ingrese el nombre del objeto"
-                        name="objeto"
-                        value="{{ old('objeto', $objeto->objeto) }}"
-                        autofocus
-                    >
-                    <span id="objetoError" class="text-danger" style="display: none;">El objeto no puede contener caracteres especiales ni números.</span>
+<div class="container-fluid">
+    <div class="row justify-content-center">
+        <div class="col-md-10">
+            <div class="card shadow-sm">
+                <div class="card-header bg-primary text-white">
+                    <h3>Editar Objeto</h3>
                 </div>
-                @if ($errors->has('objeto'))
-                    <div id="objeto-error" class="error text-danger pl-3" style="display: block;">
-                        <strong>{{ $errors->first('objeto') }}</strong>
-                    </div>
-                @endif
-            </div>
+                <div class="card-body">
+                    <form action="{{ route('objetos.update', $objeto->id) }}" method="POST">
+                        @csrf
+                        @method('PUT')
 
-            <div class="col-sm-6 col-xs-12">
-                <div class="form-group has-primary">
-                    <label for="descripcion">Descripción:</label>
-                    <input
-                        type="text"
-                        id="descripcion"
-                        class="form-control border-secondary"
-                        placeholder="Ingrese la descripción"
-                        name="descripcion"
-                        value="{{ old('descripcion', $objeto->descripcion) }}"
-                    >
-                    <span id="descripcionError" class="text-danger" style="display: none;">La descripción solo puede contener letras y espacios.</span>
+                        <!-- Nombre del Objeto -->
+                        <div class="form-group">
+                            <label for="name">Nombre del Objeto</label>
+                            <input type="text" id="name" name="name"
+                                   class="form-control @error('name') is-invalid @enderror"
+                                   value="{{ old('name', $objeto->name) }}" required
+                                   oninput="validateName(this)">
+                            <div id="nameError" class="error" style="display: none;">
+                                No se permiten caracteres especiales.
+                            </div>
+                            @error('name')
+                                <div class="invalid-feedback">{{ $message }}</div>
+                            @enderror
+                        </div>
+
+                        <!-- Selección de Roles y Permisos -->
+                        <div class="form-group mt-4">
+                            <label for="roles">Roles y Permisos</label>
+                            <div class="row">
+                                @foreach ($roles as $role)
+                                    @if(in_array($role->id, $objeto->roles->pluck('id')->toArray()))
+                                        <div class="col-md-6 col-lg-4 mb-4">
+                                            <div class="role-box">
+                                                <div class="role-title text-center mb-3">
+                                                    <input type="checkbox" 
+                                                           name="roles[{{ $role->id }}][id]"
+                                                           value="{{ $role->id }}" 
+                                                           class="role-checkbox" 
+                                                           id="role{{ $role->id }}" 
+                                                           checked>
+                                                    <label for="role{{ $role->id }}">
+                                                        <span class="badge badge-primary p-2">
+                                                            <i class="fas fa-user-shield"></i> {{ $role->name }}
+                                                        </span>
+                                                    </label>
+                                                </div>
+
+                                                <!-- Permisos del rol -->
+                                                <div class="permissions p-2 border rounded" id="permissions{{ $role->id }}">
+                                                    @foreach ($rutas as $route => $label)
+                                                        <div class="permission-box mb-3">
+                                                            <div class="permission-header bg-light text-dark p-2 rounded">
+                                                                <strong>{{ $label }}</strong>
+                                                            </div>
+                                                            <div class="permission-options d-flex justify-content-around mt-2">
+                                                                @foreach (['ver', 'insertar', 'editar', 'eliminar'] as $action)
+                                                                    <div class="form-check">
+                                                                        <input type="checkbox"
+                                                                               name="roles[{{ $role->id }}][permisos][{{ $route }}][{{ $action }}]"
+                                                                               value="1"
+                                                                               class="form-check-input"
+                                                                               id="{{ $action }}-{{ $role->id }}-{{ $route }}"
+                                                                               @if(isset($rolePermissions[$role->id][$route][$action]) && $rolePermissions[$role->id][$route][$action]) checked @endif>
+                                                                        <label class="form-check-label small" for="{{ $action }}-{{ $role->id }}-{{ $route }}">
+                                                                            {{ ucfirst($action) }}
+                                                                        </label>
+                                                                    </div>
+                                                                @endforeach
+                                                            </div>
+                                                        </div>
+                                                    @endforeach
+                                                </div>
+                                            </div>
+                                        </div>
+                                    @endif
+                                @endforeach
+                            </div>
+                        </div>
+
+                        <!-- Botones de Acción -->
+                        <div class="form-group mt-4 text-center">
+                            <button type="submit" class="btn btn-success">Actualizar Objeto</button>
+                            <a href="{{ route('objetos.index') }}" class="btn btn-secondary">Cancelar</a>
+                        </div>
+                    </form>
                 </div>
-                @if ($errors->has('descripcion'))
-                    <div id="descripcion-error" class="error text-danger pl-3" style="display: block;">
-                        <strong>{{ $errors->first('descripcion') }}</strong>
-                    </div>
-                @endif
             </div>
         </div>
-
-        <div class="row">
-            <div class="col-sm-6 col-xs-12 mb-2">
-                <a href="{{ route('objetos.index') }}" class="btn btn-danger w-100">Cancelar <i class="fa fa-times-circle ml-2"></i></a>
-            </div>
-            <div class="col-sm-6 col-xs-12 mb-2">
-                <button type="submit" class="btn btn-success w-100">
-                    Guardar <i class="fa fa-check-circle ml-2"></i>
-                </button>
-            </div>
-        </div>
-    </form>
+    </div>
+</div>
 @stop
 
-@section('css')
-@stop
-
-@section('js')
-<script>
-    let objetoAttempts = 0;
-    let descripcionAttempts = 0;
-    const maxAttempts = 3;
-    const blockDuration = 5000; // Tiempo de bloqueo en milisegundos (5 segundos)
-
-    function blockInput(inputId) {
-        document.getElementById(inputId).disabled = true;
-        setTimeout(() => {
-            document.getElementById(inputId).disabled = false;
-        }, blockDuration);
+@push('css')
+<style>
+    /* Diseño de los permisos */
+    .permissions {
+        background-color: #f8f9fa;
     }
 
-    document.getElementById('objeto').addEventListener('input', function() {
-        const regex = /^[A-Z][a-zA-Z]*$/;
-        const objetoInput = this.value;
+    .permission-box {
+        border: 1px solid #dee2e6;
+        padding: 10px;
+        border-radius: 8px;
+        background-color: #ffffff;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
 
-        if (!regex.test(objetoInput)) {
-            document.getElementById('objetoError').style.display = 'block';
-            objetoAttempts++;
-            if (objetoAttempts >= maxAttempts) {
-                blockInput('objeto');
-                document.getElementById('objetoError').innerText = 'Campo bloqueado temporalmente por intentos fallidos.';
-                setTimeout(() => {
-                    document.getElementById('objetoError').innerText = 'El objeto no puede contener caracteres especiales ni números.';
-                }, blockDuration);
-                objetoAttempts = 0; // Reiniciar el contador después del bloqueo
-            }
-        } else {
-            document.getElementById('objetoError').style.display = 'none';
-            objetoAttempts = 0; // Reiniciar el contador si el valor es válido
-        }
-    });
+    .permission-header {
+        font-weight: bold;
+        text-align: center;
+    }
 
-    document.getElementById('descripcion').addEventListener('input', function() {
-        const regex = /^[a-zA-Z\s]*$/;
-        const descripcionInput = this.value;
+    .permission-options .form-check {
+        text-align: center;
+        margin: 0 5px;
+    }
 
-        if (!regex.test(descripcionInput)) {
-            document.getElementById('descripcionError').style.display = 'block';
-            descripcionAttempts++;
-            if (descripcionAttempts >= maxAttempts) {
-                blockInput('descripcion');
-                document.getElementById('descripcionError').innerText = 'Campo bloqueado temporalmente por intentos fallidos.';
-                setTimeout(() => {
-                    document.getElementById('descripcionError').innerText = 'La descripción solo puede contener letras y espacios.';
-                }, blockDuration);
-                descripcionAttempts = 0; // Reiniciar el contador después del bloqueo
-            }
-        } else {
-            document.getElementById('descripcionError').style.display = 'none';
-            descripcionAttempts = 0; // Reiniciar el contador si el valor es válido
-        }
+    .role-title input[type="checkbox"] {
+        margin-right: 8px;
+    }
+</style>
+@endpush
+
+@push('js')
+<script>
+    // Alternar visibilidad de los permisos según el estado del rol
+    document.querySelectorAll('.role-checkbox').forEach(function (checkbox) {
+        checkbox.addEventListener('change', function () {
+            const roleId = this.id.replace('role', '');
+            const permissionsDiv = document.getElementById('permissions' + roleId);
+            permissionsDiv.style.display = this.checked ? 'block' : 'none';
+        });
     });
 </script>
-@stop
+@endpush
+
+
+
+
 
 

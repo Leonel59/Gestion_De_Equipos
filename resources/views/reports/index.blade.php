@@ -7,6 +7,8 @@
 @stop
 
 @section('content')
+
+@can('reporte.ver')
    <!-- Contenedor principal con límite de ancho -->
 <div class="container" style="max-width: 810px; margin: 0 auto;">
     <!-- Contenedor para logo y título -->
@@ -41,6 +43,16 @@
             </div>
         </div>
     </div>
+
+    @else
+   <!-- Mensaje de permiso denegado -->
+   <div class="card border-light shadow-sm mt-3 text-center">
+        <div class="card-body">
+            <i class="fas fa-lock text-danger mb-2" style="font-size: 2rem;"></i>
+            <p class="mb-0" style="font-size: 1.1rem; color: #9e9e9e;">No tienes permiso para ver esta información.</p>
+        </div>
+    </div>
+@endcan
 
 @stop
 

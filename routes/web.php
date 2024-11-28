@@ -3,7 +3,6 @@
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\UsuarioController;
 use App\Http\Controllers\parametroController;
-use App\Http\Controllers\ObjetosController;
 use App\Http\Controllers\PreguntaController;
 use App\Http\Controllers\BitacoraController;
 use App\Http\Controllers\EmpleadoController;
@@ -13,6 +12,7 @@ use App\Http\Controllers\EquiposController;
 use App\Http\Controllers\ProveedorController;
 use App\Http\Controllers\FacturaController;
 use App\Http\Controllers\AsignacionesController;
+use App\Http\Controllers\ObjetoController;
 use App\Http\Controllers\SuministrosController;
 use App\Http\Controllers\ProductoMantenimientoController;
 use App\Http\Controllers\ServiciosMantenimientosController;
@@ -49,7 +49,7 @@ Route::get('roles/{id}/delete', [RoleController::class, 'delete'])->name('roles.
 
     Route::resource('roles',RoleController::class)->names('roles');
     Route::resource('parametros',ParametroController::class)->names('parametros');
-    Route::resource('objetos',ObjetosController::class)->names('objetos');
+    Route::resource('objetos',ObjetoController::class)->names('objetos');
     Route::resource('preguntas',PreguntaController::class)->names('preguntas');
     Route::resource('empleados',EmpleadoController::class)->names('empleados');
     Route::resource('equipos',EquiposController::class)->names('equipos');

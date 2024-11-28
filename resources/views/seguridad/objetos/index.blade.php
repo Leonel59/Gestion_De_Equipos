@@ -1,89 +1,150 @@
 @extends('adminlte::page')
 
+@section('title', 'Objetos')
+
 @section('css')
-    <link href="https://cdn.datatables.net/1.10.24/css/jquery.dataTables.min.css" rel="stylesheet"> 
+    <link href="https://cdn.datatables.net/1.11.3/css/dataTables.bootstrap5.min.css" rel="stylesheet">
+    <style>
+        .badge-permission {
+            font-size: 0.9em;
+            margin: 2px;
+            padding: 5px 10px;
+            color: #fff;
+        }
+        .badge-primary { background-color: #007bff; }
+        .badge-secondary { background-color: #6c757d; }
+
+        .btn-create-objeto {
+            border-radius: 50px;
+            padding: 10px 30px;
+            font-size: 1.1em;
+            font-weight: bold;
+            transition: background-color 0.3s ease;
+        }
+        .btn-create-objeto:hover {
+            background-color: #17a2b8;
+            color: #fff;
+        }
+
+        .header-title {
+            font-family: 'Roboto', sans-serif;
+            font-size: 2em;
+            font-weight: bold;
+            color: #343a40;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
+        }
+
+        .no-access {
+            color: red;
+            font-weight: bold;
+            text-align: center;
+        }
+
+        .locked-icon {
+            color: gray;
+            font-size: 1.5em;
+            margin-left: 10px;
+        }
+    </style>
 @stop
 
 
-@section('title', 'Objetos')
-
 @section('content_header')
-@canany(['insertar','editar'])
-
-    <h1 class="text-center">Objetos</h1>
+    <h1 class="text-center header-title">Objetos</h1>
     <hr class="bg-dark border-1 border-top border-dark">
 @stop
 
 @section('content')
 
+<!-- Verificación de permisos para el módulo de Seguridad -->
+@can('seguridad.ver')
+    <div class="row mb-3">
+        @can('seguridad.insertar')
+            <a href="{{ route('objetos.create') }}" class="btn btn-outline-info btn-block text-center btn-create-objeto">
+                <span>Crear Nuevo Objeto</span> <i class="fas fa-plus-circle"></i>
+            </a>
+        @endcan
+    </div>
 
-@can('insertar') <!-- Verifica si el usuario puede insertar -->
-    <a href="{{ route('objetos.create') }}" class="btn btn-outline-info text-center btn-block">
-        <span>Crear Nuevo Objeto</span> <i class="fas fa-plus-square"></i>
-    </a>
-@endcan
-
-@if (session('info'))
-<div class="alert alert-success alert-dismissible mt-2 text-dark" role="alert">
-    <span type="button" class="close" data-dismiss="alert" aria-label="Close">
-        <span aria-hidden="true">&times;</span>
-    </span>
-    <strong>{{ session('info') }}</strong>
-</div>
-@endif
-
-<div class="table-responsive-sm mt-5">
-    <table id="tablaObjetos" class="table table-striped table-bordered table-condensed table-hover">
-        <thead class="thead-dark">
-            <tr>
-                <th>#</th>
-                <th>Nombre del Objeto</th>
-                <th>Descripción</th>
-                @canany(['editar', 'eliminar']) <!-- Verifica si el usuario puede editar o eliminar -->
-                    <th>Opciones</th>
-                @endcanany
-            </tr>
-        </thead>
-        <tbody>
-            @php $i = 0; @endphp
-            @foreach($objetos as $objeto)
+    <div class="table-responsive-sm mt-5">
+        <table id="tablaObjetos" class="table table-striped table-bordered table-condensed table-hover">
+            <thead class="thead-dark">
                 <tr>
-                    <td>{{ ++$i }}</td>
-                    <td>{{ $objeto->objeto }}</td>
-                    <td>{{ $objeto->descripcion }}</td>
-                    @canany(['editar', 'eliminar']) <!-- Verifica si el usuario puede editar o eliminar -->
-                        <td class="text-center">
-                            @can('editar') <!-- Verifica si el usuario puede editar -->
-                                <a href="{{ route('objetos.edit', $objeto->id) }}" class="btn btn-warning btn-sm">
-                                    <i class="fa fa-edit"></i>
-                                </a>
-                            @endcan
-                            @can('eliminar') <!-- Verifica si el usuario puede eliminar -->
-                                <form action="{{ route('objetos.destroy', $objeto->id) }}" method="POST" style="display:inline;">
-                                    @csrf
-                                    @method('DELETE')
-                                    <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('¿Está seguro de que desea eliminar este objeto?')">
-                                        <i class="fa fa-trash"></i>
-                                    </button>
-                                </form>
-                            @endcan
-                        </td>
+                    <th>#</th>
+                    <th>Nombre del Objeto</th>
+                    <th>Roles y Permisos Globales</th>
+                    @canany(['seguridad.editar', 'seguridad.eliminar'])
+                        <th>Opciones</th>
                     @endcanany
                 </tr>
-            @endforeach
-        </tbody>
-    </table>
-</div>
-
+            </thead>
+            <tbody>
+                @php $i = 0; @endphp
+                @foreach($objetos as $objeto)
+                    <tr>
+                        <td>{{ ++$i }}</td>
+                        <td>{{ $objeto->name }}</td>
+                        <td>
+                            @if($objeto->roles->isNotEmpty())
+                                @foreach($objeto->roles as $role)
+                                    <div>
+                                        <strong>{{ $role->name }}</strong>
+                                        <div>
+                                            {{-- Agrupación de permisos por módulo --}}
+                                            @php
+                                                $groupedPermissions = [];
+                                                foreach ($role->permissions as $permission) {
+                                                    $parts = explode('.', $permission->name);
+                                                    $module = $parts[0];
+                                                    $action = $parts[1] ?? 'otro';
+                                                    $groupedPermissions[$module][] = $action;
+                                                }
+                                            @endphp
+                                            @foreach($groupedPermissions as $module => $actions)
+                                                <span class="badge badge-permission badge-primary">
+                                                    {{ $module }}: {{ implode(', ', $actions) }}
+                                                </span>
+                                            @endforeach
+                                        </div>
+                                    </div>
+                                @endforeach
+                            @else
+                                <span class="badge badge-secondary">Sin roles asignados</span>
+                            @endif
+                        </td>
+                        @canany(['seguridad.editar', 'seguridad.eliminar'])
+                            <td class="text-center">
+                                @can('seguridad.editar')
+                                    <a href="{{ route('objetos.edit', $objeto->id) }}" class="btn btn-warning btn-sm">
+                                        <i class="fa fa-edit"></i> Editar
+                                    </a>
+                                @endcan
+                                
+                                @can('seguridad.eliminar')
+                                    <form action="{{ route('objetos.destroy', $objeto->id) }}" method="POST" style="display:inline;">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('¿Está seguro de que desea eliminar este objeto?')">
+                                            <i class="fa fa-trash"></i>
+                                        </button>
+                                    </form>
+                                @endcan
+                            </td>
+                        @endcanany
+                    </tr>
+                @endforeach
+            </tbody>
+        </table>
+    </div>
 @else
-    <div class="card border-light shadow-sm mt-3 text-center">
+   <!-- Mensaje de permiso denegado -->
+   <div class="card border-light shadow-sm mt-3 text-center">
         <div class="card-body">
             <i class="fas fa-lock text-danger mb-2" style="font-size: 2rem;"></i>
             <p class="mb-0" style="font-size: 1.1rem; color: #9e9e9e;">No tienes permiso para ver esta información.</p>
         </div>
     </div>
-@endcanany
-
+@endcan
 
 @stop
 
@@ -101,7 +162,7 @@
                 {
                     extend: 'pdf',
                     className: 'btn btn-danger',
-                }, 
+                },
                 {
                     extend: 'print',
                     text: 'Imprimir',
@@ -116,3 +177,6 @@
     });
 </script>
 @stop
+
+
+

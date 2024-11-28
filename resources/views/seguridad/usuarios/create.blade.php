@@ -81,6 +81,16 @@
                     <span class="show-password" onclick="togglePasswordVisibility('password_confirmation')">Ver contraseña</span>
                 </div>
 
+                <div class="form-group">
+                    <label for="role">Seleccionar Rol</label>
+                    <select name="role" class="form-control" required>
+                        <option value="">-- Selecciona un rol --</option>
+                        @foreach ($roles as $role)
+                            <option value="{{ $role->id }}">{{ $role->name }}</option>
+                        @endforeach
+                    </select>
+                </div>
+
                 <button type="submit" class="btn btn-primary mt-3">Guardar Usuario</button>
                 <a href="{{ route('usuarios.index') }}" class="btn btn-secondary mt-3">Cancelar</a>
             </form>
@@ -113,5 +123,20 @@
         const regex = /[^a-zA-Z0-9@.]/g;
         this.value = this.value.replace(regex, '');
     });
+
+    // Validación en tiempo real del campo de nombre de usuario
+    document.querySelector('input[name="username"]').addEventListener('input', function(event) {
+        // Solo permite letras, números y guion bajo (sin caracteres especiales)
+        const regex = /[^a-zA-Z0-9_]/g;
+        this.value = this.value.replace(regex, '');
+    });
+
+    // Validación en tiempo real del campo de nombre completo
+    document.querySelector('input[name="name"]').addEventListener('input', function(event) {
+        // Solo permite letras, espacios y guion (sin caracteres especiales)
+        const regex = /[^a-zA-ZáéíóúÁÉÍÓÚñÑ\s-]/g;
+        this.value = this.value.replace(regex, '');
+    });
 </script>
 @stop
+

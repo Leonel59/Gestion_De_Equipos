@@ -350,34 +350,6 @@ return [
         'can' => 'manage-blog',
     ],
   
-    ['header' => 'account_settings'],
-     
-    [
-        'text' => 'SEGURIDAD',
-        'icon' => 'fas fa-fw fa-lock',
-        'submenu' => [
-            
-            [
-                'text' => 'BITACORA',
-                'url' => '/bitacora',
-                'icon' => 'fas fa-solid fa-clipboard-list'
-                
-            ],
- 
-            [
-                'text' => 'ROLES',
-                'url' => '/roles',
-                'icon' => 'fas fa-users-cog fa-fw'
-            ],
-            [
-                'text' => 'USUARIOS',
-                'url' => '/usuarios',
-                'icon' => 'fas fa-users fa-fw',
-                
-            ],
-           
-        ],
-    ],
     
     ['header' => 'SECCIONES'],
 
@@ -452,6 +424,41 @@ return [
         'icon' => 'fas fa-chart-bar', 
         'icon_color' => 'cyan',
         'url' => '/reportes',
+    ],
+
+    ['header' => 'CONFIGURACIONES'],
+     
+    [
+        'text' => 'SEGURIDAD',
+        'icon' => 'fas fa-fw fa-lock',
+        'submenu' => [
+            
+            [
+                'text' => 'BITACORA',
+                'url' => '/bitacora',
+                'icon' => 'fas fa-solid fa-clipboard-list'
+                
+            ],
+ 
+            [
+                'text' => 'ROLES',
+                'url' => '/roles',
+                'icon' => 'fas fa-users-cog fa-fw'
+            ],
+            [
+                'text' => 'OBJETOS',
+                'url' => '/objetos',
+                'icon' => 'fas fa-users fa-fw',
+                
+            ],
+            [
+                'text' => 'USUARIOS',
+                'url' => '/usuarios',
+                'icon' => 'fas fa-users fa-fw',
+                
+            ],
+           
+        ],
     ],
 
 ],

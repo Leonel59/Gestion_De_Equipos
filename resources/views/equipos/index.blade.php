@@ -7,10 +7,11 @@
 @stop
 
 @section('content')
+@can('equipos.ver')
     <div class="card shadow-lg rounded-3">
         <div class="card-header d-flex justify-content-between align-items-center bg-gradient-primary text-white rounded-top">
             <h3 class="card-title mr-auto">Equipos Registrados</h3>
-            @can('insertar')
+            @can('equipos.insertar')
                 <a href="{{ route('equipos.create') }}" class="btn btn-light btn-lg">
                     <i class="fas fa-plus"></i> Agregar Equipo
                 </a>
@@ -39,7 +40,7 @@
                         <th>Fecha Adquisición</th>
                         <th>Depreciación</th>
                         <th>Propiedades</th>
-                        @canany(['editar', 'eliminar'])
+                        @canany(['equipos.editar', 'equipos.eliminar'])
                             <th>Acciones</th>
                         @endcanany
                     </tr>
@@ -61,14 +62,14 @@
                                     <i class="fas fa-eye"></i> Ver Propiedades
                                 </a>
                             </td>
-                            @canany(['editar', 'eliminar'])
+                            @canany(['equipos.editar', 'equipos.eliminar'])
                                 <td>
-                                    @can('editar')
+                                    @can('equipos.editar')
                                         <a href="{{ route('equipos.edit', $equipo->id_equipo) }}" class="btn btn-warning btn-xs rounded-pill">
                                             <i class="fas fa-edit"></i>
                                         </a>
                                     @endcan
-                                    @can('eliminar')
+                                    @can('equipos.eliminar')
                                         <button type="button" class="btn btn-danger btn-xs rounded-pill delete-equipo" data-id="{{ $equipo->id_equipo }}">
                                             <i class="fas fa-trash"></i>
                                         </button>
@@ -81,6 +82,17 @@
             </table>
         </div>
     </div>
+
+    @else
+   <!-- Mensaje de permiso denegado -->
+   <div class="card border-light shadow-sm mt-3 text-center">
+        <div class="card-body">
+            <i class="fas fa-lock text-danger mb-2" style="font-size: 2rem;"></i>
+            <p class="mb-0" style="font-size: 1.1rem; color: #9e9e9e;">No tienes permiso para ver esta información.</p>
+        </div>
+    </div>
+@endcan
+
 @stop
 
 @push('css')

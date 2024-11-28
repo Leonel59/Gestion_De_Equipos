@@ -7,10 +7,11 @@
 @stop
 
 @section('content')
+@can('asignacion.ver')
     <div class="card shadow-lg rounded-3">
         <div class="card-header d-flex justify-content-start align-items-center bg-gradient-primary text-white rounded-top">
             <h3 class="card-title mr-auto">Asignaciones Registradas</h3>
-            @can('insertar')
+            @can('asignacion.insertar')
                 <a href="{{ route('asignaciones.create') }}" class="btn btn-light btn-lg">
                     <i class="fas fa-plus"></i> Agregar Asignación
                 </a>
@@ -37,7 +38,7 @@
                         <th>Detalle de Asignación</th>
                         <th>Fecha de Asignación</th>
                         <th>Fecha de Devolución</th>
-                        @canany(['editar', 'eliminar'])
+                        @canany(['asignacion.editar', 'asignacion.eliminar'])
                             <th>Acciones</th>
                         @endcanany
                     </tr>
@@ -69,14 +70,14 @@
                             <td>{{ $asignacion->detalle_asignacion }}</td>
                             <td>{{ $asignacion->fecha_asignacion ? \Carbon\Carbon::parse($asignacion->fecha_asignacion)->format('d-m-Y') : 'N/A' }}</td>
                             <td>{{ $asignacion->fecha_devolucion ? \Carbon\Carbon::parse($asignacion->fecha_devolucion)->format('d-m-Y') : 'N/A' }}</td>
-                            @canany(['editar', 'eliminar'])
+                            @canany(['asignacion.editar', 'asignacion.eliminar'])
                                 <td>
-                                    @can('editar')
+                                    @can('asignacion.editar')
                                         <a href="{{ route('asignaciones.edit', $asignacion->id_asignacion) }}" class="btn btn-warning btn-sm rounded-pill">
                                             <i class="fas fa-edit"></i> Editar
                                         </a>
                                     @endcan
-                                    @can('eliminar')
+                                    @can('asignacion.eliminar')
                                         <button type="button" class="btn btn-danger btn-sm rounded-pill delete-asignacion" data-id="{{ $asignacion->id_asignacion }}">
                                             <i class="fas fa-trash"></i> Eliminar
                                         </button>
@@ -89,6 +90,17 @@
             </table>
         </div>
     </div>
+
+    @else
+   <!-- Mensaje de permiso denegado -->
+   <div class="card border-light shadow-sm mt-3 text-center">
+        <div class="card-body">
+            <i class="fas fa-lock text-danger mb-2" style="font-size: 2rem;"></i>
+            <p class="mb-0" style="font-size: 1.1rem; color: #9e9e9e;">No tienes permiso para ver esta información.</p>
+        </div>
+    </div>
+@endcan
+
 @stop
 
 @push('css')

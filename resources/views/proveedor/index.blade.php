@@ -12,7 +12,8 @@
 @stop
 
 @section('content')
-    @can('insertar') <!-- Verifica si el usuario puede insertar -->
+@can('mantenimiento.ver')
+    @can('mantenimiento.insertar') <!-- Verifica si el usuario puede insertar -->
         <div class="mb-3 text-center">
             <a href="{{ route('proveedores.create') }}" class="btn btn-outline-info text-center btn-block mb-4 rounded-pill">
                 <span>Agregar Proveedor</span> <i class="fas fa-plus-square"></i>
@@ -45,7 +46,7 @@
                             <th>Dirección</th>
                             <th>Teléfono</th>
                             <th>Email</th>
-                            @canany(['editar', 'eliminar']) <!-- Verifica si el usuario puede editar o eliminar -->
+                            @canany(['mantenimiento.editar', 'mantenimiento.eliminar']) <!-- Verifica si el usuario puede editar o eliminar -->
                                 <th>Opciones</th>
                             @endcanany
                         </tr>
@@ -60,14 +61,14 @@
                                 <td>{{ $proveedor->direccion_proveedor }}</td>
                                 <td>{{ $proveedor->telefono_proveedor }}</td>
                                 <td>{{ $proveedor->email_proveedor }}</td>
-                                @canany(['editar', 'eliminar']) <!-- Verifica si el usuario puede editar o eliminar -->
+                                @canany(['mantenimiento.editar', 'mantenimiento.eliminar']) <!-- Verifica si el usuario puede editar o eliminar -->
                                     <td class="text-center">
-                                        @can('editar') <!-- Verifica si el usuario puede editar -->
+                                        @can('mantenimiento.editar') <!-- Verifica si el usuario puede editar -->
                                             <a href="{{ route('proveedores.edit', $proveedor->id_proveedor) }}" class="btn btn-warning btn-sm rounded-pill" title="Editar">
                                                 <i class="fas fa-edit"></i>
                                             </a>
                                         @endcan
-                                        @can('eliminar') <!-- Verifica si el usuario puede eliminar -->
+                                        @can('mantenimiento.eliminar') <!-- Verifica si el usuario puede eliminar -->
                                             <form action="{{ route('proveedores.destroy', $proveedor->id_proveedor) }}" method="POST" style="display:inline;">
                                                 @csrf
                                                 @method('DELETE')
@@ -85,6 +86,18 @@
             </div>
         </div>
     </div>
+
+    @else
+   <!-- Mensaje de permiso denegado -->
+   <div class="card border-light shadow-sm mt-3 text-center">
+        <div class="card-body">
+            <i class="fas fa-lock text-danger mb-2" style="font-size: 2rem;"></i>
+            <p class="mb-0" style="font-size: 1.1rem; color: #9e9e9e;">No tienes permiso para ver esta información.</p>
+        </div>
+    </div>
+@endcan
+
+
 @stop
 
 @section('js')

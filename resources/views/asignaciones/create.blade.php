@@ -89,7 +89,7 @@
 </div>
 
 
-<<div class="form-group">
+<div class="form-group">
     <label for="suministros">Suministros:</label>
     <div class="form-check mb-2">
         @foreach($suministros as $suministro)

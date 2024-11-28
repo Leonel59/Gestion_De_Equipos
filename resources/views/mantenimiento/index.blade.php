@@ -12,8 +12,9 @@
 @stop
 
 @section('content')
+@can('mantenimiento.ver')
 
-@can('insertar') <!-- Verifica si el usuario puede insertar -->
+@can('mantenimiento.insertar') <!-- Verifica si el usuario puede insertar -->
     <a href="{{ route('servicios.create') }}" class="btn btn-outline-info text-center btn-block mb-4 rounded-pill">
         <span>Agregar Nuevo Servicio</span> <i class="fas fa-plus-square"></i>
     </a>
@@ -42,7 +43,7 @@
                         <th>Tipo de Mantenimiento</th>
                         <th>Descripción</th>
                         <th>Costo</th>
-                        @canany(['editar', 'eliminar']) <!-- Verifica si el usuario puede editar o eliminar -->
+                        @canany(['mantenimiento.editar', 'mantenimiento.eliminar']) <!-- Verifica si el usuario puede editar o eliminar -->
                             <th>Opciones</th>
                         @endcanany
                     </tr>
@@ -55,14 +56,14 @@
                             <td>{{ $servicio->tipo_mantenimiento }}</td>
                             <td>{{ $servicio->descripcion_mantenimiento }}</td>
                             <td>L{{ number_format($servicio->costo_mantenimiento, 2) }}</td>
-                            @canany(['editar', 'eliminar']) <!-- Verifica si el usuario puede editar o eliminar -->
+                            @canany(['mantenimiento.editar', 'mantenimiento.eliminar']) <!-- Verifica si el usuario puede editar o eliminar -->
                                 <td class="text-center">
-                                    @can('editar') <!-- Verifica si el usuario puede editar -->
+                                    @can('mantenimiento.editar') <!-- Verifica si el usuario puede editar -->
                                         <a href="{{ route('servicios.edit', $servicio->id_mant) }}" class="btn btn-warning btn-sm rounded-pill" title="Editar">
                                             <i class="fas fa-edit"></i>
                                         </a>
                                     @endcan
-                                    @can('eliminar') <!-- Verifica si el usuario puede eliminar -->
+                                    @can('mantenimiento.eliminar') <!-- Verifica si el usuario puede eliminar -->
                                         <form action="{{ route('servicios.destroy', $servicio->id_mant) }}" method="POST" style="display:inline;">
                                             @csrf
                                             @method('DELETE')
@@ -80,6 +81,17 @@
         </div>
     </div>
 </div>
+
+@else
+   <!-- Mensaje de permiso denegado -->
+   <div class="card border-light shadow-sm mt-3 text-center">
+        <div class="card-body">
+            <i class="fas fa-lock text-danger mb-2" style="font-size: 2rem;"></i>
+            <p class="mb-0" style="font-size: 1.1rem; color: #9e9e9e;">No tienes permiso para ver esta información.</p>
+        </div>
+    </div>
+@endcan
+
 
 @stop
 
