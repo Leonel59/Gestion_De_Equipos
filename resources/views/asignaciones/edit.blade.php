@@ -40,18 +40,19 @@
             </div>
 
             <!-- Empleado -->
-            <div class="form-group" id="empleado_group">
-                <label for="cod_empleados">Empleado:</label>
-                <select id="cod_empleados" name="cod_empleados" class="form-control">
-                    <option value="">Seleccione un empleado</option>
-                    @foreach($empleados as $empleado)
-                        <option value="{{ $empleado->cod_empleados }}" 
-                            {{ old('cod_empleados', $asignacion->cod_empleados) == $empleado->cod_empleados ? 'selected' : '' }}>
-                            {{ $empleado->nombre_empleado }} {{ $empleado->apellido_empleado }}
-                        </option>
-                    @endforeach
-                </select>
-            </div>
+<div class="form-group" id="empleado_group">
+    <label for="cod_empleados">Empleado:</label>
+    <select id="cod_empleados" name="cod_empleados" class="form-control">
+        <option value="">Seleccione un empleado</option>
+        @foreach($empleados as $empleado)
+            <option value="{{ $empleado->cod_empleados }}" 
+                {{ old('cod_empleados', $asignacion->cod_empleados) == $empleado->cod_empleados ? 'selected' : '' }}>
+                {{ $empleado->nombre_empleado }} {{ $empleado->apellido_empleado }}
+            </option>
+        @endforeach
+    </select>
+</div>
+
 
             <!-- Área -->
             <div class="form-group" id="area_group">
@@ -74,50 +75,54 @@
             </div>
 
             <!-- Fecha de Asignación -->
-            <div class="form-group">
-                <label for="fecha_asignacion">Fecha de Asignación:</label>
-                <input type="date" class="form-control" id="fecha_asignacion" name="fecha_asignacion" 
-                    value="{{ old('fecha_asignacion', $asignacion->fecha_asignacion) }}" required>
-                <small id="fechaWarning" class="text-danger" style="display: none;">No puede ser mayor a la fecha actual.</small>
-                <span id="mensaje_fecha" class="text-danger" style="display: none;"></span>
-            </div>
+<div class="form-group">
+    <label for="fecha_asignacion">Fecha de Asignación:</label>
+    <input type="date" class="form-control" id="fecha_asignacion" name="fecha_asignacion" 
+        value="{{ old('fecha_asignacion', $asignacion->fecha_asignacion) }}" required>
+    <small id="fechaWarning" class="text-danger" style="display: none;">No puede ser mayor a la fecha actual.</small>
+    <span id="mensaje_fecha" class="text-danger" style="display: none;"></span>
+</div>
 
-            <!-- Fecha de Devolución -->
-            <div class="form-group">
-                <label for="fecha_devolucion">Fecha de Devolución:</label>
-                <input type="date" class="form-control @error('fecha_devolucion') is-invalid @enderror" id="fecha_devolucion" name="fecha_devolucion" 
-                    value="{{ old('fecha_devolucion', $asignacion->fecha_devolucion) }}">
-                @error('fecha_devolucion')
-                <span class="invalid-feedback">{{ $message }}</span>
-                @enderror
-                <small id="fechaWarningDevolucion" class="text-danger" style="display: none;">No puede ser menor a la fecha de asignacion.</small>
-            </div>
+<!-- Fecha de Devolución -->
+<div class="form-group">
+    <label for="fecha_devolucion">Fecha de Devolución:</label>
+    <input type="date" class="form-control @error('fecha_devolucion') is-invalid @enderror" id="fecha_devolucion" name="fecha_devolucion" 
+        value="{{ old('fecha_devolucion', $asignacion->fecha_devolucion) }}">
+    @error('fecha_devolucion')
+    <span class="invalid-feedback">{{ $message }}</span>
+    @enderror
+    <small id="fechaWarningDevolucion" class="text-danger" style="display: none;">No puede ser menor a la fecha de asignacion.</small>
+   
+</div>
 
-            <!-- Suministros -->
-            <div class="form-group">
-                <label for="suministros">Suministros:</label>
-                <div class="d-flex flex-wrap">
-                    @foreach($suministros as $suministro)
-                        <div class="form-check form-check-inline mb-2">
-                            <input 
-                                type="checkbox" 
-                                class="form-check-input" 
-                                id="suministro_{{ $suministro->id_suministro }}" 
-                                name="suministros[]" 
-                                value="{{ $suministro->id_suministro }}"
-                                {{ in_array($suministro->id_suministro, $asignacion->suministros->pluck('id_suministro')->toArray()) ? 'checked' : '' }}
-                            >
-                            <label 
-                                class="form-check-label" 
-                                for="suministro_{{ $suministro->id_suministro }}"
-                            >
-                                {{ $suministro->nombre_suministro }} 
-                                ({{ $suministro->cantidad_suministro > 0 ? 'Disponibles: ' . $suministro->cantidad_suministro : 'Sin stock' }})
-                            </label>
-                        </div>
-                    @endforeach
-                </div>
+
+
+<div class="form-group">
+    <label for="suministros">Suministros:</label>
+    <div class="d-flex flex-wrap">
+        @foreach($suministros as $suministro)
+            <div class="form-check form-check-inline mb-2">
+                <input 
+                    type="checkbox" 
+                    class="form-check-input" 
+                    id="suministro_{{ $suministro->id_suministro }}" 
+                    name="suministros[]" 
+                    value="{{ $suministro->id_suministro }}"
+                    {{ in_array($suministro->id_suministro, $asignacion->suministros->pluck('id_suministro')->toArray()) ? 'checked' : '' }}
+                >
+                <label 
+                    class="form-check-label" 
+                    for="suministro_{{ $suministro->id_suministro }}"
+                >
+                    {{ $suministro->nombre_suministro }} 
+                    ({{ $suministro->cantidad_suministro > 0 ? 'Disponibles: ' . $suministro->cantidad_suministro : 'Sin stock' }})
+                </label>
             </div>
+        @endforeach
+    </div>
+</div>
+
+
 
             <!-- Botones -->
             <div class="form-group">
@@ -195,12 +200,128 @@ $(document).ready(function () {
             empleadoGroup.hide(); // Ocultar empleados
             $('#cod_empleados').val(''); // Limpiar selección de empleado
             areaGroup.show(); // Mostrar área
-        } else {
+            loadAllAreas(); // Cargar todas las áreas cuando sea impresora
+        } else if (tipoEquipo === 'Computadora') {
             empleadoGroup.show(); // Mostrar empleados
-            areaGroup.hide(); // Ocultar área
+            areaGroup.show(); // Mostrar área
+        } else {
+            empleadoGroup.show();
+            areaGroup.show();
         }
     }
+
+    // Función para cargar todas las áreas disponibles
+    function loadAllAreas() {
+    const idSucursal = $('#id_sucursal').val(); // Obtener sucursal seleccionada
+
+    if (idSucursal) {
+        $.get(`/asignaciones/areas/${idSucursal}`, function (data) {
+            $('#id_area').empty().append('<option value="">Seleccione un área</option>');
+
+            if (data.success) {
+                data.areas.forEach((area) => {
+                    // Verificar si esta área es la que fue seleccionada previamente
+                    const areaSeleccionada = "{{ $areas->id_area ?? '' }}"; // Obtener el área seleccionada
+                    if (area.id_area == areaSeleccionada) {
+                        // Si es la misma, marcarla como seleccionada
+                        $('#id_area').append(
+                            `<option value="${area.id_area}" selected>${area.nombre_area}</option>`
+                        );
+                    } else {
+                        // Si no es la seleccionada, agregarla como opción normal
+                        $('#id_area').append(
+                            `<option value="${area.id_area}">${area.nombre_area}</option>`
+                        );
+                    }
+                });
+            } else {
+                alert(data.message || 'No se encontraron áreas disponibles.');
+            }
+        }).fail(function () {
+            alert('Error al cargar las áreas. Intente nuevamente.');
+        });
+    }
+}
+
+    // Actualizar empleados y áreas según la sucursal
+    $('#id_sucursal').change(function () {
+        const idSucursal = $(this).val(); // Sucursal seleccionada
+        const empleadoActual = "{{ $asignacion->cod_empleados }}"; // Empleado actual de la asignación
+        const sucursalActual = "{{ $asignacion->id_sucursal }}"; // Sucursal actual de la asignación
+
+        // Limpiar selects de empleados y áreas
+        $('#cod_empleados').empty().append('<option value="">Seleccione un empleado</option>');
+        $('#id_area').empty().append('<option value="">Seleccione un área</option>');
+
+        // Verificación para el empleado actual y sucursal
+        if (idSucursal === sucursalActual) {
+            // Agregar al empleado actual como seleccionado
+            $('#cod_empleados').append(`
+                <option value="${empleadoActual}" selected>
+                    {{ $asignacion->empleado ? $asignacion->empleado->nombre_empleado . ' ' . $asignacion->empleado->apellido_empleado : 'Empleado no asignado' }}
+                </option>
+            `);
+
+            // Cargar el área inicial si está definida
+            const areaInicial = "{{ $areas->id_area ?? '' }}";
+            const nombreAreaInicial = "{{ $areas->nombre_area ?? '' }}";
+
+            if (areaInicial && nombreAreaInicial) {
+                $('#id_area').append(`
+                    <option value="${areaInicial}" selected>${nombreAreaInicial}</option>
+                `);
+            }
+        }
+
+        // Si se selecciona una nueva sucursal, cargar los empleados asociados
+        if (idSucursal) {
+            $.get(`/asignaciones/empleados/${idSucursal}`, function (data) {
+                if (data && data.length > 0) {
+                    data.forEach((empleado) => {
+                        // Evitar duplicar el empleado actual
+                        if (empleado.cod_empleados != empleadoActual) {
+                            $('#cod_empleados').append(`
+                                <option value="${empleado.cod_empleados}">
+                                    ${empleado.nombre_empleado} ${empleado.apellido_empleado}
+                                </option>
+                            `);
+                        }
+                    });
+                }
+            }).fail(function () {
+                alert('Error al cargar empleados. Intente nuevamente.');
+            });
+
+            // Cargar las áreas de la nueva sucursal
+            loadAllAreas();
+        }
+    });
+
+    // Cargar área específica según el empleado seleccionado
+    $('#cod_empleados').change(function () {
+        const empleadoId = $(this).val();
+        $('#id_area').empty().append('<option value="">Seleccione un área</option>');
+
+        if (empleadoId) {
+            $.get(`/asignaciones/empleados/${empleadoId}/areas`, function (data) {
+                if (data.success) {
+                    $('#id_area').append(
+                        `<option value="${data.areas.id_area}" selected>${data.areas.nombre_area}</option>`
+                    );
+                }
+            });
+        } else {
+            // Recargar todas las áreas si no hay empleado seleccionado
+            const idSucursal = $('#id_sucursal').val();
+            loadAllAreas();
+        }
+    });
 });
 </script>
+@stop
+
+
+@section('css')
+<link rel="stylesheet" href="{{ asset('vendor/adminlte/plugins/select2/css/select2.min.css') }}">
 @stop
 

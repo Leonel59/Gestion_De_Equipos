@@ -1,6 +1,6 @@
 @extends('adminlte::page')
 
-@section('title', 'Objetos')
+@section('title', 'Gestion Interfaces')
 
 @section('css')
     <link href="https://cdn.datatables.net/1.11.3/css/dataTables.bootstrap5.min.css" rel="stylesheet">
@@ -50,7 +50,7 @@
 
 
 @section('content_header')
-    <h1 class="text-center header-title">Objetos</h1>
+    <h1 class="text-center header-title">Gestion de Interfaces</h1>
     <hr class="bg-dark border-1 border-top border-dark">
 @stop
 
@@ -61,7 +61,7 @@
     <div class="row mb-3">
         @can('seguridad.insertar')
             <a href="{{ route('objetos.create') }}" class="btn btn-outline-info btn-block text-center btn-create-objeto">
-                <span>Crear Nuevo Objeto</span> <i class="fas fa-plus-circle"></i>
+                <span>Crear Nueva Interfaz</span> <i class="fas fa-plus-circle"></i>
             </a>
         @endcan
     </div>
@@ -71,7 +71,7 @@
             <thead class="thead-dark">
                 <tr>
                     <th>#</th>
-                    <th>Nombre del Objeto</th>
+                    
                     <th>Roles y Permisos Globales</th>
                     @canany(['seguridad.editar', 'seguridad.eliminar'])
                         <th>Opciones</th>
@@ -83,7 +83,7 @@
                 @foreach($objetos as $objeto)
                     <tr>
                         <td>{{ ++$i }}</td>
-                        <td>{{ $objeto->name }}</td>
+                        
                         <td>
                             @if($objeto->roles->isNotEmpty())
                                 @foreach($objeto->roles as $role)

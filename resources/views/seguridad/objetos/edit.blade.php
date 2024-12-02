@@ -3,7 +3,7 @@
 @section('title', 'Editar Objeto')
 
 @section('content_header')
-    <h1>Editar Objeto</h1>
+    <h1>Editar Interfaces</h1>
 @stop
 
 @section('content')
@@ -12,27 +12,14 @@
         <div class="col-md-10">
             <div class="card shadow-sm">
                 <div class="card-header bg-primary text-white">
-                    <h3>Editar Objeto</h3>
+                    <h3>Editar Interfaces</h3>
                 </div>
                 <div class="card-body">
                     <form action="{{ route('objetos.update', $objeto->id) }}" method="POST">
                         @csrf
                         @method('PUT')
 
-                        <!-- Nombre del Objeto -->
-                        <div class="form-group">
-                            <label for="name">Nombre del Objeto</label>
-                            <input type="text" id="name" name="name"
-                                   class="form-control @error('name') is-invalid @enderror"
-                                   value="{{ old('name', $objeto->name) }}" required
-                                   oninput="validateName(this)">
-                            <div id="nameError" class="error" style="display: none;">
-                                No se permiten caracteres especiales.
-                            </div>
-                            @error('name')
-                                <div class="invalid-feedback">{{ $message }}</div>
-                            @enderror
-                        </div>
+                       
 
                         <!-- Selección de Roles y Permisos -->
                         <div class="form-group mt-4">
@@ -90,7 +77,7 @@
 
                         <!-- Botones de Acción -->
                         <div class="form-group mt-4 text-center">
-                            <button type="submit" class="btn btn-success">Actualizar Objeto</button>
+                            <button type="submit" class="btn btn-success">Actualizar Interfaces</button>
                             <a href="{{ route('objetos.index') }}" class="btn btn-secondary">Cancelar</a>
                         </div>
                     </form>

@@ -14,14 +14,19 @@ return new class extends Migration
         Schema::create('direcciones', function (Blueprint $table) {
             $table->id('id_direcciones')->primary();
             $table->foreignId('cod_empleados')  // Aquí se hace referencia a 'COD_EMPLEADOS' de 'empleados'
-            ->references('cod_empleados')  // Especificamos que hace referencia a 'COD_EMPLEADOS' en la tabla 'empleados'
-            ->on('empleados')  // Aseguramos que sea la tabla 'empleados'
-            ->onDelete('cascade'); // Acción de eliminación en cascada
-            $table->string('departamento', 100)->notNullable();
+                ->nullable()  // Permite valores NULL
+                ->references('cod_empleados')  // Especificamos que hace referencia a 'COD_EMPLEADOS' en la tabla 'empleados'
+                ->on('empleados')  // Aseguramos que sea la tabla 'empleados'
+                ->onDelete('cascade'); // Acción de eliminación en cascada
+            $table->foreignId('id_proveedor')  // Aquí se hace referencia a 'id_proveedor' de 'proveedor'
+                ->nullable()  // Permite valores NULL
+                ->references('id_proveedor')  // Especificamos que hace referencia a 'id_proveedor' en la tabla 'proveedor'
+                ->on('proveedor')  // Aseguramos que sea la tabla 'proveedor'
+                ->onDelete('cascade'); // Acción de eliminación en cascada
+            $table->enum('departamento', ['Francisco Morazan', 'Olancho', 'Comayagua', 'El Paraiso', 'Intibuca', 'Lempira', 'Choluteca', 'La Paz']);
             $table->string('ciudad', 100)->notNullable();
             $table->string('direccion', 255)->notNullable();
             $table->timestamps();
-          
         });
     }
 

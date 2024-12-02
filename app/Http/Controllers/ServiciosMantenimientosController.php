@@ -65,7 +65,16 @@ class ServiciosMantenimientosController extends Controller
             $modificado_por,
             $request->fecha_modificacion,
         ]);
-  
+
+        // Registrar la acción en la bitácora
+        app(BitacoraController::class)->register(
+            'create',
+            'servicios_mantenimientos',
+            'Se creó un nuevo Servicio: ' . $request->id_mant,
+            null, // No hay valores anteriores al crear
+            json_encode($request->except(['_token', '_method'])) // Valores nuevos
+        );
+
         return redirect()->route('servicios.index')->with('info', 'Servicio de mantenimiento creado con éxito.');
     }
 
@@ -84,6 +93,9 @@ class ServiciosMantenimientosController extends Controller
      */
     public function update(Request $request, int $id_mant)
     {
+
+    
+
         $request->validate([
             'id_equipo_mant' => 'required|exists:equipos,cod_equipo|max:10',
             'tipo_mantenimiento' => 'required|in:Preventivo,Correctivo,Predictivo',
@@ -115,6 +127,18 @@ class ServiciosMantenimientosController extends Controller
             $request->fecha_modificacion,
         ]);
 
+         // Obtener el eservicio
+         $servicios_mantenimientos = ServiciosMantenimientos::findOrFail($id_mant);  // Asegúrate de que esto no devuelva una colección
+         $valoresAnteriores = json_encode($servicios_mantenimientos->toArray());
+        // Registrar la acción en la bitácora
+        app(BitacoraController::class)->register(
+            'update',
+            'servicios_mantenimientos',
+            'Se actualizó un Servicio: ' . $request->id_mant,
+            $valoresAnteriores,
+            json_encode($request->except(['_token', '_method']))
+        );
+
         return redirect()->route('servicios.index')->with('info', 'Servicio de mantenimiento actualizado con éxito.');
     }
 
@@ -123,7 +147,21 @@ class ServiciosMantenimientosController extends Controller
      */
     public function destroy(int $id_mant)
     {
+         // Obtener los datos del equipo antes de eliminarlo
+         $servicios_mantenimientos = ServiciosMantenimientos::findOrFail($id_mant);
+
+         $valoresAnteriores = json_encode($servicios_mantenimientos->toArray());
+
         DB::statement('CALL sp_delete_servicio_mantenimiento(?)', [$id_mant]);
+
+        // Registrar la acción en la bitácora
+        app(BitacoraController::class)->register(
+            'delete',
+            'servicios_mantenimientos',
+            'Se eliminó un Servicio: ' . $servicios_mantenimientos->id_mant,
+            $valoresAnteriores,
+            null // No hay nuevos valores al eliminar
+        );
 
         return redirect()->route('servicios.index')->with('info', 'Servicio de mantenimiento eliminado con éxito.');
     }

@@ -384,6 +384,12 @@ return [
                 'icon' => 'fas fa-clipboard-list'
             ],
 
+            [
+                'text' => 'PROVEEDORES',
+                'url' => '/proveedor', // Cambia esto a la URL correcta
+                'icon' => 'fas fa-truck'
+            ],
+
     ],
 ],
 
@@ -402,11 +408,7 @@ return [
                 'url' => '/productos', // Cambia esto a la URL correcta
                 'icon' => 'fas fa-cogs'
             ],
-            [
-                'text' => 'PROVEEDORES',
-                'url' => '/proveedores', // Cambia esto a la URL correcta
-                'icon' => 'fas fa-truck'
-            ],
+           
             
         ],
         
@@ -446,7 +448,7 @@ return [
                 'icon' => 'fas fa-users-cog fa-fw'
             ],
             [
-                'text' => 'OBJETOS',
+                'text' => 'GESTION DE INTERFACES',
                 'url' => '/objetos',
                 'icon' => 'fas fa-users fa-fw',
                 

@@ -59,6 +59,8 @@ class FacturaController extends Controller
         $imagenPath, // Ruta de la imagen almacenada
     ]);
 
+    
+
     return redirect()->route('facturas.index')->with('success', 'Factura creada exitosamente.');
 }
 
@@ -71,6 +73,9 @@ class FacturaController extends Controller
     {
         // Llamada al procedimiento almacenado para eliminar una factura
         DB::statement('CALL sp_delete_factura(?)', [$cod_factura]);
+
+        
         return redirect()->route('facturas.index')->with('success', 'Factura eliminada exitosamente.');
     }
+
 }

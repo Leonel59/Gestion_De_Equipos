@@ -7,9 +7,8 @@
 @stop
 
 @section('content')
-
 @can('reporte.ver')
-   <!-- Contenedor principal con límite de ancho -->
+<!-- Contenedor principal con límite de ancho -->
 <div class="container" style="max-width: 810px; margin: 0 auto;">
     <!-- Contenedor para logo y título -->
     <div class="d-flex justify-content-between align-items-center" style="background: linear-gradient(to right, #28a745, #007bff); padding: 10px 20px; border-radius: 8px; box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); margin-bottom: 30px;">
@@ -30,10 +29,20 @@
                     </div>
                     <div class="card-body" style="padding: 2rem;">
                         <form id="reportForm" action="{{ route('reportes.equipos') }}" method="GET">
+                            <!-- PARTE QUE AÑADI PARA GENERAR LOS REPORTES -->
                             <div class="form-group mb-4">
-                                <label for="reporteNombre" style="font-weight: 500; color: #333;">Nombre del Reporte</label>
-                                <input type="text" class="form-control form-control-lg" id="reporteNombre" name="reporteNombre" placeholder="Ingrese el nombre del reporte" required style="border-radius: 8px; box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.12), inset 0 1px 2px rgba(0, 0, 0, 0.24);">
-                            </div>
+                                <label for="reporteNombre" style="font-weight: 500; color: #333;">Seleccione el reporte</label>
+                                <select id="reporteNombre" name="reporteNombre" class="form-control form-control-lg" multiple style="border-radius: 8px; box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.12), inset 0 1px 2px rgba(0, 0, 0, 0.24);">
+                                    <option value="equipos">Reporte de Equipos</option>
+                                    <option value="empleados">Reporte de Empleados</option>
+                                    <option value="servicios">Reporte de Servicios</option>
+                                    <option value="proveedores">Reporte de Proveedores</option>
+                                    <option value="asignaciones">Reporte de Asignaciones</option>
+                                </select>
+                                <small class="text-muted">Reportes Recarga Veloz</small>
+                            </div> 
+                            <!-- FIN -->
+
                             <button type="submit" class="btn btn-primary btn-lg btn-block" style="border-radius: 8px; font-size: 1.1rem; padding: 12px 20px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);">
                                 <i class="fas fa-file-pdf"></i> Generar Reporte
                             </button>
@@ -150,7 +159,6 @@
         });
     </script>
 @stop
-
 
 
 

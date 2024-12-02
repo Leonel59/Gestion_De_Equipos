@@ -10,6 +10,7 @@ use App\Models\Empleado;
 use App\Models\Equipos;
 use App\Models\Sucursales;
 use App\Models\Suministros;
+use Carbon\Carbon;
 
 class AsignacionesController extends Controller
 {
@@ -106,8 +107,8 @@ class AsignacionesController extends Controller
                 }
             }
 
-            return redirect()->route('asignaciones.index')->with('success', 'Asignación agregada exitosamente!');
-
+            
+            return redirect()->route('asignaciones.index')->with('mensaje', 'Asignación agregada exitosamente!');
         } catch (\Exception $e) {
             return redirect()->back()->withErrors(['error' => 'Ocurrió un error al realizar la asignación.'])->withInput();
         }
@@ -121,6 +122,10 @@ class AsignacionesController extends Controller
         ->where('tipo_equipo', $asignacion->equipos->tipo_equipo)
         ->orWhere('id_equipo', $asignacion->id_equipo)
         ->get();
+    
+    
+    $asignacion->fecha_asignacion = Carbon::parse($asignacion->fecha_asignacion)->format('Y-m-d');
+    $asignacion->fecha_devolucion = Carbon::parse($asignacion->fecha_devolucion)->format('Y-m-d');
 
     $empleados = Empleado::where('id_sucursal', $asignacion->id_sucursal)
         ->where(function ($query) use ($asignacion) {
@@ -129,6 +134,8 @@ class AsignacionesController extends Controller
         })->get();
 
     $sucursales = Sucursales::all();
+
+
     $areas = Areas::where('id_area', $asignacion->id_area)->first();
 
     // Incluye suministros con cantidad > 0 o que ya están asignados
@@ -157,6 +164,9 @@ public function update(Request $request, $id)
 
     try {
         DB::beginTransaction();
+
+        $valoresAnteriores = json_encode($asignacion->toArray());
+
 
         // Verificar y actualizar el equipo asignado
         if ($asignacion->id_equipo !== $request->id_equipo) {
@@ -228,7 +238,8 @@ public function update(Request $request, $id)
 
         DB::commit();
 
-        return redirect()->route('asignaciones.index')->with('success', 'Asignación actualizada correctamente.');
+
+        return redirect()->route('asignaciones.index')->with('mensaje', 'Asignación actualizada correctamente.');
     } catch (\Exception $e) {
         DB::rollBack();
         return redirect()->back()->withErrors(['error' => 'Ocurrió un error al actualizar la asignación: ' . $e->getMessage()])->withInput();
@@ -239,6 +250,8 @@ public function update(Request $request, $id)
     {
         try {
             $asignacion = Asignaciones::findOrFail($id);
+
+            $valoresAnteriores = json_encode($asignacion->toArray());
 
             $equipo = Equipos::find($asignacion->id_equipo);
             if ($equipo) {
@@ -257,6 +270,9 @@ public function update(Request $request, $id)
             }
 
             DB::select('CALL sp_delete_asignacion(?)', [$id]);
+
+            
+            
 
             return redirect()->route('asignaciones.index')->with('mensaje', 'Asignación eliminada exitosamente.');
         } catch (\Exception $e) {
@@ -335,3 +351,4 @@ public function update(Request $request, $id)
 
     
 }
+ 

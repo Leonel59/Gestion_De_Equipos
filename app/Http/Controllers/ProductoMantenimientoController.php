@@ -55,6 +55,15 @@ class ProductoMantenimientoController extends Controller
             'servicio_mantenimiento_id' => $request->servicio_mantenimiento_id,
         ]);
 
+        // Registrar la acción en la bitácora
+        app(BitacoraController::class)->register(
+            'create',
+            'producto mantenimiento',
+            'Se creó un nuevo Producto: ' . $request->id_producto,
+            null, // No hay valores anteriores al crear
+            json_encode($request->except(['_token', '_method'])) // Valores nuevos
+        );
+
         return redirect()->route('productos.index')->with('success', 'Producto de mantenimiento creado exitosamente.');
     }
 
@@ -97,6 +106,18 @@ class ProductoMantenimientoController extends Controller
             'servicio_mantenimiento_id' => $request->servicio_mantenimiento_id,
         ]);
 
+        // Obtener el eservicio
+        $producto_mantenimiento = ProductoMantenimiento::findOrFail($id);  // Asegúrate de que esto no devuelva una colección
+        $valoresAnteriores = json_encode($producto_mantenimiento->toArray());
+       // Registrar la acción en la bitácora
+       app(BitacoraController::class)->register(
+           'update',
+           'producto mantenimiento',
+           'Se actualizó un Producto: ' . $request->id_producto,
+           $valoresAnteriores,
+           json_encode($request->except(['_token', '_method']))
+       );
+
         return redirect()->route('productos.index')->with('success', 'Producto de mantenimiento actualizado exitosamente.');
     }
 
@@ -108,6 +129,16 @@ class ProductoMantenimientoController extends Controller
         // Eliminar el producto de mantenimiento
         $producto = ProductoMantenimiento::findOrFail($id);
         $producto->delete();
+
+         $valoresAnteriores = json_encode($producto->toArray());
+         // Registrar la acción en la bitácora
+        app(BitacoraController::class)->register(
+            'delete',
+            'Producto Mantenimiento',
+            'Se eliminó un Producto: ' . $producto->id_producto,
+            $valoresAnteriores,
+            null // No hay nuevos valores al eliminar
+        );
 
         return redirect()->route('productos.index')->with('success', 'Producto de mantenimiento eliminado exitosamente.');
     }

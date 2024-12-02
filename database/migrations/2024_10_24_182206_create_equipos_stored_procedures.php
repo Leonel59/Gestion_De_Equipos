@@ -47,7 +47,7 @@ BEGIN
     -- Validaciones del estado
     IF p_estado_equipo NOT IN ("Disponible", "En Mantenimiento", "Comodin", "Asignado") THEN
         SIGNAL SQLSTATE "45000" 
-        SET MESSAGE_TEXT = "Error: El estado de equipo debe ser Disponible, En Mantenimiento, Comodin y Asignado.";
+        SET MESSAGE_TEXT = "Error: El estado de equipo debe ser Disponible, En Mantenimiento y No Disponible.";
     END IF;
 
     -- Validaciones

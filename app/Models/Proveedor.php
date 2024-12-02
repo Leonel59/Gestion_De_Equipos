@@ -15,8 +15,24 @@ class Proveedor extends Model
         'nombre_proveedor',
         'rtn_proveedor',
         'contacto_proveedor',
-        'direccion_proveedor',
-        'telefono_proveedor',
-        'email_proveedor',
+
     ];
+
+
+    public function correos()
+    {
+        return $this->hasMany(Correos::class, 'id_proveedor', 'id_proveedor');
+    }
+
+
+    public function telefonos()
+    {
+        return $this->hasMany(Telefonos::class, 'id_proveedor', 'id_proveedor');
+    }
+
+    public function direcciones()
+    {
+        return $this->hasMany(Direcciones::class, 'id_proveedor', 'id_proveedor');
+    }
+
 }

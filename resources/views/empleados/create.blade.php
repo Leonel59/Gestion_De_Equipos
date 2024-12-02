@@ -22,11 +22,11 @@
 
                     <div class="form-group">
                         <label for="nombre_empleado">Nombre</label>
-                        <input type="text" class="form-control" id="nombre_empleado" name="nombre_empleado" required>
+                        <input type="text" class="form-control" id="nombre_empleado" name="nombre_empleado" maxlength="30" required>
                     </div>
                     <div class="form-group">
                         <label for="apellido_empleado">Apellido</label>
-                        <input type="text" class="form-control" id="apellido_empleado" name="apellido_empleado" required>
+                        <input type="text" class="form-control" id="apellido_empleado" name="apellido_empleado" maxlength="30" required>
                     </div>
                     <div class="form-group">
                         <label for="id_sucursal">Sucursal:</label>
@@ -46,14 +46,14 @@
                     </div>
                     <div class="form-group">
                         <label for="cargo_empleado">Cargo</label>
-                        <input type="text" class="form-control" id="cargo_empleado" name="cargo_empleado" required>
+                        <input type="text" class="form-control" id="cargo_empleado" name="cargo_empleado" maxlength="40" required>
                     </div>
                     <div class="form-group">
                         <label for="estado_empleado">Estado</label>
                         <select class="form-control" id="estado_empleado" name="estado_empleado" required>
                             <option value="">Seleccione</option>
-                            <option value="activo">Activo</option>
-                            <option value="inactivo">Inactivo</option>
+                            <option value="Activo">Activo</option>
+                            <option value="Inactivo">Inactivo</option>
                         </select>
                     </div>
                     <div class="form-group">
@@ -65,12 +65,12 @@
 
                     <div class="form-group">
                         <label for="correo_personal">Correo Personal</label>
-                        <input type="email" class="form-control" id="correo_personal" name="correo_personal" placeholder="example@gmail.com">
+                        <input type="email" class="form-control" id="correo_personal" name="correo_personal" maxlength="30" placeholder="example@gmail.com">
                     </div>
 
                     <div class="form-group">
                         <label for="correo_profesional">Correo Profesional (Opcional)</label>
-                        <input type="email" class="form-control" id="correo_profesional" name="correo_profesional" placeholder="example@gmail.com">
+                        <input type="email" class="form-control" id="correo_profesional" name="correo_profesional" maxlength="30" placeholder="example@gmail.com">
                     </div>
 
 
@@ -80,25 +80,36 @@
 
                     <div class="form-group">
                         <label for="telefono_personal">Número de Teléfono Personal</label>
-                        <input type="text" class="form-control" id="telefono_personal" name="telefono_personal" placeholder="+504 3367-8945">
+                        <input type="text" class="form-control" id="telefono_personal" name="telefono_personal" maxlength="15" placeholder="+504 3367-8945">
                     </div>
                     <div class="form-group">
                         <label for="telefono_trabajo">Número de Teléfono Laboral (Opcional)</label>
-                        <input type="text" class="form-control" id="telefono_trabajo" name="telefono_trabajo" placeholder="+504 2200-8945">
+                        <input type="text" class="form-control" id="telefono_trabajo" name="telefono_trabajo" maxlength="15" placeholder="+504 2200-8945">
                     </div>
 
                     <!-- Direcciones -->
                     <div class="form-group">
                         <label for="direccion">Dirección</label>
-                        <input type="text" class="form-control" id="direccion" name="direccion">
+                        <input type="text" class="form-control" id="direccion" name="direccion" maxlength="50" required>
                     </div>
                     <div class="form-group">
                         <label for="departamento">Departamento</label>
-                        <input type="text" class="form-control" id="departamento" name="departamento">
+                        <select class="form-control" id="departamento" name="departamento"  required>
+                            <option value="">Seleccione el departamento</option>
+                            <option value="Francisco Morazan">Francisco Morazan</option>
+                            <option value="Olancho">Olancho</option>
+                            <option value="Comayagua">Comayagua</option>
+                            <option value="El Paraiso">El Paraiso</option>
+                            <option value="Intibuca">Intibuca</option>
+                            <option value="Lempira">Lempira</option>
+                            <option value="Choluteca">Choluteca</option>
+                            <option value="La Paz">La Paz</option>
+                        </select>
                     </div>
+                    
                     <div class="form-group">
                         <label for="ciudad">Ciudad</label>
-                        <input type="text" class="form-control" id="ciudad" name="ciudad">
+                        <input type="text" class="form-control" id="ciudad" name="ciudad" maxlength="50" required >
                     </div>
                 </div>
             </div>
@@ -113,6 +124,7 @@
 @endsection
 
 @section('js')
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
     $('#id_sucursal').on('change', function() {
         var sucursalID = $(this).val();
@@ -142,8 +154,8 @@
 
     // Aplicación de validaciones específicas
     validateInput('#nombre_empleado, #apellido_empleado, #cargo_empleado', /[^a-zA-Z\s]/g); // Solo letras
-    validateInput('#departamento, #ciudad', /[^a-zA-Z\s]/g); // Solo letras
-    validateInput('#direccion', /[^a-zA-Z\s]/g); // Solo letras
+    validateInput('#ciudad', /[^a-zA-Z\s]/g); // Solo letras
+    validateInput('#direccion', /[^a-zA-Z0-9\s]/g); // Solo letras
 
     // Validación para fecha de contratacion
     $('#fecha_contratacion').on('change', function() {
@@ -160,25 +172,19 @@
         }
     });
 
-    // Validación para ingresar teléfonos
+    // Validacion para ingresar telefonos
     document.querySelectorAll('#telefono_personal, #telefono_trabajo').forEach(function(input) {
         input.addEventListener('input', function(event) {
             // Expresión regular: solo permite números, guiones y el signo +
             const regex = /^[0-9+\-\s]*$/;
 
+            // Si el valor del input no cumple con la expresión regular, lo corregimos
             if (!regex.test(event.target.value)) {
+                // Eliminamos el último carácter que no cumple con la validación
                 event.target.value = event.target.value.replace(/[^0-9+\-\s]/g, '');
             }
         });
     });
 
-    // Validaciones para correos electrónicos
-    document.querySelectorAll('#correo_personal, #correo_profesional').forEach(function(input) {
-        input.addEventListener('input', function(event) {
-            // Permitir solo letras, números, @ y el punto
-            const regex = /[^a-zA-Z0-9@.]/g;
-            this.value = this.value.replace(regex, '');
-        });
-    });
 </script>
 @endsection

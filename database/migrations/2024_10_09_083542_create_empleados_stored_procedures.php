@@ -21,7 +21,7 @@ return new class extends Migration
     IN p_nombre_empleado VARCHAR(100),
     IN p_apellido_empleado VARCHAR(100),
     IN p_cargo_empleado VARCHAR(30),
-    IN p_estado_empleado ENUM(\'Activo\', \'Inactivo\'),
+    IN p_estado_empleado ENUM(\'Activo\', \'Inactivo\',\'Asignado\' ),
     IN p_fecha_contratacion DATE,
     
     -- parámetros para correos, teléfonos y direcciones
@@ -30,7 +30,7 @@ return new class extends Migration
     IN p_telefono_personal VARCHAR(25),
     IN p_telefono_trabajo VARCHAR(25),
     IN p_direccion VARCHAR(255),
-    IN p_departamento VARCHAR(100),
+    IN p_departamento ENUM(\'Francisco Morazan\', \'Olancho\',\'Comayagua\', \'El Paraiso\', \'Intibuca\', \'Lempira\', \'Choluteca\', \'La Paz\'),
     IN p_ciudad VARCHAR(100)
 )
 BEGIN
@@ -63,7 +63,7 @@ CREATE PROCEDURE sp_update_empleados(
     IN p_nombre_empleado VARCHAR(100),
     IN p_apellido_empleado VARCHAR(100),
     IN p_cargo_empleado VARCHAR(30),
-    IN p_estado_empleado ENUM(\'Activo\', \'Inactivo\'),
+    IN p_estado_empleado ENUM(\'Activo\', \'Inactivo\', \'Asignado\'),
     IN p_fecha_contratacion DATE,
     
     -- parámetros para correos, teléfonos y direcciones
@@ -72,7 +72,7 @@ CREATE PROCEDURE sp_update_empleados(
     IN p_telefono_personal VARCHAR(25),
     IN p_telefono_trabajo VARCHAR(25),
     IN p_direccion VARCHAR(255),
-    IN p_departamento VARCHAR(100),
+     IN p_departamento ENUM(\'Francisco Morazan\', \'Olancho\',\'Comayagua\', \'El Paraiso\', \'Intibuca\', \'Lempira\', \'Choluteca\', \'La Paz\'),
     IN p_ciudad VARCHAR(100)
 )
 BEGIN

@@ -22,168 +22,170 @@ class ObjetoController extends Controller
      * Mostrar el formulario para crear un nuevo objeto.
      */
     public function create()
-{
-    $roles = Role::all(); // Obtener todos los roles disponibles
+    {
+        $roles = Role::all(); // Obtener todos los roles disponibles
 
-    // Rutas gestionables
-    $rutas = [
-        'empleados' => 'Gestión de Empleados',
-        'equipos' => 'Gestión de Equipos',
-        'asignacion' => 'Gestion de Asignacion', 
-        'mantenimiento' => 'Gestion de Mantenimiento',
-        'factura' => 'Gestion de Factura', 
-        'reporte' => 'Gestion de Reporte',
-        'seguridad' => 'Gestión de Seguridad',
-    ];
+        // Rutas gestionables
+        $rutas = [
+            'empleados' => 'Gestión de Empleados',
+            'equipos' => 'Gestión de Equipos',
+            'asignacion' => 'Gestion de Asignacion', 
+            'mantenimiento' => 'Gestion de Mantenimiento',
+            'factura' => 'Gestion de Factura', 
+            'reporte' => 'Gestion de Reporte',
+            'seguridad' => 'Gestión de Seguridad',
+        ];
 
-    return view('seguridad.objetos.create', compact('roles', 'rutas'));
-}
+        return view('seguridad.objetos.create', compact('roles', 'rutas'));
+    }
 
     /**
      * Guardar un nuevo objeto con permisos.
      */
     public function store(Request $request)
-{
-    // Validar la entrada del formulario
-    $request->validate([
-        'name' => 'required|string|max:255|unique:objetos,name',
-        'roles' => 'nullable|array',
-        'roles.*.id' => 'exists:roles,id',
-        'roles.*.permisos' => 'array', // Validar que los permisos sean un array
-    ]);
+    {
+        // Validar la entrada del formulario
+        $request->validate([
+            'name' => 'nullable|string|max:255|unique:objetos,name', // Ya no es obligatorio
+            'roles' => 'nullable|array',
+            'roles.*.id' => 'exists:roles,id',
+            'roles.*.permisos' => 'array', // Validar que los permisos sean un array
+        ]);
 
-    // Crear el objeto
-    $objeto = Objeto::create(['name' => $request->name]);
+        // Si no se proporciona un nombre, generar uno automáticamente
+        $name = $request->name ?? 'Objeto_' . now()->format('Ymd_His');
 
-    // Sincronizar roles y permisos
-    if ($request->has('roles')) {
-        foreach ($request->roles as $roleData) {
-            $role = Role::findOrFail($roleData['id']);
+        // Crear el objeto
+        $objeto = Objeto::create(['name' => $name]);
 
-            // Crear o verificar los permisos seleccionados
-            $permissions = [];
-            if (isset($roleData['permisos'])) {
-                foreach ($roleData['permisos'] as $route => $actions) {
-                    foreach ($actions as $action => $value) {
-                        if ($value) { // Solo agregar permisos seleccionados
-                            $permissionName = "{$route}.{$action}";
-                            $permission = Permission::firstOrCreate(['name' => $permissionName, 'guard_name' => 'web']);
-                            $permissions[] = $permission->id;
+        // Sincronizar roles y permisos
+        if ($request->has('roles')) {
+            foreach ($request->roles as $roleData) {
+                $role = Role::findOrFail($roleData['id']);
+
+                // Crear o verificar los permisos seleccionados
+                $permissions = [];
+                if (isset($roleData['permisos'])) {
+                    foreach ($roleData['permisos'] as $route => $actions) {
+                        foreach ($actions as $action => $value) {
+                            if ($value) { // Solo agregar permisos seleccionados
+                                $permissionName = "{$route}.{$action}";
+                                $permission = Permission::firstOrCreate(['name' => $permissionName, 'guard_name' => 'web']);
+                                $permissions[] = $permission->id;
+                            }
                         }
                     }
                 }
+
+                // Asignar permisos al rol
+                $role->syncPermissions($permissions);
+
+                // Asociar rol y permisos al objeto
+                $objeto->roles()->attach($role->id, [
+                    'ver' => $roleData['permisos']['ver'] ?? false,
+                    'insertar' => $roleData['permisos']['insertar'] ?? false,
+                    'editar' => $roleData['permisos']['editar'] ?? false,
+                    'eliminar' => $roleData['permisos']['eliminar'] ?? false,
+                ]);
             }
-
-            // Asignar permisos al rol
-            $role->syncPermissions($permissions);
-
-            // Asociar rol y permisos al objeto
-            $objeto->roles()->attach($role->id, [
-                'ver' => $roleData['permisos']['ver'] ?? false,
-                'insertar' => $roleData['permisos']['insertar'] ?? false,
-                'editar' => $roleData['permisos']['editar'] ?? false,
-                'eliminar' => $roleData['permisos']['eliminar'] ?? false,
-            ]);
         }
+
+        return redirect()->route('objetos.index')->with('success', 'Objeto creado con éxito.');
     }
-
-    return redirect()->route('objetos.index')->with('success', 'Objeto creado con éxito.');
-}
-
-
-
-
 
     /**
      * Mostrar un objeto específico.
      */
-    
+    public function show($id)
+    {
+        // Código para mostrar un objeto específico si se necesita
+    }
 
     /**
      * Mostrar el formulario para editar un objeto.
      */
     public function edit($id)
-{
-    $objeto = Objeto::with('roles.permissions')->findOrFail($id);  // Cargar roles con permisos asociados
-    $roles = Role::all();
+    {
+        $objeto = Objeto::with('roles.permissions')->findOrFail($id);  // Cargar roles con permisos asociados
+        $roles = Role::all();
 
-    // Rutas gestionables
-    $rutas = [
-        'empleados' => 'Gestión de Empleados',
-        'equipos' => 'Gestión de Equipos',
-        'asignacion' => 'Gestion de Asignacion', 
-        'mantenimiento' => 'Gestion de Mantenimiento',
-        'factura' => 'Gestion de Factura', 
-        'reporte' => 'Gestion de Reporte',
-        'seguridad' => 'Gestión de Seguridad',
-    ];
+        // Rutas gestionables
+        $rutas = [
+            'empleados' => 'Gestión de Empleados',
+            'equipos' => 'Gestión de Equipos',
+            'asignacion' => 'Gestion de Asignacion', 
+            'mantenimiento' => 'Gestion de Mantenimiento',
+            'factura' => 'Gestion de Factura', 
+            'reporte' => 'Gestion de Reporte',
+            'seguridad' => 'Gestión de Seguridad',
+        ];
 
-    // Preparar los permisos existentes para cada rol
-    $rolePermissions = [];
-    foreach ($objeto->roles as $role) {
-        foreach ($role->permissions as $permission) {
-            $routeAction = explode('.', $permission->name);
-            $rolePermissions[$role->id][$routeAction[0]][$routeAction[1]] = true;
+        // Preparar los permisos existentes para cada rol
+        $rolePermissions = [];
+        foreach ($objeto->roles as $role) {
+            foreach ($role->permissions as $permission) {
+                $routeAction = explode('.', $permission->name);
+                $rolePermissions[$role->id][$routeAction[0]][$routeAction[1]] = true;
+            }
         }
+
+        return view('seguridad.objetos.edit', compact('objeto', 'roles', 'rutas', 'rolePermissions'));
     }
-
-    return view('seguridad.objetos.edit', compact('objeto', 'roles', 'rutas', 'rolePermissions'));
-}
-
 
     /**
      * Actualizar un objeto y sus permisos.
      */
     public function update(Request $request, $id)
-{
-    // Validar la entrada del formulario
-    $request->validate([
-        'name' => 'required|string|max:255|unique:objetos,name,' . $id,
-        'roles' => 'nullable|array',
-        'roles.*.id' => 'exists:roles,id',
-        'roles.*.permisos' => 'array',
-    ]);
+    {
+        // Validar la entrada del formulario
+        $request->validate([
+            'name' => 'nullable|string|max:255|unique:objetos,name',
+            'roles' => 'nullable|array',
+            'roles.*.id' => 'exists:roles,id',
+            'roles.*.permisos' => 'array',
+        ]);
 
-    $objeto = Objeto::findOrFail($id);
+        $objeto = Objeto::findOrFail($id);
 
-    // Actualizar el nombre del objeto
-    $objeto->update(['name' => $request->name]);
+        $name = $request->name ?? $objeto->name; // Conservar el nombre existente si no se proporciona uno nuevo
 
-    // Sincronizar roles y permisos
-    if ($request->has('roles')) {
-        foreach ($request->roles as $roleData) {
-            $role = Role::findOrFail($roleData['id']);
+        // Actualizar el nombre del objeto
+        $objeto->update(['name' => $name]);
 
-            // Crear o verificar los permisos seleccionados
-            $permissions = [];
-            if (isset($roleData['permisos'])) {
-                foreach ($roleData['permisos'] as $route => $actions) {
-                    foreach ($actions as $action => $value) {
-                        if ($value) { // Solo agregar permisos seleccionados
-                            $permissionName = "{$route}.{$action}";
-                            $permission = Permission::firstOrCreate(['name' => $permissionName, 'guard_name' => 'web']);
-                            $permissions[] = $permission->id;
+        // Sincronizar roles y permisos
+        if ($request->has('roles')) {
+            foreach ($request->roles as $roleData) {
+                $role = Role::findOrFail($roleData['id']);
+
+                // Crear o verificar los permisos seleccionados
+                $permissions = [];
+                if (isset($roleData['permisos'])) {
+                    foreach ($roleData['permisos'] as $route => $actions) {
+                        foreach ($actions as $action => $value) {
+                            if ($value) { // Solo agregar permisos seleccionados
+                                $permissionName = "{$route}.{$action}";
+                                $permission = Permission::firstOrCreate(['name' => $permissionName, 'guard_name' => 'web']);
+                                $permissions[] = $permission->id;
+                            }
                         }
                     }
                 }
+
+                // Asignar permisos al rol
+                $role->syncPermissions($permissions);
+
+                // Sincronizar permisos en la tabla pivot del objeto
+                $objeto->roles()->syncWithoutDetaching([$role->id => [
+                    'ver' => $roleData['permisos']['ver'] ?? false,
+                    'insertar' => $roleData['permisos']['insertar'] ?? false,
+                    'editar' => $roleData['permisos']['editar'] ?? false,
+                    'eliminar' => $roleData['permisos']['eliminar'] ?? false,
+                ]]);
             }
-
-            // Asignar permisos al rol
-            $role->syncPermissions($permissions);
-
-            // Sincronizar permisos en la tabla pivot del objeto
-            $objeto->roles()->syncWithoutDetaching([$role->id => [
-                'ver' => $roleData['permisos']['ver'] ?? false,
-                'insertar' => $roleData['permisos']['insertar'] ?? false,
-                'editar' => $roleData['permisos']['editar'] ?? false,
-                'eliminar' => $roleData['permisos']['eliminar'] ?? false,
-            ]]);
         }
+
+        return redirect()->route('objetos.index')->with('success', 'Objeto actualizado con éxito.');
     }
-
-    return redirect()->route('objetos.index')->with('success', 'Objeto actualizado con éxito.');
-}
-
 
     /**
      * Eliminar un objeto.

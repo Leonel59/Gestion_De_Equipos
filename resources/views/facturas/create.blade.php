@@ -36,9 +36,13 @@
                 </div>
 
                 <div class="form-group">
-                    <label for="tipo_factura">Tipo de Factura</label>
-                    <input type="text" name="tipo_factura" id="tipo_factura" class="form-control rounded-pill" required>
-                </div>
+    <label for="tipo_factura">Tipo de Factura</label>
+    <select name="tipo_factura" id="tipo_factura" class="form-control rounded-pill" required>
+        <option value="">Seleccione un tipo de factura</option>
+        <option value="Por Mantenimiento">Por Mantenimiento</option>
+        <option value="Por Compra de equipo">Por Compra de equipo</option>
+    </select>
+</div>
 
                 <div class="form-group">
                     <label for="nombre_cliente">Nombre del Cliente</label>

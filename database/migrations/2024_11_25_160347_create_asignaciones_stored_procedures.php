@@ -22,8 +22,8 @@ return new class extends Migration
                 IN p_cod_empleados INT,
                 IN p_id_suministro INT,
                 IN p_detalle_asignacion VARCHAR(100),
-                IN p_fecha_asignacion DATE,
-                IN p_fecha_devolucion DATE
+                IN p_fecha_asignacion DATETIME,
+                IN p_fecha_devolucion DATETIME
             )
             BEGIN
                 -- Validar si el equipo existe
@@ -69,8 +69,8 @@ return new class extends Migration
                 IN p_cod_empleados INT,
                 IN p_id_suministro INT,
                 IN p_detalle_asignacion VARCHAR(100),
-                IN p_fecha_asignacion DATE,
-                IN p_fecha_devolucion DATE
+                IN p_fecha_asignacion DATETIME,
+                IN p_fecha_devolucion DATETIME
             )
             BEGIN
                 -- Validar si la asignación existe

@@ -78,7 +78,8 @@ class UsuarioController extends Controller
 {
     $usuario = User::findOrFail($id);
     $roles = Role::all(); // Obtener todos los roles disponibles para la edición
-    return view('seguridad.usuarios.edit', compact('usuario', 'roles'));
+    $rolActual = $usuario->roles->first(); // Obtener el rol actual, si existe
+    return view('seguridad.usuarios.edit', compact('usuario', 'roles', 'rolActual'));
 }
 
 public function update(Request $request, string $id)
@@ -90,7 +91,7 @@ public function update(Request $request, string $id)
         'username' => 'required|string|max:255|unique:users,username,' . $usuario->id,
         'email' => 'required|string|email|max:255|unique:users,email,' . $usuario->id,
         'password' => 'nullable|string|min:8|confirmed',
-        // No se necesita validar el rol si no va a cambiar
+        'role' => 'required|exists:roles,id', // Validar que el rol existe
     ]);
 
     $valoresAnteriores = [
@@ -108,6 +109,10 @@ public function update(Request $request, string $id)
     if ($request->password) {
         $usuario->password = bcrypt($request->password);
     }
+
+     // Actualizar el rol del usuario
+     $nuevoRol = Role::findById($request->role);
+     $usuario->syncRoles($nuevoRol); // Reemplazar roles existentes con el nuevo
 
     $usuario->save();
 

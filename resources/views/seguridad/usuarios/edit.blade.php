@@ -81,14 +81,16 @@
                 </div>
 
                 <div class="form-group">
-                    <label for="role">Rol Seleccionado</label>
-                    <select name="role" class="form-control" disabled>
-                        <option value="{{ $usuario->roles->first()->id }}">
-                            {{ $usuario->roles->first()->name }}
-                        </option>
-                    </select>
-                </div>
-
+    <label for="role">Rol</label>
+    <select name="role" class="form-control" required>
+        @foreach ($roles as $rol)
+            <option value="{{ $rol->id }}" 
+                {{ $usuario->roles->isNotEmpty() && $usuario->roles->first()->id == $rol->id ? 'selected' : '' }}>
+                {{ $rol->name }}
+            </option>
+        @endforeach
+    </select>
+</div>
                 <button type="submit" class="btn btn-primary mt-3">Actualizar Usuario</button>
                 <a href="{{ route('usuarios.index') }}" class="btn btn-secondary mt-3">Cancelar</a>
             </form>

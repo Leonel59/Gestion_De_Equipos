@@ -252,25 +252,12 @@ input:checked + .slider:before {
 
 @section('content')
 <div class="container">
-    <h2 class="title">Crear Nuevo Objeto</h2>
+    <h2 class="title">Crear Nueva Interfaces</h2>
 
     <form action="{{ route('objetos.store') }}" method="POST">
         @csrf
 
-        <!-- Nombre del Objeto -->
-        <div class="form-group">
-            <label for="name">Nombre del Objeto</label>
-            <input type="text" id="name" name="name" 
-                   class="form-control @error('name') is-invalid @enderror" 
-                   value="{{ old('name') }}" required 
-                   oninput="validateName(this)">
-            <div id="nameError" class="error" style="display: none;">
-                No se permiten caracteres especiales.
-            </div>
-            @error('name')
-                <div class="invalid-feedback">{{ $message }}</div>
-            @enderror
-        </div>
+        
 
         <!-- Selección de Roles y Permisos -->
         <div class="form-group mt-3">
@@ -338,7 +325,7 @@ input:checked + .slider:before {
 
         <!-- Botones de Acción -->
         <div class="form-group mt-4">
-            <button type="submit" class="btn btn-save transition">Crear Objeto</button>
+            <button type="submit" class="btn btn-save transition">Crear Interfaces</button>
             <a href="{{ route('objetos.index') }}" class="btn btn-cancel transition">Cancelar</a>
         </div>
     </form>
@@ -346,15 +333,17 @@ input:checked + .slider:before {
 
 @push('js')
 <script>
-    // Bloquear caracteres no permitidos (solo letras, números y espacios)
-    document.getElementById('name').addEventListener('keydown', function(event) {
-        const regex = /^[a-zA-Z0-9\s]*$/; // Permite solo letras, números y espacios
+    // Eliminar esta función de validación de caracteres especiales
+/*
+document.getElementById('name').addEventListener('keydown', function(event) {
+    const regex = /^[a-zA-Z0-9\s]*$/; // Permite solo letras, números y espacios
 
-        // Si el valor de la tecla presionada no cumple con el regex, prevenir la entrada
-        if (!regex.test(event.key) && event.key !== 'Backspace' && event.key !== 'Tab' && event.key !== 'Delete') {
-            event.preventDefault();
-        }
-    });
+    // Si el valor de la tecla presionada no cumple con el regex, prevenir la entrada
+    if (!regex.test(event.key) && event.key !== 'Backspace' && event.key !== 'Tab' && event.key !== 'Delete') {
+        event.preventDefault();
+    }
+});
+*/
 
     // Mostrar y ocultar permisos según el checkbox del rol
     document.querySelectorAll('.role-checkbox').forEach(input => {
@@ -384,5 +373,6 @@ input:checked + .slider:before {
 @endpush
 
 @endsection
+
 
 

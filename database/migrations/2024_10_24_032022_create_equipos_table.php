@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('equipos', function (Blueprint $table) {
             $table->id('id_equipo'); // Clave primaria ID_EQUIPO
-            $table->enum('estado_equipo',['Disponible', 'En Mantenimiento', 'Comodin', 'Asignado' ] ); 
+            $table->enum('estado_equipo',['Disponible', 'En Mantenimiento','Comodin', 'Asignado' ] ); 
             $table->enum('tipo_equipo', ['Computadora', 'Impresora', 'Otro'])->notNullable(); // TIPO_EQUIPO como ENUM
             $table->string('cod_equipo', 10)->unique(); // COD_EQUIPO con UNIQUE
             $table->string('marca_equipo', 100)->notNullable(); // MARCA_EQUIPO como VARCHAR(100), obligatorio

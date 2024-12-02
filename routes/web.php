@@ -54,7 +54,7 @@ Route::get('roles/{id}/delete', [RoleController::class, 'delete'])->name('roles.
     Route::resource('empleados',EmpleadoController::class)->names('empleados');
     Route::resource('equipos',EquiposController::class)->names('equipos');
     Route::resource('servicios', ServiciosMantenimientosController::class);
-    Route::resource('proveedores', ProveedorController::class);
+    Route::resource('proveedor', ProveedorController::class)->names('proveedor');
     Route::resource('facturas', FacturaController::class);
     Route::resource('asignaciones', AsignacionesController::class)->names('asignaciones');
     Route::resource('suministros', SuministrosController::class)->names('suministros');
@@ -89,11 +89,12 @@ Route::get('/get-areas/{id_sucursal}', [EmpleadoController::class, 'getAreasBySu
 
 //RUTAS DE ASIGNACIONES//
 Route::post('/asignaciones/actualizar-cantidad', [AsignacionesController::class, 'actualizarCantidad']);
-Route::get('/asignaciones/empleados/{id_sucursal}', [AsignacionesController::class, 'getEmpleadosBySucursal']);
-Route::get('/get-area-by-empleado/{empleadoId}/{sucursalId}', [AsignacionesController::class, 'getAreaByEmpleado']);
+    Route::get('/asignaciones/empleados/{id_sucursal}', [AsignacionesController::class, 'getEmpleadosBySucursal']);
+    Route::get('/get-area-by-empleado/{empleadoId}/{sucursalId}', [AsignacionesController::class, 'getAreaByEmpleado']);
 Route::get('/asignaciones/empleados/{id}/areas', [AsignacionesController::class, 'getEmpleadoArea'])->name('asignaciones.empleado.area');
-Route::get('/asignaciones/areas/{id_sucursal}', [AsignacionesController::class, 'getAreasBySucursal']);
-Route::get('/asignaciones/empleados/{id}/areas', [AsignacionesController::class, 'getEmpleadoArea']);
+    Route::get('/asignaciones/areas/{idSucursal}', [AsignacionesController::class, 'getAreasBySucursal']);
+    Route::get('/asignaciones/empleados/{id}/areas', [AsignacionesController::class, 'getEmpleadoArea']);
+   
 });
 
 

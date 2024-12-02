@@ -18,7 +18,7 @@ return new class extends Migration
             $table->string('nombre_empleado', 100);
             $table->string('apellido_empleado', 100);
             $table->string('cargo_empleado', 30);
-            $table->enum('estado_empleado', ['Activo', 'Inactivo']);
+            $table->enum('estado_empleado', ['Activo', 'Inactivo', 'Asignado']);
             $table->date('fecha_contratacion');
             $table->dateTime('fecha_modificacion')->nullable();
         });

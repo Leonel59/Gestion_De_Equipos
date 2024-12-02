@@ -26,12 +26,12 @@
                         <div class="col-md-6">
                             <div class="form-group">
                                 <label for="nombre_empleado">Nombre</label>
-                                <input type="text" class="form-control" name="nombre_empleado" value="{{old ('nombre_empleado', $empleado->nombre_empleado) }}" required>
+                                <input type="text" class="form-control" name="nombre_empleado" maxlength="30"  value="{{old ('nombre_empleado', $empleado->nombre_empleado) }}" required>
                             </div>
 
                             <div class="form-group">
                                 <label for="apellido_empleado">Apellido</label>
-                                <input type="text" class="form-control" name="apellido_empleado" value="{{old ('apellido_empleado', $empleado->apellido_empleado) }}" required>
+                                <input type="text" class="form-control" name="apellido_empleado" maxlength="30"  value="{{old ('apellido_empleado', $empleado->apellido_empleado) }}" required>
                             </div>
 
                             <div class="form-group">
@@ -59,7 +59,7 @@
                             </div>
                             <div class="form-group">
                                 <label for="cargo_empleado">Cargo</label>
-                                <input type="text" class="form-control" name="cargo_empleado" value="{{old ('cargo_empleado', $empleado->cargo_empleado) }}" required>
+                                <input type="text" class="form-control" name="cargo_empleado" maxlength="30"  value="{{old ('cargo_empleado', $empleado->cargo_empleado) }}" required>
                             </div>
 
                             <div class="form-group">
@@ -79,37 +79,47 @@
 
                             <div class="form-group">
                                 <label for="correo_personal">Correo Personal</label>
-                                <input type="email" class="form-control" name="correo_personal" placeholder="example@gmail.com" value="{{ old('correo_personal', $empleado->correos->first()->correo_personal ?? '') }}">
+                                <input type="email" class="form-control" name="correo_personal" maxlength="30"  placeholder="example@gmail.com" value="{{ old('correo_personal', $empleado->correos->first()->correo_personal ?? '') }}">
                             </div>
 
                             <div class="form-group">
                                 <label for="correo_profesional">Correo Profesional (Opcional)</label>
-                                <input type="email" class="form-control" name="correo_profesional" placeholder="example@gmail.com"  value="{{ old('correo_profesional', $empleado->correos->first()->correo_profesional ?? '') }}">
+                                <input type="email" class="form-control" name="correo_profesional" maxlength="30"  placeholder="example@gmail.com"  value="{{ old('correo_profesional', $empleado->correos->first()->correo_profesional ?? '') }}">
                             </div>
 
                             <div class="form-group">
                                 <label for="telefono_personal">Número de Teléfono Personal</label>
-                                <input type="text" class="form-control" name="telefono_personal" placeholder="+504 3367-8945" value="{{ old('telefono_personal', $empleado->telefonos->first()->telefono_personal ?? '') }}">
+                                <input type="text" class="form-control" name="telefono_personal" maxlength="15" placeholder="+504 3367-8945" value="{{ old('telefono_personal', $empleado->telefonos->first()->telefono_personal ?? '') }}">
                             </div>
 
                             <div class="form-group">
                                 <label for="telefono_trabajo">Número de Teléfono Laboral (Opcional)</label>
-                                <input type="text" class="form-control" name="telefono_trabajo" placeholder="+504 2200-6644" value="{{ old('telefono_trabajo', $empleado->telefonos->first()->telefono_trabajo ?? '') }}">
+                                <input type="text" class="form-control" name="telefono_trabajo" maxlength="15" placeholder="+504 2200-6644" value="{{ old('telefono_trabajo', $empleado->telefonos->first()->telefono_trabajo ?? '') }}">
                             </div>
 
                             <div class="form-group">
                                 <label for="direccion">Dirección</label>
-                                <input type="text" class="form-control" name="direccion" value="{{ old('direccion', $empleado->direcciones->first()->direccion ?? '') }}">
+                                <input type="text" class="form-control" name="direccion" maxlength="50"  value="{{ old('direccion', $empleado->direcciones->first()->direccion ?? '') }}">
                             </div>
 
                             <div class="form-group">
                                 <label for="departamento">Departamento</label>
-                                <input type="text" class="form-control" name="departamento" value="{{ old('departamento',$empleado->direcciones->first()->departamento ?? '') }}">
+                                <select class="form-control" id="departamento" name="departamento" required>
+                                    <option value=" Francisco Morazan" {{ $empleado->departamento == 'Francisco Morazan' ? 'selected' : '' }}>Francisco Morazan</option>
+                                    <option value=" Olancho" {{ $empleado->departamento == 'Olancho' ? 'selected' : '' }}>Olancho </option>
+                                    <option value=" Comayagua" {{ $empleado->departamento == 'Comayagua' ? 'selected' : '' }}>Comayagua</option>
+                                    <option value=" El Paraiso" {{ $empleado->departamento == 'El Paraiso' ? 'selected' : '' }}>El Paraiso</option>
+                                    <option value=" Intibuca" {{ $empleado->departamento == 'Intibuca ' ? 'selected' : '' }}>Intibuca</option>
+                                    <option value=" Lempira" {{ $empleado->departamento == 'Lempira ' ? 'selected' : '' }}>Lempira</option>
+                                    <option value=" Choluteca" {{ $empleado->departamento == 'Choluteca' ? 'selected' : '' }}>Choluteca</option>
+                                    <option value=" La Paz" {{ $empleado->departamento == 'La Paz' ? 'selected' : '' }}>La Paz</option>
+
+                                </select>
                             </div>
 
                             <div class="form-group">
                                 <label for="ciudad">Ciudad</label>
-                                <input type="text" class="form-control" name="ciudad" value="{{ old('ciudad', $empleado->direcciones->first()->ciudad ?? '') }}">
+                                <input type="text" class="form-control" name="ciudad" maxlength="30"  value="{{ old('ciudad', $empleado->direcciones->first()->ciudad ?? '') }}">
                             </div>
                         </div>
                     </div>
@@ -125,6 +135,7 @@
 @endsection
 
 @section('js')
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
     $('#id_sucursal').on('change', function() {
         var sucursalID = $(this).val();
@@ -155,8 +166,8 @@
 
     // Aplicación de validaciones específicas
     validateInput('#nombre_empleado, #apellido_empleado, #cargo_empleado', /[^a-zA-Z\s]/g); // Solo letras
-    validateInput('#departamento, #ciudad', /[^a-zA-Z\s]/g); // Solo letras
-    validateInput('#direccion', /[^a-zA-Z\s]/g); // Solo letras
+    validateInput('#ciudad', /[^a-zA-Z\s]/g); // Solo letras
+    validateInput('#direccion', /[^a-zA-Z0-9\s]/g); // Solo letras
 
     // Validación para fecha de contratacion
     $('#fecha_contratacion').on('change', function() {

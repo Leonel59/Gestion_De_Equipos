@@ -19,8 +19,8 @@ return new class extends Migration
             $table->unsignedBigInteger('cod_empleados')->nullable();
             $table->unsignedBigInteger('id_suministro')->nullable();
             $table->string('detalle_asignacion', 100)->notNullable();
-            $table->date('fecha_asignacion')->notNullable();
-            $table->date('fecha_devolucion')->notNullable();
+            $table->dateTime('fecha_asignacion')->notNullable();
+            $table->dateTime('fecha_devolucion')->notNullable();
             $table->timestamps();
 
 
@@ -47,3 +47,4 @@ return new class extends Migration
         Schema::dropIfExists('asignaciones');
     }
 };
+
