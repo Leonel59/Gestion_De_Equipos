@@ -116,7 +116,7 @@
                             <td class="text-center">
                                 @can('seguridad.editar')
                                     <a href="{{ route('objetos.edit', $objeto->id) }}" class="btn btn-warning btn-sm">
-                                        <i class="fa fa-edit"></i> Editar
+                                        <i class="fa fa-edit"></i> 
                                     </a>
                                 @endcan
                                 

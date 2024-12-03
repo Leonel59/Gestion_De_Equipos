@@ -100,7 +100,7 @@
                             <td>
                                 @can('empleados.editar')
                                     <a href="{{ route('empleados.edit', $empleado->cod_empleados) }}" class="btn btn-warning btn-sm">
-                                        <i class="fas fa-edit"></i> Editar
+                                        <i class="fas fa-edit"></i> 
                                     </a>
                                 @endcan
                                 @can('empleados.eliminar')

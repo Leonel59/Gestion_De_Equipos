@@ -70,7 +70,7 @@
                                 <td>
                                     @can('mantenimiento.editar')
                                         <a href="{{ route('productos.edit', $producto->id_producto) }}" class="btn btn-warning btn-sm rounded-pill">
-                                            <i class="fas fa-edit"></i> Editar
+                                            <i class="fas fa-edit"></i> 
                                         </a>
                                     @endcan
                                     @can('mantenimiento.eliminar')
@@ -78,7 +78,7 @@
                                             @csrf
                                             @method('DELETE')
                                             <button type="submit" class="btn btn-danger btn-sm rounded-pill" onclick="return confirm('¿Estás seguro de eliminar este producto?')">
-                                                <i class="fas fa-trash"></i> Eliminar
+                                                <i class="fas fa-trash"></i> 
                                             </button>
                                         </form>
                                     @endcan

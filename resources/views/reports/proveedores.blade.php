@@ -5,7 +5,6 @@
 @section('content')
 
 <div class="row">
-    <!-- Coloca el logo a la izquierda -->
     <div class="col-md-0">
         <img src="{{ asset('logo/empresafondo.png') }}" alt="Logo de Empresa" class="img-fluid rounded-circle" style="max-width: 120px;">
     </div>
@@ -56,6 +55,8 @@
                                 <th>RTN</th>
                                 <th>Contacto</th>
                                 <th>Dirección</th>
+                                <th>Ciudad</th>
+                                <th>Departamento</th>
                                 <th>Teléfono</th>
                                 <th>Email</th>
                                 <th>Tipo de Factura</th>
@@ -69,8 +70,10 @@
                                     <td>{{ $proveedor['rtn_proveedor'] }}</td>
                                     <td>{{ $proveedor['contacto_proveedor'] }}</td>
                                     <td>{{ $proveedor['direccion_proveedor'] }}</td>
-                                    <td>{{ $proveedor['telefono_proveedor'] }}</td>
-                                    <td>{{ $proveedor['email_proveedor'] }}</td>
+                                    <td>{{ $proveedor['ciudad_proveedor'] }}</td>
+                                    <td>{{ $proveedor['departamento_proveedor'] }}</td>
+                                    <td>{{ $proveedor['telefono_personal'] }}</td>
+                                    <td>{{ $proveedor['correo_personal'] }}</td>
                                     <td>{{ $proveedor['tipo_factura'] }}</td>
                                     <td>{{ \Carbon\Carbon::parse($proveedor['fecha_facturacion'])->format('d/m/Y') }}</td>
                                 </tr>
@@ -159,7 +162,7 @@
 
 /* Ajustes específicos para las columnas */
 .table td:nth-child(1), .table th:nth-child(1) {
-    width: 100px; /* Columna 'Proveedor' */
+    width: 110px; /* Columna 'Proveedor' */
 }
 
 .table td:nth-child(2), .table th:nth-child(2) {
@@ -179,7 +182,7 @@
 }
 
 .table td:nth-child(6), .table th:nth-child(6) {
-    width: 100px; /* Columna 'Email' */
+    width: 105px; /* Columna 'Email' */
 }
 
 .table td:nth-child(7), .table th:nth-child(7) {
@@ -202,14 +205,14 @@
             document.getElementById('download-pdf').style.display = 'none';
 
             const options = {
-                margin:       0,   // Ajuste de márgenes
+                margin:       0,
                 filename:     'reporte_proveedores.pdf',
                 image:        { type: 'jpeg', quality: 1.0 },
-                html2canvas:  { dpi: 300, letterRendering: true, scale: 2 },  // Mayor escala
+                html2canvas:  { dpi: 300, letterRendering: true, scale: 2 },
                 jsPDF:        { unit: 'in', format: 'letter', orientation: 'landscape', autoFirstPage: true }
             };
 
-            const element = document.querySelector('.content');  // Selecciona toda la sección
+            const element = document.querySelector('.content');
 
             html2pdf().from(element).set(options).save().then(function() {
                 document.getElementById('download-pdf').style.display = 'block';
@@ -217,3 +220,4 @@
         });
     </script>
 @stop
+

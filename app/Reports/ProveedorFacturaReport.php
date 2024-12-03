@@ -26,22 +26,28 @@ class ProveedorFacturaReport extends KoolReport
 
     // Configurar los datos para el reporte
     protected function setup()
-    {
-        // Realizamos un JOIN entre las tablas proveedor y factura
-        $this->src('mysql')
-            ->query("SELECT 
-                        p.nombre_proveedor,
-                        p.rtn_proveedor,
-                        p.contacto_proveedor,
-                        p.direccion_proveedor,
-                        p.telefono_proveedor,
-                        p.email_proveedor,
-                        f.tipo_factura,
-                        f.fecha_facturacion
-                    FROM proveedor AS p
-                    LEFT JOIN factura AS f ON p.id_proveedor = f.id_proveedor")
-            ->pipe($this->dataStore('proveedor_factura')); // Guardar los datos en el dataStore
-    }
+{
+    // Realizamos JOIN entre las tablas proveedor, factura, direcciones, telefonos y correos
+    $this->src('mysql')
+        ->query("SELECT 
+                    p.nombre_proveedor,
+                    p.rtn_proveedor,
+                    p.contacto_proveedor,
+                    d.direccion AS direccion_proveedor, -- Dirección del proveedor
+                    d.ciudad AS ciudad_proveedor, -- Ciudad del proveedor
+                    d.departamento AS departamento_proveedor, -- Departamento del proveedor
+                    t.telefono_personal, -- Teléfono personal
+                    c.correo_personal, -- Correo personal
+                    f.tipo_factura,
+                    f.fecha_facturacion
+                FROM proveedor AS p
+                LEFT JOIN factura AS f ON p.id_proveedor = f.id_proveedor
+                LEFT JOIN direcciones AS d ON p.id_proveedor = d.id_proveedor -- Relación con direcciones
+                LEFT JOIN telefonos AS t ON p.id_proveedor = t.id_proveedor -- Relación con telefonos
+                LEFT JOIN correos AS c ON p.id_proveedor = c.id_proveedor -- Relación con correos")
+        ->pipe($this->dataStore('proveedor_factura')); // Guardar los datos en el dataStore
+}
+
 
     // Método para obtener los datos del reporte
     public function getProveedorFactura()

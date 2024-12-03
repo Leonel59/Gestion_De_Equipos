@@ -91,12 +91,12 @@
                             <td class="text-center">
                                 @can('seguridad.editar')
                                 <a href="{{ route('roles.edit', $rol->id) }}" class="btn btn-warning btn-sm">
-                                    <i class="fa fa-edit"></i> Editar
+                                    <i class="fa fa-edit"></i> 
                                 </a>
                                 @endcan
                                 @can('seguridad.ver')
                                 <a href="{{ route('roles.show', $rol->id) }}" class="btn btn-info btn-sm">
-                                    <i class="fa fa-eye"></i> Ver
+                                    <i class="fa fa-eye"></i> 
                                 </a>
                                 @endcan
                                 @can('seguridad.eliminar')
