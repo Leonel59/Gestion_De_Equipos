@@ -16,7 +16,7 @@ return new class extends Migration
             $table->unsignedBigInteger('id_proveedor'); // ID del proveedor (foreign key)
             $table->string('tipo_factura', 100); // Tipo de factura (sin referencia a otra tabla)
             $table->string('nombre_cliente', 100); // Nombre del cliente
-            $table->string('rtn_cliente', 20)->unique(); // RTN del cliente, único
+            $table->string('rtn_cliente', 20); // RTN del cliente
             $table->dateTime('fecha_facturacion'); // Fecha de facturación
             $table->string('imagen')->nullable(); // Columna para la imagen
            

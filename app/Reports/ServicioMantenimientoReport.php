@@ -30,21 +30,21 @@ class ServicioMantenimientoReport extends KoolReport
         // Hacemos JOIN con las tablas de equipos y producto_mantenimiento
         $this->src('mysql')
             ->query("SELECT 
-                        sm.id_mant,
-                        sm.id_equipo_mant,
-                        sm.tipo_mantenimiento,
-                        sm.descripcion_mantenimiento,
-                        sm.cantidad_equipo_usado,
-                        sm.duracion_mantenimiento,
-                        sm.fecha_reparacion_equipo,
-                        sm.fecha_entrega_equipo,
-                        sm.costo_mantenimiento,
-                        pm.nombre_producto,
-                        pm.cantidad_producto,
-                        pm.costo_producto
-                    FROM servicios_mantenimientos AS sm
-                    LEFT JOIN producto_mantenimiento AS pm ON sm.id_mant = pm.servicio_mantenimiento_id
-                    LEFT JOIN equipos AS e ON sm.id_equipo_mant = e.cod_equipo") // Incluimos el nombre del equipo si lo necesitas
+                    sm.id_mant,
+                    CONCAT(e.cod_equipo, ' - ', e.tipo_equipo) AS id_equipo_mant,
+                    sm.tipo_mantenimiento,
+                    sm.descripcion_mantenimiento,
+                    sm.cantidad_equipo_usado,
+                    sm.duracion_mantenimiento,
+                    sm.fecha_reparacion_equipo,
+                    sm.fecha_entrega_equipo,
+                    sm.costo_mantenimiento,
+                    pm.nombre_producto,
+                    pm.cantidad_producto,
+                    pm.costo_producto
+                FROM servicios_mantenimientos AS sm
+                LEFT JOIN producto_mantenimiento AS pm ON sm.id_mant = pm.servicio_mantenimiento_id
+                LEFT JOIN equipos AS e ON sm.id_equipo_mant = e.cod_equipo") // Incluimos el nombre del equipo si lo necesitas
             ->pipe($this->dataStore('servicio_mantenimiento')); // Guardar los datos en el dataStore
     }
 

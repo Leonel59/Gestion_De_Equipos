@@ -38,7 +38,7 @@ class FacturaController extends Controller
         'id_proveedor' => 'required|exists:proveedor,id_proveedor',
         'tipo_factura' => 'required|string|max:100',
         'nombre_cliente' => 'required|string|max:100',
-        'rtn_cliente' => 'required|string|unique:factura,rtn_cliente|max:20',
+        'rtn_cliente' => 'required|string|max:20',
         'fecha_facturacion' => 'required|date',
         'imagen' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048'  // Validación de imagen
     ]);

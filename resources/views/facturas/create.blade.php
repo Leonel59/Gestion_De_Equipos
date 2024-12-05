@@ -41,6 +41,7 @@
         <option value="">Seleccione un tipo de factura</option>
         <option value="Por Mantenimiento">Por Mantenimiento</option>
         <option value="Por Compra de equipo">Por Compra de equipo</option>
+        <option value="Por Suministro">Por Suministro</option>
     </select>
 </div>
 
