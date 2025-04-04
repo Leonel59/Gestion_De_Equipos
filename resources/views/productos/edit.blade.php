@@ -8,13 +8,13 @@
 
 @section('content')
     <div class="card shadow-lg rounded-3">
-        <div class="card-header bg-gradient-primary text-white rounded-top d-flex justify-content-start align-items-center">
-            <h3 class="card-title mr-auto">Actualizar Producto</h3>
+        <div class="card-header bg-gradient-primary text-white rounded-top d-flex justify-content-between align-items-center">
+            <h3 class="card-title">Actualizar Producto</h3>
         </div>
         <div class="card-body">
-            <form action="{{ route('productos.update', $producto->id_producto) }}" method="POST">
+            <form action="{{ route('productos.update', $producto->id_producto) }}" method="POST" id="editForm">
                 @csrf
-                @method('PUT') <!-- Método PUT para la actualización -->
+                @method('PUT')
 
                 <!-- Selección del Servicio de Mantenimiento -->
                 <div class="form-group">
@@ -45,87 +45,132 @@
                 </div>
                 
                 <!-- Campo Nombre Producto -->
-                <div class="form-group">
-                    <label for="nombre_producto">Nombre del Producto</label>
-                    <input type="text" name="nombre_producto" class="form-control" value="{{ old('nombre_producto', $producto->nombre_producto) }}" required id="nombre_producto">
-                </div>
+<div class="form-group">
+    <label for="nombre_producto">Nombre del Producto</label>
+    <input type="text" name="nombre_producto" class="form-control" value="{{ old('nombre_producto', $producto->nombre_producto) }}" required id="nombre_producto">
+    <small class="text-danger d-none" id="nombreError">Solo se permiten letras y espacios.</small>
+</div>
 
-                <!-- Campo Descripción Producto -->
-                <div class="form-group">
-                    <label for="descripcion_producto">Descripción del Producto</label>
-                    <input type="text" name="descripcion_producto" class="form-control" value="{{ old('descripcion_producto', $producto->descripcion_producto) }}" required id="descripcion_producto">
-                </div>
+               <!-- Campo Descripción Producto -->
+<div class="form-group">
+    <label for="descripcion_producto">Descripción del Producto</label>
+    <input type="text" name="descripcion_producto" class="form-control" value="{{ old('descripcion_producto', $producto->descripcion_producto) }}" required id="descripcion_producto">
+    <small class="text-danger d-none" id="descripcionError">Solo se permiten letras y espacios.</small>
+</div>
 
                 <!-- Campo Cantidad Producto -->
                 <div class="form-group">
                     <label for="cantidad_producto">Cantidad</label>
-                    <input type="number" name="cantidad_producto" class="form-control" value="{{ old('cantidad_producto', $producto->cantidad_producto) }}" placeholder="Cantidad del producto" id="cantidad_producto">
+                    <input type="number" name="cantidad_producto" class="form-control" value="{{ old('cantidad_producto', $producto->cantidad_producto) }}" required placeholder="Cantidad del producto" id="cantidad_producto">
                 </div>
 
                 <!-- Campo Costo Producto -->
                 <div class="form-group">
                     <label for="costo_producto">Costo</label>
-                    <input type="number" step="0.01" name="costo_producto" class="form-control" value="{{ old('costo_producto', $producto->costo_producto) }}" placeholder="Costo del producto">
+                    <input type="number" step="0.01" name="costo_producto" class="form-control" value="{{ old('costo_producto', $producto->costo_producto) }}" required placeholder="Costo del producto" id="costo_producto">
                 </div>
 
                 <!-- Campo Fecha Adquisición Producto -->
                 <div class="form-group">
                     <label for="fecha_adquisicion_producto">Fecha de Adquisición</label>
-                    <input type="date" name="fecha_adquisicion_producto" class="form-control" value="{{ old('fecha_adquisicion_producto', $producto->fecha_adquisicion_producto) }}">
+                    <input type="date" name="fecha_adquisicion_producto" class="form-control" value="{{ old('fecha_adquisicion_producto', $producto->fecha_adquisicion_producto) }}" required id="fecha_adquisicion_producto">
                 </div>
 
-                <button type="submit" class="btn btn-primary btn-lg mt-3 rounded-pill">Actualizar Producto</button>
+                <div class="d-flex justify-content-end mt-3">
+    <a href="{{ route('productos.index') }}" class="btn btn-secondary ">Cancelar</a>
+    <button type="submit" class="btn btn-primary ">Actualizar Producto</button>
+</div>
             </form>
         </div>
     </div>
 
     @push('js')
-        <script>
-            // Detectar el cambio de selección en el campo "Servicio de Mantenimiento"
-            document.getElementById('servicio_mantenimiento_id').addEventListener('change', function () {
-                // Obtener los datos asociados al servicio seleccionado
-                var selectedOption = this.options[this.selectedIndex];
-                var equipo = selectedOption.getAttribute('data-equipo');
-                var descripcion = selectedOption.getAttribute('data-descripcion');
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            // Bloquear fechas futuras en el campo de fecha
+            let fechaInput = document.getElementById('fecha_adquisicion_producto');
+            let hoy = new Date().toISOString().split('T')[0];
+            fechaInput.setAttribute('max', hoy);
 
-                // Mostrar los campos de Equipo y Descripción del Mantenimiento si se selecciona un servicio
+            // Mostrar equipo y descripción al cargar si hay datos
+            let servicioSelect = document.getElementById('servicio_mantenimiento_id');
+            let equipoInput = document.getElementById('equipo_mantenimiento');
+            let descripcionInput = document.getElementById('descripcion_mantenimiento');
+            let equipoGroup = document.getElementById('equipo_group');
+            let descripcionGroup = document.getElementById('descripcion_group');
+
+            function actualizarEquipoDescripcion() {
+                let selectedOption = servicioSelect.options[servicioSelect.selectedIndex];
+                let equipo = selectedOption.getAttribute('data-equipo');
+                let descripcion = selectedOption.getAttribute('data-descripcion');
+
                 if (equipo && descripcion) {
-                    document.getElementById('equipo_mantenimiento').value = equipo;
-                    document.getElementById('descripcion_mantenimiento').value = descripcion;
-                    document.getElementById('equipo_group').style.display = 'block';
-                    document.getElementById('descripcion_group').style.display = 'block';
+                    equipoInput.value = equipo;
+                    descripcionInput.value = descripcion;
+                    equipoGroup.style.display = 'block';
+                    descripcionGroup.style.display = 'block';
                 } else {
-                    document.getElementById('equipo_group').style.display = 'none';
-                    document.getElementById('descripcion_group').style.display = 'none';
+                    equipoGroup.style.display = 'none';
+                    descripcionGroup.style.display = 'none';
                 }
-            });
-
-            // Al cargar la página, si ya está seleccionado un servicio, mostrar el equipo y descripción
-            window.addEventListener('DOMContentLoaded', function () {
-                var selectedOption = document.getElementById('servicio_mantenimiento_id').options[document.getElementById('servicio_mantenimiento_id').selectedIndex];
-                var equipo = selectedOption.getAttribute('data-equipo');
-                var descripcion = selectedOption.getAttribute('data-descripcion');
-                if (equipo && descripcion) {
-                    document.getElementById('equipo_mantenimiento').value = equipo;
-                    document.getElementById('descripcion_mantenimiento').value = descripcion;
-                    document.getElementById('equipo_group').style.display = 'block';
-                    document.getElementById('descripcion_group').style.display = 'block';
-                }
-            });
-
-            // Filtrar caracteres especiales en los campos "Nombre Producto", "Descripción Producto" y "Cantidad"
-            function removeSpecialChars(event) {
-                // Expresión regular para permitir solo letras, números y espacios
-                let regex = /[^a-zA-Z0-9\s]/g;
-                event.target.value = event.target.value.replace(regex, '');
             }
 
-            // Asignar el evento de entrada para los campos
-            document.getElementById('nombre_producto').addEventListener('input', removeSpecialChars);
-            document.getElementById('descripcion_producto').addEventListener('input', removeSpecialChars);
-            document.getElementById('cantidad_producto').addEventListener('input', removeSpecialChars);
-        </script>
-    @endpush
+            servicioSelect.addEventListener('change', actualizarEquipoDescripcion);
+            actualizarEquipoDescripcion(); // Ejecutar al cargar
+
+            // Validaciones en tiempo real para Nombre y Descripción
+            function validarTexto(input, errorElement) {
+                let regex = /^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+$/;
+                if (!regex.test(input.value)) {
+                    input.classList.add('is-invalid');
+                    errorElement.classList.remove('d-none');
+                } else {
+                    input.classList.remove('is-invalid');
+                    errorElement.classList.add('d-none');
+                }
+            }
+
+            let nombreProducto = document.getElementById('nombre_producto');
+            let descripcionProducto = document.getElementById('descripcion_producto');
+            let nombreError = document.getElementById('nombreError');
+            let descripcionError = document.getElementById('descripcionError');
+
+            nombreProducto.addEventListener('input', function () {
+                validarTexto(nombreProducto, nombreError);
+            });
+
+            descripcionProducto.addEventListener('input', function () {
+                validarTexto(descripcionProducto, descripcionError);
+            });
+
+            // Validaciones antes de enviar el formulario
+            document.getElementById('editForm').addEventListener('submit', function (event) {
+                let valido = true;
+                let mensajesError = [];
+
+                if (!/^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+$/.test(nombreProducto.value)) {
+                    valido = false;
+                    nombreProducto.classList.add('is-invalid');
+                    nombreError.classList.remove('d-none');
+                    mensajesError.push("El nombre del producto solo puede contener letras y espacios.");
+                }
+
+                if (!/^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+$/.test(descripcionProducto.value)) {
+                    valido = false;
+                    descripcionProducto.classList.add('is-invalid');
+                    descripcionError.classList.remove('d-none');
+                    mensajesError.push("La descripción del producto solo puede contener letras y espacios.");
+                }
+
+                if (!valido) {
+                    event.preventDefault();
+                    alert(mensajesError.join("\n"));
+                }
+            });
+        });
+    </script>
+@endpush
+
 @stop
 
 @push('css')
@@ -149,6 +194,11 @@
         .form-control {
             border-radius: 10px;
         }
+        .is-invalid {
+            border: 2px solid red;
+            background-color: #fdd;
+        }
     </style>
 @endpush
+
 

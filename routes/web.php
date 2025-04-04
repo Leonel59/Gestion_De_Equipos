@@ -18,6 +18,8 @@ use App\Http\Controllers\ProductoMantenimientoController;
 use App\Http\Controllers\ServiciosMantenimientosController;
 use App\Http\Controllers\ReportController;
 use App\Http\Controllers\SecurityAnswerController;
+use App\Http\Controllers\CentroAyudaController;
+use App\Http\Controllers\BackupController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -45,6 +47,11 @@ Route::get('/', function () {
 Route::post('/usuarios/store', [UsuarioController::class, 'store'])->name('usuarios.store');
 
 Route::get('roles/{id}/delete', [RoleController::class, 'delete'])->name('roles.delete');
+
+//RUTA FAVICON EXCLUIDA 
+Route::get('/favicon.ico', function () {
+    return response()->file(public_path('favicon.ico'));
+})->name('favicon');
 
 
     Route::resource('roles',RoleController::class)->names('roles');
@@ -94,7 +101,16 @@ Route::post('/asignaciones/actualizar-cantidad', [AsignacionesController::class,
 Route::get('/asignaciones/empleados/{id}/areas', [AsignacionesController::class, 'getEmpleadoArea'])->name('asignaciones.empleado.area');
     Route::get('/asignaciones/areas/{idSucursal}', [AsignacionesController::class, 'getAreasBySucursal']);
     Route::get('/asignaciones/empleados/{id}/areas', [AsignacionesController::class, 'getEmpleadoArea']);
-   
+  
+    //CENTRO DE AYUDA RUTA//
+    Route::get('/centroayuda', [CentroAyudaController::class, 'index'])->name('centroayuda.index');
+
+    //RUTAS DE BACKUP// 
+    Route::get('/backup', [BackupController::class, 'index'])->name('backup.index');
+Route::post('/backup/create', [BackupController::class, 'create'])->name('backup.create');
+Route::post('/backup/restore', [BackupController::class, 'restore'])->name('backup.restore');
+Route::post('/backup/destroy', [BackupController::class, 'destroy'])->name('backup.destroy');
+
 });
 
 

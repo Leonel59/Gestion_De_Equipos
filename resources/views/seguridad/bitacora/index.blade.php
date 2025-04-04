@@ -3,7 +3,12 @@
 @section('title', 'Bitácora')
 
 @section('content_header')
-    <h1>Bitácora</h1>
+<div class="d-flex justify-content-between align-items-center">
+        <h1 class="text-dark font-weight-bold" style="font-size: 28px; text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.2);">
+            <i class="fas fa-book"></i> Bitácora
+        </h1>
+        <input type="text" id="search" class="form-control w-25" placeholder="Buscar...">
+    </div>
 @stop
 
 @section('content')
@@ -11,7 +16,12 @@
     <div class="card-body">
         <!-- Permiso general para acceder a la bitácora -->
         @can('seguridad.ver')
-            <h2>Bitácora</h2>
+        <h2 class="text-dark font-weight-bold" style="font-size: 24px; text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.2);">
+    <i class="fas fa-tasks"></i> Gestión de Bitácora
+</h2>
+<hr class="mb-4">
+
+
 
             <!-- Sólo mostrar tabla si se tiene permiso para ver -->
             <table class="table table-bordered table-striped table-sm">
@@ -199,7 +209,38 @@
     .minimal-pagination li.disabled span {
         color: #ccc;
     }
+
+    #search {
+        border-radius: 20px;
+        padding: 5px 15px;
+        border: 1px solid #ccc;
+    }
 </style>
+
+@section('js')
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        let searchInput = document.getElementById("search");
+
+        searchInput.addEventListener("keypress", function(event) {
+            if (event.key === "Enter") {
+                event.preventDefault(); // Evita que se envíe el formulario o recargue la página
+                let filter = searchInput.value.toLowerCase();
+                let rows = document.querySelectorAll("table tbody tr");
+
+                rows.forEach(row => {
+                    let rowText = row.innerText.toLowerCase();
+                    if (rowText.includes(filter)) {
+                        row.style.display = "";
+                    } else {
+                        row.style.display = "none";
+                    }
+                });
+            }
+        });
+    });
+</script>
+
 @stop
 
 

@@ -240,7 +240,7 @@
 
             //Ajustes para la captura de los datos
             const options = {
-                margin: [0.5, 0, 1.0, 0],  // Ajuste de márgenes
+                margin: [0.5, 0, 1.0, 0],  // Márgenes enteros
                 filename:     'reporte_empleados.pdf', 
                 image:        { type: 'jpg', quality: 1.0 },  //Calidad de la imagen 
                 html2canvas:  { dpi: 500, letterRendering: true, scale: 2, scrollX: 0, scrollY: 0, useCORS: true},// Mayor escala para la captura
@@ -383,7 +383,10 @@
                             size: 14,
                             weight: "bold"
                         }
-                    }
+                    },
+                    ticks: {
+            stepSize: 1 // Asegura que las marcas del eje Y sean números enteros
+        }
                 }
             }
         }
@@ -452,7 +455,10 @@
                             size: 14,
                             weight: "bold"
                         }
-                    }
+                    }, 
+                    ticks: {
+            stepSize: 1 // Asegura que las marcas del eje Y sean números enteros
+        }
                 }
             }
         }

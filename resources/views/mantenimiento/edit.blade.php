@@ -53,11 +53,11 @@
                     @enderror
                 </div>
 
-                <!-- Descripción -->
-                <h5>Detalles del Mantenimiento</h5>
+                 <!-- Descripción -->
+                 <h5>Detalles del Mantenimiento</h5>
                 <div class="form-group">
                     <label for="descripcion_mantenimiento">Descripción</label>
-                    <textarea class="form-control rounded" id="descripcion_mantenimiento" name="descripcion_mantenimiento" rows="3" placeholder="Describa el mantenimiento realizado..." pattern="^[A-Za-zÀ-ÿ0-9\s]+$" title="Solo letras y números" required>{{ old('descripcion_mantenimiento', $servicio->descripcion_mantenimiento) }}</textarea>
+                    <textarea class="form-control rounded" id="descripcion_mantenimiento" name="descripcion_mantenimiento" rows="3" placeholder="Describa el mantenimiento realizado..." required>{{ old('descripcion_mantenimiento') }}</textarea>
                     @error('descripcion_mantenimiento')
                         <small class="text-danger">{{ $message }}</small>
                     @enderror
@@ -144,10 +144,10 @@
 </div>
 
 
-                <!-- Botones -->
-                <div class="form-group d-flex justify-content-between">
-                    <button type="submit" class="btn btn-success rounded-pill">Actualizar Servicio</button>
-                    <a href="{{ route('servicios.index') }}" class="btn btn-danger rounded-pill">Cancelar</a>
+                 <!-- Botones -->
+                 <div class="form-group d-flex justify-content-end">
+                    <button type="submit" class="btn btn-primary rounded-pill">Actualizar Servicio</button>
+                    <a href="{{ route('servicios.index') }}" class="btn btn-secondary rounded-pill mr-2">Cancelar</a>
                 </div>
             </form>
         </div>
@@ -161,7 +161,28 @@
         const equipoSelect = document.getElementById('id_equipo_mant');
         const estadoEquipoContainer = document.getElementById('estado_equipo_container');
         const estadoEquipoInput = document.getElementById('estado_equipo');
+        const duracionInput = document.getElementById('duracion_mantenimiento');
+        const fechaReparacion = document.getElementById('fecha_reparacion_equipo');
+        const fechaEntrega = document.getElementById('fecha_entrega_equipo');
+        const fechaCreacion = document.getElementById('fecha_creacion'); // Tomamos la fecha de creación
+        const descripcionInput = document.getElementById('descripcion_mantenimiento');
 
+        // Validación para la duración del mantenimiento
+        duracionInput.addEventListener('input', function() {
+            let valor = this.value;
+
+            // Permitir solo números positivos con decimales
+            if (!/^\d*\.?\d*$/.test(valor)) {
+                this.value = valor.slice(0, -1);
+            }
+
+            // Evitar valores menores a 0.1
+            if (this.value !== '' && parseFloat(this.value) < 0.1) {
+                this.value = '0.1';
+            }
+        });
+
+        // Mostrar el estado del equipo al cambiar la selección
         equipoSelect.addEventListener('change', function() {
             const selectedOption = equipoSelect.options[equipoSelect.selectedIndex];
             const estado = selectedOption.getAttribute('data-estado');
@@ -175,14 +196,26 @@
             }
         });
 
-        // Inicialización del estado del equipo si ya está seleccionado
-        const equipoSeleccionado = equipoSelect.options[equipoSelect.selectedIndex];
-        if (equipoSeleccionado) {
-            estadoEquipoInput.value = equipoSeleccionado.getAttribute('data-estado');
-            estadoEquipoContainer.style.display = equipoSeleccionado.getAttribute('data-estado') ? 'block' : 'none';
+        // Inicializar el estado del equipo y las fechas si ya tienen valores
+        if (equipoSelect.value) {
+            const selectedOption = equipoSelect.options[equipoSelect.selectedIndex];
+            estadoEquipoInput.value = selectedOption.getAttribute('data-estado') || '';
+            estadoEquipoContainer.style.display = estadoEquipoInput.value ? 'block' : 'none';
         }
+
+        // Asignar la fecha de creación a la fecha de reparación si está vacía
+    if (!fechaReparacion.value) {
+        fechaReparacion.value = fechaCreacion.value;
+    }
+
+// Validación en tiempo real para la descripción
+descripcionInput.addEventListener('input', function() {
+            this.value = this.value.replace(/[^A-Za-zÀ-ÿ\s]/g, '');
+ 
     });
+});
 </script>
 @endsection
+
 
 

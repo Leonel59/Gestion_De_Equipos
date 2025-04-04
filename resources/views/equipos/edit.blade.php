@@ -7,6 +7,11 @@
 @endsection
 
 @section('content')
+@if(session('success'))
+<div class="alert alert-success">
+    {{ session('success') }}
+</div>
+@endif
 
 <div class="row">
     <div class="col-md-12">
@@ -15,7 +20,7 @@
                 <h3 class="card-title">Modificar Datos del Equipo</h3>
             </div>
             <div class="card-body">
-                <form action="{{ route('equipos.update', $equipo->id_equipo) }}" method="POST">
+                <form id="miFormulario" action="{{ route('equipos.update', $equipo->id_equipo) }}" method="POST">
                     @csrf
                     @method('PUT')
 
@@ -32,7 +37,7 @@
                                     <option value="Disponible" {{ $equipo->estado_equipo == 'Disponible' ? 'selected' : '' }}>Disponible</option>
                                     <option value="En Mantenimiento" {{ $equipo->estado_equipo == 'En Mantenimiento' ? 'selected' : '' }}>En Mantenimiento</option>
                                     <option value="Comodin" {{ $equipo->estado_equipo == 'Comodin' ? 'selected' : '' }}>Comodin</option>
-                                    <option value="Asignado" {{ $equipo->estado_equipo == 'Asignado' ? 'selected' : '' }}>Asignado</option>
+
                                 </select>
                             </div>
                             <div class="form-group">
@@ -139,7 +144,7 @@
                     </div>
 
                     <div class="form-group">
-                        <button type="submit" class="btn btn-primary">Actualizar</button>
+                        <button type="submit" id="btnActualizar" class="btn btn-primary">Actualizar</button>
                         <a href="{{ route('equipos.index') }}" class="btn btn-secondary">Cancelar</a>
                     </div>
                 </form>
@@ -147,6 +152,9 @@
         </div>
     </div>
 </div>
+@endsection
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+@section('js')
 
 <script>
     // Función para manejar la visualización de campos dependiendo del tipo de equipo
@@ -233,6 +241,56 @@
             document.getElementById('fecha_adquisicion').value = '';
         });
     });
+
+    document.addEventListener("DOMContentLoaded", function() {
+    const form = document.getElementById("miFormulario");
+    const btnActualizar = document.getElementById("btnActualizar"); // Cambié de btnGuardar a btnActualizar
+    const fechaAdquisicion = document.getElementById("fecha_adquisicion");
+    const mensajeFecha = $('#mensaje_fecha');
+
+    // Validación cuando el formulario intenta enviarse
+    btnActualizar.addEventListener("click", async function(event) { // Usamos btnActualizar en lugar de btnGuardar
+        event.preventDefault(); // Previene el envío inmediato del formulario
+        let errores = [];
+
+        // Verificación de validez del formulario usando validaciones nativas
+        if (!form.checkValidity()) {
+            form.reportValidity(); // ⚠ Muestra los mensajes nativos del navegador
+            return;
+        }
+
+        // Verificación de fecha de adquisición
+        const fechaSeleccionada = new Date(fechaAdquisicion.value);
+        const fechaActual = new Date();
+        if (fechaSeleccionada > fechaActual) {
+            errores.push("La fecha de adquisición no puede ser mayor a la fecha actual.");
+        }
+
+        // Si hay errores, se muestran
+        if (errores.length > 0) {
+            Swal.fire({
+                icon: "error",
+                title: "Error en el formulario",
+                html: errores.join("<br>"),
+                confirmButtonText: "Aceptar"
+            });
+        } else {
+            // Confirmación antes de enviar el formulario
+            Swal.fire({
+                icon: "warning",
+                title: "¿Estás seguro?",
+                text: "¿Deseas actualizar este registro?",
+                showCancelButton: true,
+                confirmButtonText: "Sí, actualizar",
+                cancelButtonText: "Cancelar"
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    document.getElementById("miFormulario").submit(); // Enviar formulario si confirma
+                }
+            });
+        }
+    });
+});
 </script>
 
 @endsection

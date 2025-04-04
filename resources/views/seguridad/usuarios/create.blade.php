@@ -40,12 +40,44 @@
         color: #6c757d;
         font-size: 0.9rem;
     }
+
+
+    .btn-cancel {
+        background-color: #dee2e6;
+        color: #495057;
+        border: 1px solid #ced4da;
+    }
+
+    .btn-cancel:hover {
+        background-color: #ced4da;
+    }
+
+    .btn-save {
+        background-color: #007bff;
+        color: #fff;
+        border: none;
+    }
+
+    .btn-save:hover {
+        background-color: #0056b3;
+    }
+
+    /* Alinear los botones a la derecha */
+   .button-container {
+        display: flex;
+        justify-content: flex-end; /* Alinea los botones a la derecha */
+        align-items: center;
+        margin-top: 20px;
+    }
+
+    .button-container .btn {
+        margin-right: 10px;
+    }
 </style>
 @stop
 
 @section('content_header')
     <h1 class="text-center">Crear Nuevo Usuario</h1>
-    <hr class="bg-dark border-1 border-top border-dark">
 @stop
 
 @section('content')
@@ -61,7 +93,7 @@
 
                 <div class="form-group">
                     <label for="username">Nombre de Usuario</label>
-                    <input type="text" name="username" class="form-control" required pattern="^[a-zA-Z0-9]*$" title="No se permiten caracteres especiales.">
+                    <input type="text" name="username" class="form-control" required pattern="^[a-zA-Z0-9]*$" title="No se permiten caracteres especiales." autocomplete="off">
                 </div>
 
                 <div class="form-group">
@@ -71,7 +103,8 @@
 
                 <div class="form-group position-relative">
                     <label for="password">Contraseña</label>
-                    <input type="password" name="password" class="form-control" required pattern="(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}" title="La contraseña debe tener al menos 8 caracteres, incluir al menos un número y un carácter especial.">
+                    <input type="password" name="password" class="form-control" required pattern="(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}" 
+                    title="La contraseña debe tener al menos 8 caracteres, incluir al menos un número y un carácter especial." autocomplete="new-password">
                     <span class="show-password" onclick="togglePasswordVisibility('password')">Ver contraseña</span>
                 </div>
 
@@ -91,8 +124,14 @@
                     </select>
                 </div>
 
-                <button type="submit" class="btn btn-primary mt-3">Guardar Usuario</button>
-                <a href="{{ route('usuarios.index') }}" class="btn btn-secondary mt-3">Cancelar</a>
+                <div class="button-container">
+                <a href="{{ route('usuarios.index') }}" class="btn btn-cancel transition">
+                    Cancelar
+                </a>
+                <button type="submit" class="btn btn-save transition">
+                    Guardar
+                </button>
+            </div>
             </form>
         </div>
     </div>
@@ -139,4 +178,3 @@
     });
 </script>
 @stop
-

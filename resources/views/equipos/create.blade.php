@@ -15,7 +15,7 @@
 
 <div class="card">
     <div class="card-body">
-        <form action="{{ route('equipos.store') }}" method="POST">
+        <form id="miFormulario" action="{{ route('equipos.store') }}" method="POST">
             @csrf
             <div class="row">
                 <div class="col-md-6">
@@ -31,7 +31,6 @@
                             <option value="Disponible">Disponible</option>
                             <option value="En Mantenimiento">En Mantenimiento</option>
                             <option value="Comodin">Comodin</option>
-                            <option value="NAsignado">Asignado</option>
                         </select>
                     </div>
 
@@ -71,7 +70,7 @@
                         <span id="mensaje_fecha" class="text-danger" style="display: none;"></span>
                     </div>
                 </div>
-                
+
                 <div class="col-md-6">
                     <!-- Campos específicos para Computadora -->
                     <div id="camposComputadora" style="display: none;">
@@ -140,7 +139,10 @@
 
             <div class="modal-footer">
                 <a href="{{ route('equipos.index') }}" class="btn btn-secondary">Cancelar</a>
-                <button type="submit" class="btn btn-primary">Guardar</button>
+                <button type="button" id="btnGuardar" class="btn btn-primary">
+                    <i class="fas fa-save"></i> Guardar
+                </button>
+
             </div>
         </form>
 
@@ -150,6 +152,7 @@
 </div>
 @endsection
 
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 @section('js')
 
 
@@ -250,7 +253,75 @@
             $('#camposOtro input').prop('required', true);
         }
     });
+
+    document.addEventListener("DOMContentLoaded", function() {
+    const form = document.getElementById("miFormulario");
+    const btnGuardar = document.getElementById("btnGuardar");
+    const codigoEquipo = document.getElementById("cod_equipo");
+    const fechaAdquisicion = document.getElementById("fecha_adquisicion");
+    const codEquipoError = $('#codEquipoError');
+    const mensajeFecha = $('#mensaje_fecha');
+    
+    // Función de verificación personalizada para el código de equipo
+    function verificarCodigoEquipo(codigo) {
+        return $.ajax({
+            url: '/verificar-codigo-equipo',
+            method: 'GET',
+            data: { cod_equipo: codigo }
+        }).then(response => response.exists);
+    }
+
+    // Validación cuando el formulario intenta enviarse
+    btnGuardar.addEventListener("click", async function() {
+        let errores = [];
+
+        // Verificación de validez del formulario usando validaciones nativas
+        if (!form.checkValidity()) {
+            form.reportValidity(); // ⚠ Muestra los mensajes nativos del navegador
+            return;
+        }
+
+        // Verificar si el código de equipo ya existe
+        const codigoEquipoValor = codigoEquipo.value.trim();
+        if (codigoEquipoValor) {
+            const codigoExistente = await verificarCodigoEquipo(codigoEquipoValor);
+            if (codigoExistente) {
+                errores.push("El código de equipo ya está registrado.");
+            }
+        }
+
+        // Verificación de fecha de adquisición
+        const fechaSeleccionada = new Date(fechaAdquisicion.value);
+        const fechaActual = new Date();
+        if (fechaSeleccionada > fechaActual) {
+            errores.push("La fecha de adquisición no puede ser mayor a la fecha actual.");
+        }
+
+        // Si hay errores, se muestran
+        if (errores.length > 0) {
+            Swal.fire({
+                icon: "error",
+                title: "Error en el formulario",
+                html: errores.join("<br>"),
+                confirmButtonText: "Aceptar"
+            });
+        } else {
+            // Confirmación antes de enviar el formulario
+            Swal.fire({
+                icon: "question",
+                title: "¿Guardar equipo?",
+                text: "¿Estás seguro de que deseas guardar este equipo?",
+                showCancelButton: true,
+                confirmButtonText: "Sí, guardar",
+                cancelButtonText: "Cancelar"
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    document.getElementById("miFormulario").submit(); // Enviar formulario si confirma
+                }
+            });
+        }
+    });
+});
 </script>
 @endsection
-
 

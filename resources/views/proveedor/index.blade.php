@@ -32,7 +32,9 @@
             <div class="card-header d-flex justify-content-between align-items-center bg-info text-white rounded-top">
             <h3 class="card-title mr-auto">Proveedores Registrados</h3>
                     @can('asignacion.insertar')
-                    <a href="{{ route('proveedor.create') }}" class="btn btn-primary btn-lg">Agregar Proveedor</a>
+                    <a href="{{ route('proveedor.create') }}" class="btn btn-primary btn-lg">
+                    <i class="fas fa-plus"></i> Agregar Proveedor
+                </a>
                 </div>
                 @endcan
             </div>
@@ -47,7 +49,7 @@
                         <th>Numero de Teléfono</th>
                         <th>Dirección</th>
                         @canany(['asignacion.editar', 'asignacion.eliminar'])
-                        <th>Opciones</th>
+                        <th>Acciones</th>
                         @endcanany
                         </tr>
                     </thead>
@@ -140,10 +142,15 @@
             paging: true, // Habilita la paginación
             info: true, // Muestra información sobre el número de registros
             language: {
+
+                search: "Buscar:",
+                
                 paginate: {
                     previous: "Anterior",
                     next: "Siguiente"
                 },
+                emptyTable: "No hay datos disponibles en la tabla",
+                lengthMenu: "Mostrar _MENU_ registros",
                 info: "Mostrando _START_ a _END_ de _TOTAL_ registros",
                 infoEmpty: "Mostrando 0 a 0 de 0 registros",
                 infoFiltered: "(filtrado de _MAX_ registros totales)"

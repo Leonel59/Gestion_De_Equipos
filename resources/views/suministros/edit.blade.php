@@ -35,20 +35,20 @@
             </div>
 
             <div class="form-group">
-                <label for="nombre_suministro">Nombre del Suministro</label>
-                <input type="text" name="nombre_suministro" id="nombre_suministro" class="form-control @error('nombre_suministro') is-invalid @enderror" value="{{ old('nombre_suministro', $suministro->nombre_suministro) }}" required>
-                @error('nombre_suministro')
-                <span class="invalid-feedback">{{ $message }}</span>
-                @enderror
-            </div>
+    <label for="nombre_suministro">Nombre del Suministro</label>
+    <input type="text" name="nombre_suministro" id="nombre_suministro" class="form-control @error('nombre_suministro') is-invalid @enderror" value="{{ old('nombre_suministro', $suministro->nombre_suministro) }}" placeholder="ej. Mouse, Teclados" required>
+    @error('nombre_suministro')
+        <span class="invalid-feedback">{{ $message }}</span>
+    @enderror
+</div>
 
-            <div class="form-group">
-                <label for="descripcion_suministro">Descripción</label>
-                <textarea name="descripcion_suministro" id="descripcion_suministro" class="form-control @error('descripcion_suministro') is-invalid @enderror">{{ old('descripcion_suministro', $suministro->descripcion_suministro) }}</textarea>
-                @error('descripcion_suministro')
-                <span class="invalid-feedback">{{ $message }}</span>
-                @enderror
-            </div>
+<div class="form-group">
+    <label for="descripcion_suministro">Descripción</label>
+    <textarea name="descripcion_suministro" id="descripcion_suministro" class="form-control @error('descripcion_suministro') is-invalid @enderror" required>{{ old('descripcion_suministro', $suministro->descripcion_suministro) }}</textarea>
+    @error('descripcion_suministro')
+        <span class="invalid-feedback">{{ $message }}</span>
+    @enderror
+</div>
 
             <div class="form-group">
                 <label for="fecha_adquisicion">Fecha de Adquisición</label>

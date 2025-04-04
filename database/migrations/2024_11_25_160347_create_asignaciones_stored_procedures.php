@@ -38,17 +38,16 @@ return new class extends Migration
                     SET MESSAGE_TEXT = "Error: La sucursal no existe.";
                 END IF;
                 
-               
-                 -- Validar si el empleado existe, si se proporciona
+                -- Validar si el empleado existe, si se proporciona
                 IF p_cod_empleados IS NOT NULL THEN
-                   IF NOT EXISTS (SELECT 1 FROM empleados WHERE cod_empleados = p_cod_empleados) THEN
-                     SIGNAL SQLSTATE "45000"
-                     SET MESSAGE_TEXT = "Error: El empleado no existe.";
-                   END IF;
+                    IF NOT EXISTS (SELECT 1 FROM empleados WHERE cod_empleados = p_cod_empleados) THEN
+                        SIGNAL SQLSTATE "45000"
+                        SET MESSAGE_TEXT = "Error: El empleado no existe.";
+                    END IF;
                 END IF;
 
                 -- Validar la coherencia de fechas
-                IF p_fecha_asignacion > p_fecha_devolucion THEN
+                IF p_fecha_asignacion > p_fecha_devolucion AND p_fecha_devolucion IS NOT NULL THEN
                     SIGNAL SQLSTATE "45000"
                     SET MESSAGE_TEXT = "Error: La fecha de asignación no puede ser posterior a la fecha de devolución.";
                 END IF;
@@ -85,21 +84,20 @@ return new class extends Migration
                     SET MESSAGE_TEXT = "Error: El equipo no existe.";
                 END IF;
                 
-                 -- Validar si la sucursal existe
+                -- Validar si la sucursal existe
                 IF NOT EXISTS (SELECT 1 FROM sucursales WHERE id_sucursal = p_id_sucursal) THEN
                     SIGNAL SQLSTATE "45000"
                     SET MESSAGE_TEXT = "Error: La sucursal no existe.";
                 END IF;
 
                 -- Validar si el empleado existe
-                IF NOT EXISTS (SELECT 1 FROM empleados WHERE cod_empleados = p_cod_empleados) THEN
+                IF p_cod_empleados IS NOT NULL AND NOT EXISTS (SELECT 1 FROM empleados WHERE cod_empleados = p_cod_empleados) THEN
                     SIGNAL SQLSTATE "45000"
                     SET MESSAGE_TEXT = "Error: El empleado no existe.";
                 END IF;
 
-
                 -- Validar la coherencia de fechas
-                IF p_fecha_asignacion > p_fecha_devolucion THEN
+                IF p_fecha_asignacion > p_fecha_devolucion AND p_fecha_devolucion IS NOT NULL THEN
                     SIGNAL SQLSTATE "45000"
                     SET MESSAGE_TEXT = "Error: La fecha de asignación no puede ser posterior a la fecha de devolución.";
                 END IF;

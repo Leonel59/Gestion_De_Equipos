@@ -116,6 +116,8 @@
 
         validateInput('#ciudad', /[^a-zA-Z\s]/g); // Solo letras
         validateInput('#rtn_proveedor', /[^0-9\s]/g); // Solo numeros
+        validateInput('#nombre_proveedor', /[^a-zA-Z\s]/g); // Solo letras
+validateInput('#contacto_proveedor', /[^a-zA-Z\s]/g); // Solo letras
 
         // Validación para el campo de correo
         const emailField = document.getElementById('correo_personal');

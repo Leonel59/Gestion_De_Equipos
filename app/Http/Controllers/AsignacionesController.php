@@ -43,7 +43,7 @@ class AsignacionesController extends Controller
             'suministros.*' => 'exists:suministros,id_suministro',
             'detalle_asignacion' => 'required|string|max:100',
             'fecha_asignacion' => 'required|date',
-            'fecha_devolucion' => 'required|date',
+'fecha_devolucion' => 'nullable|date|after:fecha_asignacion', // La fecha de devolucion es opcional, pero si existe debe ser posterior a fecha_asignacion
         ]);
 
         try {
@@ -125,7 +125,11 @@ class AsignacionesController extends Controller
     
     
     $asignacion->fecha_asignacion = Carbon::parse($asignacion->fecha_asignacion)->format('Y-m-d');
-    $asignacion->fecha_devolucion = Carbon::parse($asignacion->fecha_devolucion)->format('Y-m-d');
+    if ($asignacion->fecha_devolucion) {
+        $asignacion->fecha_devolucion = Carbon::parse($asignacion->fecha_devolucion)->format('Y-m-d');
+    } else {
+        $asignacion->fecha_devolucion = null; // Si no hay fecha, asegurarse de que sea null
+    }
 
     $empleados = Empleado::where('id_sucursal', $asignacion->id_sucursal)
         ->where(function ($query) use ($asignacion) {
@@ -155,7 +159,7 @@ public function update(Request $request, $id)
         'id_area' => 'nullable|exists:areas,id_area',
         'detalle_asignacion' => 'required|string|max:100',
         'fecha_asignacion' => 'required|date',
-        'fecha_devolucion' => 'nullable|date',
+        'fecha_devolucion' => 'nullable|date|after:fecha_asignacion', // La fecha de devolucion es opcional, pero si existe debe ser posterior a fecha_asignacion
         'suministros' => 'array',
         'suministros.*' => 'exists:suministros,id_suministro',
     ]);

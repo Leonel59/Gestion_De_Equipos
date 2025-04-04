@@ -19,28 +19,37 @@
             @csrf
 
             <div class="form-group">
-                <label for="id_equipo">Equipo:</label>
-                <select id="id_equipo" name="id_equipo" class="form-control">
-                    <option value="">Seleccione un equipo</option>
-                    @foreach($equipos as $equipo)
-                    <option value="{{ $equipo->id_equipo }}" data-tipo-equipo="{{ $equipo->tipo_equipo }}">
-                        {{ $equipo->cod_equipo }} - {{ $equipo->tipo_equipo }}
-                    </option>
-                    @endforeach
-                </select>
-            </div>
+    <label for="id_equipo">Equipo</label>
+    <select name="id_equipo" id="id_equipo" class="form-control @error('id_equipo') is-invalid @enderror" required>
+        <option value="">Seleccione un equipo</option>
+        @foreach($equipos as $equipo)
+            <option value="{{ $equipo->id_equipo }}" {{ old('id_equipo') == $equipo->id_equipo ? 'selected' : '' }} 
+                    data-tipo-equipo="{{ $equipo->tipo_equipo }}">
+                {{ $equipo->cod_equipo }} - {{ $equipo->tipo_equipo }}
+            </option>
+        @endforeach
+    </select>
+    @error('id_equipo')
+        <span class="invalid-feedback">{{ $message }}</span>
+    @enderror
+</div>
 
 
 
-            <div class="form-group">
-                <label for="id_sucursal">Sucursal:</label>
-                <select id="id_sucursal" name="id_sucursal" class="form-control">
-                    <option value="">Seleccione una sucursal</option>
-                    @foreach($sucursales as $sucursal)
-                    <option value="{{ $sucursal->id_sucursal }}">{{ $sucursal->nombre_sucursal }}</option>
-                    @endforeach
-                </select>
-            </div>
+<div class="form-group">
+    <label for="id_sucursal">Sucursal</label>
+    <select name="id_sucursal" id="id_sucursal" class="form-control @error('id_sucursal') is-invalid @enderror" required>
+        <option value="">Seleccione una sucursal</option>
+        @foreach($sucursales as $sucursal)
+            <option value="{{ $sucursal->id_sucursal }}" {{ old('id_sucursal') == $sucursal->id_sucursal ? 'selected' : '' }}>
+                {{ $sucursal->nombre_sucursal }}
+            </option>
+        @endforeach
+    </select>
+    @error('id_sucursal')
+        <span class="invalid-feedback">{{ $message }}</span>
+    @enderror
+</div>
 
 
             <!-- Campo Empleado -->
@@ -61,21 +70,25 @@
 
 
             <div class="form-group">
-                <label for="detalle_asignacion">Detalle de Asignación:</label>
-                <input type="text" id="detalle_asignacion" name="detalle_asignacion" class="form-control @error('detalle_asignacion') is-invalid @enderror" value="{{ old('detalle_asignacion') }}" placeholder="Ingrese el detalle de la asignación">
-                @error('detalle_asignacion')
-                <span class="invalid-feedback">{{ $message }}</span>
-                @enderror
-            </div>
+    <label for="detalle_asignacion">Detalle de Asignación:</label>
+    <input type="text" id="detalle_asignacion" name="detalle_asignacion" 
+           class="form-control @error('detalle_asignacion') is-invalid @enderror" 
+           value="{{ old('detalle_asignacion') }}" 
+           placeholder="Ingrese el detalle de la asignación" 
+           required>
+    @error('detalle_asignacion')
+        <span class="invalid-feedback">{{ $message }}</span>
+    @enderror
+    </div>
 
-            <div class="form-group">
-                <label for="fecha_asignacion">Fecha de Asignación:</label>
-                <input type="date" id="fecha_asignacion" name="fecha_asignacion" class="form-control @error('fecha_asignacion') is-invalid @enderror" value="{{ old('fecha_asignacion')}}">
-                <span id="mensaje_fecha" class="text-danger" style="display: none;"></span>
-                @error('fecha_asignacion')
-                <span class="invalid-feedback">{{ $message }}</span>
-                @enderror
-            </div>
+    <div class="form-group">
+    <label for="fecha_asignacion">Fecha de Asignación:</label>
+    <input type="date" id="fecha_asignacion" name="fecha_asignacion" class="form-control @error('fecha_asignacion') is-invalid @enderror" value="{{ old('fecha_asignacion') }}" required>
+    <span id="mensaje_fecha" class="text-danger" style="display: none;"></span>
+    @error('fecha_asignacion')
+        <span class="invalid-feedback">{{ $message }}</span>
+    @enderror
+</div>
 
             <div class="form-group">
     <label for="fecha_devolucion">Fecha de Devolución:</label>
@@ -119,8 +132,8 @@
 
 
 
-            <div class="form-group">
-                <button type="submit" class="btn btn-primary">Crear Asignación</button>
+<div class="form-group">
+                <button type="submit" class="btn btn-primary">Guardar</button>
                 <a href="{{ route('asignaciones.index') }}" class="btn btn-secondary">Cancelar</a>
             </div>
         </form>
@@ -143,20 +156,24 @@
         validateInput('#detalle_asignacion', /[^a-zA-Z\s]/g); // Solo letras
 
         // Validación para fecha de adquisición
-        $('#fecha_asignacion').on('change', function() {
-            const fechaSeleccionada = new Date(this.value);
-            const fechaActual = new Date();
-            const mensajeFecha = $('#mensaje_fecha');
+       
+$('#fecha_asignacion').on('change', function() {
+    const fechaSeleccionada = new Date(this.value);
+    const fechaActual = new Date();
+    const mensajeFecha = $('#mensaje_fecha');
 
-            if (fechaSeleccionada > fechaActual) {
-                mensajeFecha.text('No puede ser mayor a la fecha actual.');
-                mensajeFecha.show();
-                this.value = '';
-            } else {
-                mensajeFecha.hide();
-            }
-            
-        });
+    // Ajustar la fecha actual para comparar solo el año, mes y día (sin horas)
+    fechaActual.setHours(0, 0, 0, 0);  // Esto hace que la hora se ponga a las 00:00:00 para solo comparar fecha
+
+    // Verificar si la fecha seleccionada es mayor a la fecha actual
+    if (fechaSeleccionada > fechaActual) {
+        mensajeFecha.text('La fecha de asignación no puede ser mayor a la fecha actual.');
+        mensajeFecha.show();
+        this.value = '';  // Limpiar el valor de la fecha
+    } else {
+        mensajeFecha.hide();
+    }
+});
 
         // Validación para fecha de devolución
     $('#fecha_devolucion').on('change', function () {

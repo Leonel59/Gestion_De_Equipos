@@ -56,15 +56,23 @@
     .btn-cancel:hover {
         background-color: #ced4da;
     }
-
     .btn-save {
-        background-color: #28a745;
+        background-color: #007bff;
         color: #fff;
         border: none;
     }
 
     .btn-save:hover {
-        background-color: #218838;
+        background-color: #0056b3;
+    }
+
+    /* Alinear los botones a la derecha */
+    .button-container {
+        display: flex;
+        justify-content: flex-end;
+        /* Alinea los botones a la derecha */
+        align-items: center;
+        margin-top: 20px;
     }
 
     /* Animación sutil */
@@ -88,22 +96,22 @@
             <!-- Campo Nombre del Rol -->
             <div class="form-group">
                 <label for="name" class="font-weight-bold">Nombre del Rol:</label>
-                <input 
-                    id="name" 
-                    name="name" 
-                    type="text" 
-                    class="form-control" 
-                    placeholder="Escribe el nuevo nombre del rol" 
-                    value="{{ old('name', $rol->name) }}" 
-                    required 
+                <input
+                    id="name"
+                    name="name"
+                    type="text"
+                    class="form-control"
+                    placeholder="Escribe el nuevo nombre del rol"
+                    value="{{ old('name', $rol->name) }}"
+                    required
                     oninput="validateName(this)">
                 <div id="nameError" class="error" style="display: none;">
                     No se permiten caracteres especiales.
                 </div>
                 @if ($errors->has('name'))
-                    <div class="error">
-                        <strong>{{ $errors->first('name') }}</strong>
-                    </div>
+                <div class="error">
+                    <strong>{{ $errors->first('name') }}</strong>
+                </div>
                 @endif
             </div>
 
@@ -123,9 +131,9 @@
 
 @section('js')
 <script>
-    // Validación para evitar caracteres especiales en tiempo real y prevenir su entrada
+    // Validación para evitar números y caracteres especiales en tiempo real
     function validateName(input) {
-        const regex = /^[a-zA-Z0-9\s]*$/; // Permite solo letras, números y espacios
+        const regex = /^[A-Za-zÁÉÍÓÚáéíóúñÑ\s]+$/; // Permite solo letras y espacios
         const errorDiv = document.getElementById('nameError');
 
         // Comprobamos si el valor actual no es válido
@@ -138,14 +146,14 @@
         }
     }
 
-    // Prevenir que se ingresen caracteres especiales mientras se escribe
-    document.getElementById('name').addEventListener('keypress', function (e) {
-        const regex = /^[a-zA-Z0-9\s]*$/; // Permite solo letras, números y espacios
+    // Prevenir que se ingresen números o caracteres especiales mientras se escribe
+    document.getElementById('name').addEventListener('keypress', function(e) {
+        const regex = /^[A-Za-zÁÉÍÓÚáéíóúñÑ\s]+$/; // Permite solo letras y espacios
         const key = String.fromCharCode(e.which || e.keyCode);
 
         // Si la tecla presionada no coincide con la expresión regular, evitamos su ingreso
         if (!regex.test(key)) {
-            e.preventDefault();  // Bloquea la entrada del carácter
+            e.preventDefault(); // Bloquea la entrada del carácter
         }
     });
 </script>

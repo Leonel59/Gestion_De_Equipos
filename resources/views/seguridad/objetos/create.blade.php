@@ -55,17 +55,23 @@
     .btn-cancel:hover {
         background-color: #ced4da;
     }
-
     .btn-save {
-        background-color: #28a745;
+        background-color: #007bff;
         color: #fff;
         border: none;
     }
 
     .btn-save:hover {
-        background-color: #218838;
+        background-color: #0056b3;
     }
 
+   /* Alinear los botones a la derecha */
+   .button-container {
+        display: flex;
+        justify-content: flex-end; /* Alinea los botones a la derecha */
+        align-items: center;
+        margin-top: 20px;
+    }
     /* Animación sutil */
     .transition {
         transition: all 0.3s ease;
@@ -247,6 +253,10 @@ input:checked + .slider:before {
     margin-top: 4px;
 }
 
+.button-container .btn {
+        margin-right: 10px;
+    }
+
 </style>
 @stop
 
@@ -323,11 +333,15 @@ input:checked + .slider:before {
             </div>
         </div>
 
-        <!-- Botones de Acción -->
-        <div class="form-group mt-4">
-            <button type="submit" class="btn btn-save transition">Crear Interfaces</button>
-            <a href="{{ route('objetos.index') }}" class="btn btn-cancel transition">Cancelar</a>
-        </div>
+         <!-- Botones alineados a la derecha -->
+         <div class="button-container">
+                <a href="{{ route('objetos.index') }}" class="btn btn-cancel transition">
+                    Cancelar
+                </a>
+                <button type="submit" class="btn btn-save transition">
+                    Guardar
+                </button>
+            </div>
     </form>
 </div>
 

@@ -90,7 +90,7 @@ class ObjetoController extends Controller
             }
         }
 
-        return redirect()->route('objetos.index')->with('success', 'Objeto creado con éxito.');
+        return redirect()->route('objetos.index')->with('mensaje', 'Objeto creado con éxito.');
     }
 
     /**
@@ -184,7 +184,7 @@ class ObjetoController extends Controller
             }
         }
 
-        return redirect()->route('objetos.index')->with('success', 'Objeto actualizado con éxito.');
+        return redirect()->route('objetos.index')->with('mensaje', 'Objeto actualizado con éxito.');
     }
 
     /**
@@ -195,6 +195,6 @@ class ObjetoController extends Controller
         $objeto = Objeto::findOrFail($id);
         $objeto->delete();
 
-        return redirect()->route('objetos.index')->with('success', 'Objeto eliminado con éxito.');
+        return redirect()->route('objetos.index')->with('mensaje', 'Objeto eliminado con éxito.');
     }
 }

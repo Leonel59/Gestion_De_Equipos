@@ -134,10 +134,15 @@
             paging: true, // Habilita la paginación
             info: true, // Muestra información sobre el número de registros
             language: {
+                
+                search: "Buscar:",
+
                 paginate: {
                     previous: "Anterior",
                     next: "Siguiente"
                 },
+                emptyTable: "No hay datos disponibles en la tabla",
+                lengthMenu: "Mostrar _MENU_ registros",
                 info: "Mostrando _START_ a _END_ de _TOTAL_ registros",
                 infoEmpty: "Mostrando 0 a 0 de 0 registros",
                 infoFiltered: "(filtrado de _MAX_ registros totales)"

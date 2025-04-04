@@ -20,7 +20,7 @@ return new class extends Migration
             $table->unsignedBigInteger('id_suministro')->nullable();
             $table->string('detalle_asignacion', 100)->notNullable();
             $table->dateTime('fecha_asignacion')->notNullable();
-            $table->dateTime('fecha_devolucion')->notNullable();
+            $table->dateTime('fecha_devolucion')->nullable();
             $table->timestamps();
 
 

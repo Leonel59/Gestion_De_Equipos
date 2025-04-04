@@ -12,9 +12,9 @@
             <div class="card-header d-flex justify-content-between align-items-center bg-info text-white rounded-top">
                 <h3 class="card-title mr-auto">Suministros Registrados</h3>
                 @can('asignacion.insertar') <!-- Verifica si el usuario tiene permiso para insertar suministros -->
-                    <a href="{{ route('suministros.create') }}" class="btn btn-success btn-lg">
-                        <i class="fas fa-plus"></i> Agregar Suministro
-                    </a>
+                <a href="{{ route('suministros.create') }}" class="btn btn-primary btn-lg">
+                    <i class="fas fa-plus"></i> Agregar Suministro
+                </a>
                 @endcan
             </div>
             <div class="card-body">
@@ -106,10 +106,15 @@
             paging: true, // Habilita la paginación
             info: true, // Muestra información sobre el número de registros
             language: {
+
+                search: "Buscar:",
+                
                 paginate: {
                     previous: "Anterior",
                     next: "Siguiente"
                 },
+                emptyTable: "No hay datos disponibles en la tabla",
+                lengthMenu: "Mostrar _MENU_ registros",
                 info: "Mostrando _START_ a _END_ de _TOTAL_ registros",
                 infoEmpty: "Mostrando 0 a 0 de 0 registros",
                 infoFiltered: "(filtrado de _MAX_ registros totales)"

@@ -49,6 +49,36 @@
     </x-authentication-card>
 
     <script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const usernameField = document.getElementById('username');
+        const rememberMeCheckbox = document.getElementById('remember_me');
+
+        // Recuperar usuario guardado en localStorage
+        if (localStorage.getItem('remembered_user')) {
+            usernameField.value = localStorage.getItem('remembered_user');
+            rememberMeCheckbox.checked = true;
+        }
+
+        // Guardar usuario cuando se marque "Recordar Usuario"
+        rememberMeCheckbox.addEventListener('change', function () {
+            if (this.checked) {
+                localStorage.setItem('remembered_user', usernameField.value);
+            } else {
+                localStorage.removeItem('remembered_user');
+            }
+        });
+
+        // Actualizar almacenamiento cuando el usuario cambia
+        usernameField.addEventListener('input', function () {
+            if (rememberMeCheckbox.checked) {
+                localStorage.setItem('remembered_user', this.value);
+            }
+        });
+    });
+</script>
+
+
+    <script>
         document.addEventListener('DOMContentLoaded', function () {
             // Restricción de caracteres especiales en el campo 'Usuario'
             const usernameField = document.getElementById('username');
@@ -60,7 +90,7 @@
         });
     </script>
 
-    <script>
+<script>
         const togglePassword = document.getElementById('togglePassword');
         const passwordInput = document.getElementById('password');
         const toggleText = document.getElementById('toggleText');
@@ -139,6 +169,7 @@
             }
         });
     </script>
+
 
     <style>
         /* Estilo para los campos de entrada */

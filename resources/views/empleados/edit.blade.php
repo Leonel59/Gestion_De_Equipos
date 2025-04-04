@@ -71,9 +71,12 @@
                             </div>
 
                             <div class="form-group">
-                                <label for="fecha_contratacion">Fecha de Contratación</label>
-                                <input type="date" class="form-control" name="fecha_contratacion" value="{{ old ('fecha_contratacion', $empleado->fecha_contratacion) }}" required>
-                            </div>
+    <label for="fecha_contratacion">Fecha de Contratación</label>
+    <input type="date" class="form-control" name="fecha_contratacion" id="fecha_contratacion"
+        value="{{ old('fecha_contratacion', $empleado->fecha_contratacion) }}"
+        max="{{ date('Y-m-d') }}" required>
+</div>
+
                         </div>
                         <div class="col-md-6">
 

@@ -331,11 +331,18 @@ return [
     // Navbar items:
     [
         'type' => 'navbar-search',
-        'text' => 'search',
+        'text' => 'Centro de Ayuda',
         'topnav_right' => false,
     ],
     [
         'type' => 'fullscreen-widget',
+        'topnav_right' => true,
+    ],
+    [
+        'type' => 'link',
+        'text' => 'Centro de Ayuda',
+        'icon' => 'fas fa-question-circle',
+        'url'  => '/centroayuda', // Ruta que desees
         'topnav_right' => true,
     ],
 
@@ -457,6 +464,13 @@ return [
                 'text' => 'USUARIOS',
                 'url' => '/usuarios',
                 'icon' => 'fas fa-users fa-fw',
+                
+            ],
+
+            [
+                'text' => 'RESPALDO',
+                'url' => '/backup',
+                'icon' => 'fas fa-database fa-fw',
                 
             ],
            

@@ -38,7 +38,7 @@ class RoleController extends Controller
         // Crear el rol
         Role::create(['name' => $request->name]);
 
-        return redirect()->route('roles.index')->with('success', 'Rol creado con éxito.');
+        return redirect()->route('roles.index')->with('mensaje', 'Rol creado con éxito.');
     }
 
     /**
@@ -73,7 +73,7 @@ class RoleController extends Controller
         $rol = Role::findOrFail($id);
         $rol->update(['name' => $request->name]);
 
-        return redirect()->route('roles.index')->with('success', 'Rol actualizado con éxito.');
+        return redirect()->route('roles.index')->with('mensaje', 'Rol actualizado con éxito.');
     }
 
     /**
@@ -86,7 +86,7 @@ class RoleController extends Controller
         // Eliminar el rol
         $rol->delete();
 
-        return redirect()->route('roles.index')->with('success', 'Rol eliminado con éxito.');
+        return redirect()->route('roles.index')->with('mensaje', 'Rol eliminado con éxito.');
     }
 }
 

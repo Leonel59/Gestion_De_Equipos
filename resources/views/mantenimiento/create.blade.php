@@ -61,15 +61,16 @@
                     @enderror
                 </div>
 
-                <!-- Descripción -->
-                <h5>Detalles del Mantenimiento</h5>
+                 <!-- Descripción -->
+                 <h5>Detalles del Mantenimiento</h5>
                 <div class="form-group">
                     <label for="descripcion_mantenimiento">Descripción</label>
-                    <textarea class="form-control rounded" id="descripcion_mantenimiento" name="descripcion_mantenimiento" rows="3" placeholder="Describa el mantenimiento realizado..." pattern="^[A-Za-zÀ-ÿ0-9\s]+$" title="Solo letras y números" required>{{ old('descripcion_mantenimiento') }}</textarea>
+                    <textarea class="form-control rounded" id="descripcion_mantenimiento" name="descripcion_mantenimiento" rows="3" placeholder="Describa el mantenimiento realizado..." required>{{ old('descripcion_mantenimiento') }}</textarea>
                     @error('descripcion_mantenimiento')
                         <small class="text-danger">{{ $message }}</small>
                     @enderror
                 </div>
+                
 
                 <!-- Cantidad y duración -->
                 <div class="form-group">
@@ -81,12 +82,15 @@
                 </div>
 
                 <div class="form-group">
-                    <label for="duracion_mantenimiento">Duración de Mantenimiento (horas)</label>
-                    <input type="number" class="form-control rounded" id="duracion_mantenimiento" name="duracion_mantenimiento" value="{{ old('duracion_mantenimiento') }}" min="1" step="0.1" placeholder="Duración en horas" required>
-                    @error('duracion_mantenimiento')
-                        <small class="text-danger">{{ $message }}</small>
-                    @enderror
-                </div>
+    <label for="duracion_mantenimiento">Duración de Mantenimiento (horas)</label>
+    <input type="number" class="form-control rounded" id="duracion_mantenimiento" name="duracion_mantenimiento" 
+           value="{{ old('duracion_mantenimiento') }}" min="0.1" step="0.1" 
+           placeholder="Ingrese la duración en horas (Ejemplo: 1.5)" required>
+    <small class="form-text text-muted">Ingrese la duración en horas con decimales (Ejemplo: 1.5 para 1 hora y 30 minutos).</small>
+    @error('duracion_mantenimiento')
+        <small class="text-danger">{{ $message }}</small>
+    @enderror
+</div>
 
                 <!-- Fechas -->
                 <h5>Fechas del Mantenimiento</h5>
@@ -151,10 +155,10 @@
                     @enderror
                 </div>
 
-                <!-- Botones -->
-                <div class="form-group d-flex justify-content-between">
+                 <!-- Botones -->
+                 <div class="form-group d-flex justify-content-end">
+                    <a href="{{ route('servicios.index') }}" class="btn btn-secondary rounded-pill mr-2">Cancelar</a>
                     <button type="submit" class="btn btn-primary rounded-pill">Crear Servicio</button>
-                    <a href="{{ route('servicios.index') }}" class="btn btn-secondary rounded-pill">Cancelar</a>
                 </div>
             </form>
         </div>
@@ -168,7 +172,27 @@
         const equipoSelect = document.getElementById('id_equipo_mant');
         const estadoEquipoContainer = document.getElementById('estado_equipo_container');
         const estadoEquipoInput = document.getElementById('estado_equipo');
+        const duracionInput = document.getElementById('duracion_mantenimiento');
+        const descripcionInput = document.getElementById('descripcion_mantenimiento');
 
+        // Validación para la duración del mantenimiento
+        duracionInput.addEventListener('input', function() {
+            let valor = this.value;
+
+
+
+            // Permitir solo números positivos con decimales
+            if (!/^\d*\.?\d*$/.test(valor)) {
+                this.value = valor.slice(0, -1); // Elimina el último carácter ingresado si no es válido
+            }
+
+            // Evitar valores menores a 0.1
+            if (this.value !== '' && parseFloat(this.value) < 0.1) {
+                this.value = '0.1';
+            }
+        });
+
+        // Evento para mostrar el estado del equipo
         equipoSelect.addEventListener('change', function() {
             const selectedOption = equipoSelect.options[equipoSelect.selectedIndex];
             const estado = selectedOption.getAttribute('data-estado');
@@ -181,6 +205,12 @@
                 estadoEquipoInput.value = '';
             }
         });
+
+       // Validación en tiempo real para la descripción
+       descripcionInput.addEventListener('input', function() {
+            this.value = this.value.replace(/[^A-Za-zÀ-ÿ\s]/g, '');
+        });
+
     });
 </script>
 @endsection

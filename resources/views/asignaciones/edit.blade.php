@@ -92,9 +92,7 @@
     <span class="invalid-feedback">{{ $message }}</span>
     @enderror
     <small id="fechaWarningDevolucion" class="text-danger" style="display: none;">No puede ser menor a la fecha de asignacion.</small>
-   
 </div>
-
 
 
 <div class="form-group">

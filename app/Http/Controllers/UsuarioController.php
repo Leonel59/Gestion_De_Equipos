@@ -68,7 +68,7 @@ class UsuarioController extends Controller
             json_encode($datosUsuario)
         );
 
-        return redirect()->route('usuarios.index')->with('success', 'Usuario creado exitosamente.');
+        return redirect()->route('usuarios.index')->with('mensaje', 'Usuario creado exitosamente.');
     }
 
     /**
@@ -130,7 +130,7 @@ public function update(Request $request, string $id)
         ])
     );
 
-    return redirect()->route('usuarios.index')->with('success', 'Usuario actualizado exitosamente.');
+    return redirect()->route('usuarios.index')->with('mensaje', 'Usuario actualizado exitosamente.');
 }
 
     /**
@@ -158,6 +158,6 @@ public function update(Request $request, string $id)
             null
         );
 
-        return redirect()->route('usuarios.index')->with('success', 'Usuario eliminado exitosamente.');
+        return redirect()->route('usuarios.index')->with('mensaje', 'Usuario eliminado exitosamente.');
     }
 }

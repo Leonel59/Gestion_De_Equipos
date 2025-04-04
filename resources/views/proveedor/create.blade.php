@@ -39,29 +39,51 @@
             </div>
 
             <div class="form-group">
-                <label for="contacto_proveedor">Contacto</label>
-                <input type="text" name="contacto_proveedor" id="contacto_proveedor" class="form-control rounded-pill @error('contacto_proveedor') is-invalid @enderror" value="{{ old('contacto_proveedor') }}">
-                @error('contacto_proveedor')
-                <span class="invalid-feedback">{{ $message }}</span>
-                @enderror
-            </div>
-
-            <div class="form-group">
-                <label for="correo_personal">Correo Electronico</label>
-                <input type="email" class="form-control" id="correo_personal" name="correo_personal" placeholder="example@gmail.com">
-            </div>
+    <label for="contacto_proveedor">Contacto</label>
+    <input type="text" name="contacto_proveedor" id="contacto_proveedor" class="form-control rounded-pill @error('contacto_proveedor') is-invalid @enderror" 
+           value="{{ old('contacto_proveedor') }}" required>
+    
+    @error('contacto_proveedor')
+        <span class="invalid-feedback">{{ $message }}</span>
+    @enderror
+</div>
 
 
-            <div class="form-group">
-                <label for="telefono_personal">Número de Teléfono </label>
-                <input type="text" class="form-control" id="telefono_personal" maxlength="15" name="telefono_personal" placeholder="+504 3367-8945">
-            </div>
+<div class="form-group">
+    <label for="correo_personal">Correo Electrónico</label>
+    <input type="email" class="form-control rounded-pill @error('correo_personal') is-invalid @enderror" 
+           id="correo_personal" name="correo_personal" placeholder="example@gmail.com" value="{{ old('correo_personal') }}" required>
+    
+    @error('correo_personal')
+        <span class="invalid-feedback">{{ $message }}</span>
+    @enderror
+</div>
+
+
+
+<div class="form-group">
+    <label for="telefono_personal">Número de Teléfono</label>
+    <input type="text" class="form-control rounded-pill @error('telefono_personal') is-invalid @enderror" 
+           id="telefono_personal" name="telefono_personal" maxlength="15" placeholder="+504 3367-8945" 
+           value="{{ old('telefono_personal') }}" required>
+    
+    @error('telefono_personal')
+        <span class="invalid-feedback">{{ $message }}</span>
+    @enderror
+</div>
+
 
             <!-- Direcciones -->
             <div class="form-group">
-                <label for="direccion">Dirección</label>
-                <input type="text" class="form-control" id="direccion" name="direccion">
-            </div>
+    <label for="direccion">Dirección</label>
+    <input type="text" class="form-control rounded-pill @error('direccion') is-invalid @enderror" 
+           id="direccion" name="direccion" value="{{ old('direccion') }}" required>
+    
+    @error('direccion')
+        <span class="invalid-feedback">{{ $message }}</span>
+    @enderror
+</div>
+
             <div class="form-group">
                 <label for="departamento">Departamento</label>
                 <select class="form-control" id="departamento" name="departamento" required>
@@ -77,15 +99,19 @@
                 </select>
             </div>
             <div class="form-group">
-                <label for="ciudad">Ciudad</label>
-                <input type="text" class="form-control" id="ciudad" name="ciudad">
-            </div>
+    <label for="ciudad">Ciudad</label>
+    <input type="text" name="ciudad" id="ciudad" class="form-control rounded-pill @error('ciudad') is-invalid @enderror" 
+           value="{{ old('ciudad') }}" required>
+    @error('ciudad')
+        <span class="invalid-feedback">{{ $message }}</span>
+    @enderror
+</div>
 
             <div class="form-group d-flex justify-content-center">
-                <button type="submit" class="btn btn-success btn-sm rounded-pill shadow-lg p-3 mr-3">
+                <button type="submit" class="btn btn-primary">
                     Guardar Proveedor
                 </button>
-                <a href="{{ route('proveedor.index') }}" class="btn btn-secondary btn-sm rounded-pill shadow-lg p-3">
+                <a href="{{ route('proveedor.index') }}" class="btn btn-secondary">
                     Cancelar
                 </a>
             </div>
@@ -142,6 +168,8 @@
 
         validateInput('#ciudad', /[^a-zA-Z\s]/g); // Solo letras
         validateInput('#rtn_proveedor', /[^0-9\s]/g); // Solo numeros
+        validateInput('#nombre_proveedor', /[^a-zA-Z\s]/g); // Solo letras
+validateInput('#contacto_proveedor', /[^a-zA-Z\s]/g); // Solo letras
 
         // Validación para el campo de correo
         const emailField = document.getElementById('correo_personal');

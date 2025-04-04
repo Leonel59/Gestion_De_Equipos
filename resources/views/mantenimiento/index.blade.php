@@ -8,69 +8,71 @@
 
 @section('content_header')
     <h1 class="text-center text-primary font-weight-bold">Servicios de Mantenimiento</h1>
-    <hr class="bg-dark border-1 border-top border-dark">
+   
 @stop
 
 @section('content')
 @can('mantenimiento.ver')
 
-@can('mantenimiento.insertar') <!-- Verifica si el usuario puede insertar -->
-    <a href="{{ route('servicios.create') }}" class="btn btn-outline-info text-center btn-block mb-4 rounded-pill">
-        <span>Agregar Nuevo Servicio</span> <i class="fas fa-plus-square"></i>
-    </a>
-@endcan
 
-@if (session('info'))
-<div class="alert alert-success alert-dismissible mt-2 text-dark rounded-3" role="alert">
-    <span type="button" class="close" data-dismiss="alert" aria-label="Close">
-        <span aria-hidden="true">&times;</span>
-    </span>
-    <strong>{{ session('info') }}</strong>
+<div class="card-header d-flex justify-content-between align-items-center bg-gradient-primary text-white rounded-top">
+    <h3 class="card-title">Lista de Servicios</h3>
+    @can('mantenimiento.insertar') 
+        <div class="ml-auto"> <!-- Empuja el botón hacia la derecha -->
+            <a href="{{ route('servicios.create') }}" class="btn btn-primary text-white font-weight-bold">
+                <i class="fas fa-plus"></i> Agregar Nuevo Servicio
+            </a>
+        </div>
+    @endcan
 </div>
-@endif
-
-<div class="card shadow-lg rounded-3">
-    <div class="card-header d-flex justify-content-start align-items-center bg-gradient-primary text-white rounded-top">
-        <h3 class="card-title mr-auto">Lista de Servicios</h3>
-    </div>
     <div class="card-body">
-        <div class="table-responsive-sm mt-5">
-            <table id="tablaServicios" class="table table-striped table-bordered table-condensed table-hover rounded shadow-sm">
-                <thead class="thead-dark">
+        @if(session('info'))
+            <script>
+                document.addEventListener('DOMContentLoaded', function() {
+                    Swal.fire({
+                        title: "Éxito!",
+                        text: "{{ session('info') }}",
+                        icon: "success",
+                        confirmButtonText: 'Aceptar',
+                        timer: 3000
+                    });
+                });
+            </script>
+        @endif
+
+        <div class="table-responsive-sm mt-3">
+            <table id="tablaServicios" class="table table-striped table-bordered table-hover rounded shadow-sm">
+                <thead class="thead-light">
                     <tr>
-                        <th>ID</th>
+                        
                         <th>Equipo</th>
                         <th>Tipo de Mantenimiento</th>
                         <th>Descripción</th>
                         <th>Costo</th>
-                        @canany(['mantenimiento.editar', 'mantenimiento.eliminar']) <!-- Verifica si el usuario puede editar o eliminar -->
-                            <th>Opciones</th>
+                        @canany(['mantenimiento.editar', 'mantenimiento.eliminar'])
+                            <th>Acciones</th>
                         @endcanany
                     </tr>
                 </thead>
                 <tbody>
                     @foreach ($servicios as $servicio)
                         <tr>
-                            <td>{{ $servicio->id_mant }}</td>
+                            
                             <td>{{ $servicio->id_equipo_mant }}</td>
                             <td>{{ $servicio->tipo_mantenimiento }}</td>
                             <td>{{ $servicio->descripcion_mantenimiento }}</td>
                             <td>L{{ number_format($servicio->costo_mantenimiento, 2) }}</td>
-                            @canany(['mantenimiento.editar', 'mantenimiento.eliminar']) <!-- Verifica si el usuario puede editar o eliminar -->
+                            @canany(['mantenimiento.editar', 'mantenimiento.eliminar'])
                                 <td class="text-center">
-                                    @can('mantenimiento.editar') <!-- Verifica si el usuario puede editar -->
+                                    @can('mantenimiento.editar')
                                         <a href="{{ route('servicios.edit', $servicio->id_mant) }}" class="btn btn-warning btn-sm rounded-pill" title="Editar">
                                             <i class="fas fa-edit"></i>
                                         </a>
                                     @endcan
-                                    @can('mantenimiento.eliminar') <!-- Verifica si el usuario puede eliminar -->
-                                        <form action="{{ route('servicios.destroy', $servicio->id_mant) }}" method="POST" style="display:inline;">
-                                            @csrf
-                                            @method('DELETE')
-                                            <button type="submit" class="btn btn-danger btn-sm rounded-pill" title="Eliminar" onclick="return confirm('¿Estás seguro de eliminar este servicio?')">
-                                                <i class="fas fa-trash-alt"></i>
-                                            </button>
-                                        </form>
+                                    @can('mantenimiento.eliminar')
+                                        <button class="btn btn-danger btn-sm rounded-pill delete-servicio" data-id="{{ $servicio->id_mant }}" title="Eliminar">
+                                            <i class="fas fa-trash-alt"></i>
+                                        </button>
                                     @endcan
                                 </td>
                             @endcanany
@@ -83,7 +85,6 @@
 </div>
 
 @else
-   <!-- Mensaje de permiso denegado -->
    <div class="card border-light shadow-sm mt-3 text-center">
         <div class="card-body">
             <i class="fas fa-lock text-danger mb-2" style="font-size: 2rem;"></i>
@@ -91,13 +92,11 @@
         </div>
     </div>
 @endcan
-
-
 @stop
 
 @section('js')
 <script src="https://cdn.datatables.net/1.10.24/js/jquery.dataTables.min.js"></script>
-<script src="https://cdn.datatables.net/1.10.24/js/dataTables.bootstrap5.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script>
     $(document).ready(function() {
         $('#tablaServicios').DataTable({
@@ -120,6 +119,48 @@
                     className: 'btn btn-success'
                 }
             ]
+        });
+
+        $(document).on('click', '.delete-servicio', function() {
+            var servicioId = $(this).data('id');
+            var url = '{{ route("servicios.destroy", ":id") }}'.replace(':id', servicioId);
+
+            Swal.fire({
+                title: '¿Estás seguro?',
+                text: "¡No podrás recuperar este servicio!",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#d33',
+                cancelButtonColor: '#3085d6',
+                confirmButtonText: 'Sí, eliminarlo!',
+                cancelButtonText: 'Cancelar'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    $.ajax({
+                        url: url,
+                        type: 'POST',
+                        data: {
+                            _method: 'DELETE',
+                            _token: '{{ csrf_token() }}'
+                        },
+                        success: function(response) {
+                            Swal.fire(
+                                'Eliminado!',
+                                'El servicio ha sido eliminado.',
+                                'success'
+                            );
+                            location.reload();
+                        },
+                        error: function(xhr) {
+                            Swal.fire(
+                                'Error!',
+                                'No se pudo eliminar el servicio.',
+                                'error'
+                            );
+                        }
+                    });
+                }
+            });
         });
     });
 </script>
